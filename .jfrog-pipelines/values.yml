@@ -1,0 +1,12 @@
+templateRepository:
+  gitProvider: rajGit
+  path: RjSH1/newTemplates
+  branch: main
+  templateFolder: templates
+ 
+publishTemplate:
+  namespace: rajNewTemplates
+  name: myPipelineTemplate
+  version: 1.0.0
+  pipelineName: PublishTemplate
+  artifactoryIntegration: rajArt
