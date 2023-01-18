@@ -2,4 +2,4 @@ namePrefix: intro
 repo:
   integrationName: myGithub
   path: "RjSH1/pipelines-local-test-repo"
-  #branchPattern: "template2.0"
+
