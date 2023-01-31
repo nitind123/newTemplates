@@ -42,6 +42,7 @@ goConfig:
   ## The repository must first be created in Artifactory.
   binaryTargetRepository: go-local
   ## Here you specify any additional arguments to the command to execute
+  ## it is executed as `go {{ command }}`
   command: "build -o $outputLocation/$outputFile"
   outputLocation: "GoBuild"
   outputFile: "myOutputFile"
