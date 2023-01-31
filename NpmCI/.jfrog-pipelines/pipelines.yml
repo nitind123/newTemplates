@@ -11,13 +11,13 @@ resources:
       gitProvider: {{ .Values.repo.gitIntegration }}
       branches:
         include: {{ .Values.repo.branchPattern | default "main" }}
- 
+
 {{ if .Values.publishBuild }}
   - name: {{ .Values.namePrefix }}_info
     type: BuildInfo
     configuration:
       sourceArtifactory: {{ .Values.artIntegration }}
- 
+
   - name: {{ .Values.namePrefix }}_spec
     type: FileSpec
     configuration:
@@ -26,8 +26,8 @@ resources:
       buildName: ${JFROG_CLI_BUILD_NAME}
       buildNumber: ${JFROG_CLI_BUILD_NUMBER}
 {{ end }}
- 
- 
+
+
 pipelines:
   - name: {{ .Values.namePrefix }}_npm_ci
     configuration:
@@ -46,7 +46,7 @@ pipelines:
             - name: {{ .Values.artIntegration }}
           inputResources:
             - name: {{ .Values.namePrefix }}_repo
- 
+
         {{ if .Values.npmConfig.npmArgs }}
           npmArgs: {{ .Values.npmConfig.npmArgs }}
         {{ end }}
@@ -56,7 +56,7 @@ pipelines:
         {{ if .Values.npmConfig.resolverRepo }}
           resolverRepo: {{ .Values.npmConfig.resolverRepo }}
         {{ end }}
- 
+
       - name: publish
         type: NpmPublish
         configuration:
