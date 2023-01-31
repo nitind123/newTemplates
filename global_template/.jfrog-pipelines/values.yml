@@ -2,4 +2,5 @@ namePrefix: HelloWorld
 repo:
   integrationName: myGithub
   path: "RjSH1/newTemplates"
-  branch: main
+  branchs:
+    include: main
