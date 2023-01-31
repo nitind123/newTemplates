@@ -37,19 +37,4 @@ goConfig:
   ## in your local Artifactory instance.
   resolverRepo: go-remote
  
-  ### Settings used only for GoBuild and GoPublishBinary:
-  ## Required to use these steps, the repository to which to upload the binary.
-  ## The repository must first be created in Artifactory.
-  binaryTargetRepository: go-local
-  ## Here you specify any additional arguments to the command to execute
-  ## it is executed as `go {{ command }}`
-  #command: "build -o $outputLocation/$outputFile"
-  outputLocation: "GoBuild"
-  outputFile: "myOutputFile"
- 
-  ### Settings used only for GoPublishModule:
-  ## Required to use this step, the repository to which to upload the module.
-  ## The repository must first be created in Artifactory.
-  moduleTargetRepository: go-local
-  ## The version specified in the go-publish command.
-  version: v1.0.${run_number}
+
