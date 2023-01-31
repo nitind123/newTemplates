@@ -24,6 +24,7 @@ repo:
 npmConfig:
   ## Here you specify any additional arguments to the command to execute
   npmArgs: "--no-install"
+  
   sourceLocation: "."
   ## These repositories must first be created in Artifactory.
   ## The resolver is used to resolve dependencies. It is recommended to
