@@ -43,7 +43,7 @@ goConfig:
   binaryTargetRepository: go-local
   ## Here you specify any additional arguments to the command to execute
   ## it is executed as `go {{ command }}`
-  command: "build -o $outputLocation/$outputFile"
+  go: "build -o $outputLocation/$outputFile"
   outputLocation: "GoBuild"
   outputFile: "myOutputFile"
  
