@@ -1,0 +1,12 @@
+templateRepository:
+  gitProvider: s_gitHub
+  path: "{{.jfrog-pipelines.sourceRepository}}"
+  branch: "{{gitBranch}}"
+  templateFolder: tests/uploadTemplate/templates/jfrog/myPipelineTemplate
+
+publishTemplate:
+  namespace: jfrogPipelines
+  name: templateDefinition
+  version: 0.0.1
+  pipelineName: Publish_Template_10113
+  artifactoryIntegration: s_artifactory
