@@ -24,7 +24,6 @@ repo:
 ##### Gradle configuration
 gradleConfig:
   ## Here you specify the command to execute
-  ## it is executed as `gradle {{ command }}`
   command: "hello"
   sourceLocation: "."
   ## These repositories must first be created in Artifactory.
