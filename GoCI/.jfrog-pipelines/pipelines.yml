@@ -1,5 +1,5 @@
 valuesFilePath: ./values.yml
 
 include:
-  #template: jfrog/GoCI/2.0.0
-  template: jfrog/invalidTemplateDocker/1.0.0
+  template: jfrog/Goci/1.0.0
+
