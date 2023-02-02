@@ -1,10 +1,4 @@
-resources:
-  - name: P_WF_7379_001
-    type: PropertyBag
-    configuration:
-      property: value
-
-  GitRepo:
+GitRepo:
   name: fooGitRepo
   gitProvider: s_gitHub
   path: {{.jfrog-pipelines.sourceRepository}}
@@ -33,6 +27,14 @@ DockerPush:
   dockerFileName: foo
   targetRepository: foo  
 
+
+resources:
+  - name: P_WF_7379_001
+    type: PropertyBag
+    configuration:
+      property: value
+
+  
 pipelines:
   - name: pipeline_P_WF_7379_001
     steps:
