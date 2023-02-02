@@ -13,13 +13,7 @@ resources:
       interval: '*/15 * * * *'
       branches:
         include: ^master$
-  - name: jfdev_ci_commons_releases_process_bitbucket
-    type: GitRepo
-    configuration:
-      path: auto/jfdev-ci-commons
-      gitProvider: JFrog_bitbucket
-      branches:
-        include: ^master$
+  
   - name: jfdev_ci_commons_release_services_properties
     type: PropertyBag
     configuration:
