@@ -1,5 +1,5 @@
 valuesFilePath: ./values.yml
 
 include:
-  template: jfrog/Goci/1.0.0
+  template: jfrog/GoCI/1.0.0
 
