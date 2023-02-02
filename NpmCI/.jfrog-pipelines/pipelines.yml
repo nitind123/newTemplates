@@ -31,5 +31,13 @@ pipelines:
         execution:
           onExecute:
             - echo "Testing..."
+     - name: P_WF_7379_001_2
+        type: Bash
+        configuration:
+          inputResources:
+            - name: jfdev_ci_commons_release_services_properties
+        execution:
+          onExecute:
+            - echo "Testing..."
             
             
