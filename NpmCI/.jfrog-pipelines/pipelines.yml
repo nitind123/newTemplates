@@ -36,6 +36,8 @@ pipelines:
         configuration:
           inputResources:
             - name: jfdev_ci_commons_release_services_properties
+          inputSteps:
+            - name: P_WF_7379_001
         execution:
           onExecute:
             - echo "Testing..."
