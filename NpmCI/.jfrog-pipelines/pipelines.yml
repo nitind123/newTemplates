@@ -35,7 +35,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: jfdev_ci_commons_release_services_properties
+            - name: jfdev_ci_commons_milestone_cron_trigger
           inputSteps:
             - name: P_WF_7379_001
         execution:
