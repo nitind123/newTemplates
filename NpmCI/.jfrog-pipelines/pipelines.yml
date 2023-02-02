@@ -31,7 +31,7 @@ pipelines:
         execution:
           onExecute:
             - echo "Testing..."
-     - name: P_WF_7379_001_2
+      - name: P_WF_7379_001_2
         type: Bash
         configuration:
           inputResources:
@@ -39,5 +39,4 @@ pipelines:
         execution:
           onExecute:
             - echo "Testing..."
-            
             
