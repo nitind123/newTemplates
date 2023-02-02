@@ -1,44 +1,29 @@
 
+GitRepo:
+  name: fooGitRepo
+  gitProvider: s_gitHub
+  path: {{.jfrog-pipelines.sourceRepository}}
+  branches:
+    include: 'master'
 
-
-
-resources:
-  - name: P_WF_7379_001
-    type: PropertyBag
-    configuration:
-      property: value
-  - name: jfdev_ci_commons_milestone_cron_trigger
-    type: CronTrigger
-    configuration:
-      interval: '*/15 * * * *'
-      branches:
-        include: ^master$
+artifactoryIntegration: s_artifactory
   
-  - name: jfdev_ci_commons_release_services_properties
-    type: PropertyBag
-    configuration:
-      last_released_run_number: -1
+Image:
+  name: fooImage
+  sourceRepository: foo
 
-  
-pipelines:
-  - name: pipeline_P_WF_7379_001
-    steps:
-      - name: P_WF_7379_001
-        type: Bash
-        configuration:
-          inputResources:
-            - name: P_WF_7379_001
-        execution:
-          onExecute:
-            - echo "Testing..."
-      - name: P_WF_7379_001_2
-        type: Bash
-        configuration:
-          inputResources:
-            - name: jfdev_ci_commons_milestone_cron_trigger
-          inputSteps:
-            - name: P_WF_7379_001
-        execution:
-          onExecute:
-            - echo "Testing..."
-            
+DockerBuild:
+  name: foobuild
+  dockerImageName: foo
+  dockerFileName: foo
+  dockerFileLocation: '.'
+  dockerImageTag: ${run_number}
+
+Pipeline:
+  name: foo
+
+DockerPush:
+  name: foopush
+  dockerImageName: foo
+  dockerFileName: foo
+  targetRepository: foo
