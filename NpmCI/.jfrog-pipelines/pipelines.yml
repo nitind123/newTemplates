@@ -1,34 +1,38 @@
 resources:
-  - name: MB_G_002_inputResource
-    type: PropertyBag
+  - name: r_Aql
+    type: Aql
     configuration:
-      test: MB_G_004
-  - name: MB_G_002_outputResource
-    type: PropertyBag
-    configuration:
-      test: MB_G_004
+      sourceArtifactory: s_artifactory
+      query: items.find({"@build.name":{"$eq":"artifactory"}})
+      addedProperties:
+        key1: value1
+        key2: value2
+      mappings:
+        - name: mapping1
+          input: IN
+          output: test1
+        - name: mapping2
+          input: IN
+          output: test2
 
 pipelines:
-  - name: pipeline_MB_G_002
+  - name: pipelines_r_Aql
     steps:
-      - name: MB_G_002_step1
+      - name: Bash_Aql_Output
         type: Bash
         configuration:
           outputResources:
-            - name: MB_G_002_outputResource
-              branch: master
+            - name: r_Aql
         execution:
           onExecute:
-            - write_output MB_G_002_outputResource updatedBy=MB_G_002_step1
-      - name: MB_G_002_step2
+            - echo "executing step..."
+           # - write_output r_Aql "query=items.find({"repo": "mvn_test_repo"})"
+
+      - name: Bash_Aql_Input
         type: Bash
         configuration:
           inputResources:
-            - name: MB_G_002_outputResource
-              branch: master
-            - name: MB_G_002_inputResource
-              branch: master
+            - name: r_Aql
         execution:
           onExecute:
-            - if [ "$res_MB_G_002_inputResource_test" != "MB_G_002" ]; then return 1; fi
-            - if [ "$res_MB_G_002_outputResource_updatedBy" != "MB_G_002_step1" ]; then return 1; fi
+            - echo "executing step..."
