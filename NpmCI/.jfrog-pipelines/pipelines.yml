@@ -7,12 +7,23 @@ resources:
     type: PropertyBag
     configuration:
       property: value
- - name: testResource
-    type: test/TestResource
+  - name: jfdev_ci_commons_milestone_cron_trigger
+    type: CronTrigger
     configuration:
-      foo: bar
-      sourceArtifactory: s_artifactory
-      gitProvider: s_gitHub
+      interval: '*/15 * * * *'
+      branches:
+        include: ^master$
+  - name: jfdev_ci_commons_releases_process_bitbucket
+    type: GitRepo
+    configuration:
+      path: auto/jfdev-ci-commons
+      gitProvider: JFrog_bitbucket
+      branches:
+        include: ^master$
+  - name: jfdev_ci_commons_release_services_properties
+    type: PropertyBag
+    configuration:
+      last_released_run_number: -1
 
   
 pipelines:
