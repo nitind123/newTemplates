@@ -4,16 +4,34 @@ resources:
     configuration:
       property: value
 
-  - name: ES-resource-0001-valid
-    type: shippable/GitRepo
-    syntaxVersion: 1.0.0
-    configuration:
-      name: test
-  - name: ES-resource-0001
-    type: shippable/GitRepo
-    syntaxVersion: 1.11.11
-    configuration:
-      name: test     
+  GitRepo:
+  name: fooGitRepo
+  gitProvider: s_gitHub
+  path: {{.jfrog-pipelines.sourceRepository}}
+  branches:
+    include: 'master'
+
+artifactoryIntegration: s_artifactory
+  
+Image:
+  name: fooImage
+  sourceRepository: foo
+
+DockerBuild:
+  name: foobuild
+  dockerImageName: foo
+  dockerFileName: foo
+  dockerFileLocation: '.'
+  dockerImageTag: ${run_number}
+
+Pipeline:
+  name: foo
+
+DockerPush:
+  name: foopush
+  dockerImageName: foo
+  dockerFileName: foo
+  targetRepository: foo  
 
 pipelines:
   - name: pipeline_P_WF_7379_001
