@@ -1,3 +1,13 @@
+resources:
+  - name: MB_G_002_inputResource
+    type: PropertyBag
+    configuration:
+      test: MB_G_004
+  - name: MB_G_002_outputResource
+    type: PropertyBag
+    configuration:
+      test: MB_G_004
+
 pipelines:
   - name: pipeline_MB_G_002
     steps:
