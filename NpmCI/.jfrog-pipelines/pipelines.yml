@@ -1,22 +1,19 @@
-name: sample_npm_ci
-configuration:
-  affinityGroup: sample_npm_ci
-steps:
-  - name: build
-    type: NpmBuild
+resources:
+  - name: P_WF_7379_001
+    type: PropertyBag
     configuration:
-      integrations:
-        - name: myArtIntegrationName
-      inputResources:
-        - name: sample_repo
-      npmArgs: '--no-install'
-      sourceLocation: .
-      resolverRepo: npm-remote
-  - name: publish
-    type: NpmPublish
-    configuration:
-      integrations:
-        - name: myArtIntegrationName
-      inputSteps:
-        - name: build
-      deployerRepo: npm-local
+      property: value
+
+pipelines:
+  - name: pipeline_P_WF_7379_001
+    steps:
+      - name: P_WF_7379_001
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_001
+        execution:
+          onExecute:
+            - echo "Testing..."
+            
+            
