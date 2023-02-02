@@ -1,29 +1,24 @@
-
-GitRepo:
-  name: fooGitRepo
-  gitProvider: s_gitHub
-  path: {{.jfrog-pipelines.sourceRepository}}
-  branches:
-    include: 'master'
-
-artifactoryIntegration: s_artifactory
-  
-Image:
-  name: fooImage
-  sourceRepository: foo
-
-DockerBuild:
-  name: foobuild
-  dockerImageName: foo
-  dockerFileName: foo
-  dockerFileLocation: '.'
-  dockerImageTag: ${run_number}
-
-Pipeline:
-  name: foo
-
-DockerPush:
-  name: foopush
-  dockerImageName: foo
-  dockerFileName: foo
-  targetRepository: foo
+pipelines:
+  - name: pipeline_MB_G_002
+    steps:
+      - name: MB_G_002_step1
+        type: Bash
+        configuration:
+          outputResources:
+            - name: MB_G_002_outputResource
+              branch: master
+        execution:
+          onExecute:
+            - write_output MB_G_002_outputResource updatedBy=MB_G_002_step1
+      - name: MB_G_002_step2
+        type: Bash
+        configuration:
+          inputResources:
+            - name: MB_G_002_outputResource
+              branch: master
+            - name: MB_G_002_inputResource
+              branch: master
+        execution:
+          onExecute:
+            - if [ "$res_MB_G_002_inputResource_test" != "MB_G_002" ]; then return 1; fi
+            - if [ "$res_MB_G_002_outputResource_updatedBy" != "MB_G_002_step1" ]; then return 1; fi
