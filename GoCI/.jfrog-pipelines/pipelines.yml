@@ -1,5 +1,5 @@
 template: true
-valuesFilePath: ../values/gitRepoValues.yml
+valuesFilePath: ./values.yml
 
 resources:
   - name: S_NpmPublish_5933_010_GitRepo
