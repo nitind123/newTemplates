@@ -1,4 +1,4 @@
 valuesFilePath: ./values.yml
 
 include:
-  template: jfrog/Npminvalid/1.0.0
+  template: jfrog1/Npminvalid/1.0.0
