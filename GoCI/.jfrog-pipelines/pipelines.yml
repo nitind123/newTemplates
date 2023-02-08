@@ -1,5 +1,8 @@
-template: true
-valuesFilePath: ./values.yml
+## template: true
+## valuesFilePath: ./values.yml
+include:
+  template: jfrog/invalidTemplateDocker/1.0.0
+valuesFilePath: ./values/syncTemplate/values.yml
 
 resources:
   - name: S_NpmPublish_5933_010_GitRepo
