@@ -1,4 +1,26 @@
-valuesFilePath: ./values.yml
+valuesFilePath: ./values/helm/values.yml
 
-include:
-  template: jfrog/GradleCI/1.0.0
+resources:
+  - name: PS_Sync_10509
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.repoName }}
+      branches:
+        include: {{ .Values.repoBranch }}
+
+pipelines:
+  - name: PS_Sync_10509
+    type: Artifact
+    configuration:
+      sourcePlatformProvider: jfrogAccessToken_10509 # Jfrog Platform Access token integration
+      repository: jfrogpipelines                  # name of the repository
+      artifactPath:
+        include: tools/*
+        exclude: tools/exclude
+      buildOn:
+        deployed: true
+        cached: true
+        deleted: true
+        copied: false
+        moved: false
