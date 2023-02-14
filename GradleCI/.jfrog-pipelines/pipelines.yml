@@ -9,5 +9,4 @@ pipelines:
           regExp: true
           integrations:
             - name: s_artifactory
-          inputResources:
-            - name: EXT_S_SYC_AU_0012_fileSpec
+          
