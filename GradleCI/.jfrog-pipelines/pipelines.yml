@@ -1,26 +1,18 @@
-valuesFilePath: ./values/helm/values.yml
-
 resources:
-  - name: PS_Sync_10509
-    type: GitRepo
+  - name: EXT_S_SYC_AU_0012_fileSpec
+    type: FileSpec
     configuration:
-      gitProvider: s_gitHub
-      path: {{ .Values.repoName }}
-      branches:
-        include: {{ .Values.repoBranch }}
-
+      sourceArtifactory: s_artifactory
+      pattern: "test-automation-generic-local/test.txt"
 pipelines:
-  - name: PS_Sync_10509
-    type: Artifact
-    configuration:
-      sourcePlatformProvider: jfrogAccessToken_10509 # Jfrog Platform Access token integration
-      repository: jfrogpipelines                  # name of the repository
-      artifactPath:
-        include: tools/*
-        exclude: tools/exclude
-      buildOn:
-        deployed: true
-        cached: true
-        deleted: true
-        copied: false
-        moved: false
+  - name: EXT_S_SYC_AU_0012
+    steps:
+      - name: EXT_S_SYC_AU_0012
+        type: UploadArtifact
+        configuration:
+          targetPath: "test-automation-generic-local/EXT_S_SYC_AU_0012"
+          regExp: true
+          integrations:
+            - name: s_artifactory
+          inputResources:
+            - name: EXT_S_SYC_AU_0012_fileSpec
