@@ -5,7 +5,7 @@ resources:
       sourceArtifactory: s_artifactory
       pattern: "test-automation-generic-local/test.txt"
 pipelines:
-  - name: EXT_S_SYC_AU_0012
+  - name: Nitin
     steps:
       - name: EXT_S_SYC_AU_0012
         type: UploadArtifact
