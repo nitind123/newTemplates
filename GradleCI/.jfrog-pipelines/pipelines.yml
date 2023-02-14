@@ -1,9 +1,4 @@
-resources:
-  - name: EXT_S_SYC_AU_0012_fileSpec
-    type: FileSpec
-    configuration:
-      sourceArtifactory: s_artifactory
-      pattern: "test-automation-generic-local/test.txt"
+
 pipelines:
   - name: Nitin
     steps:
