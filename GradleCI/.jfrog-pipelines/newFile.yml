@@ -12,9 +12,9 @@ resources:
       sourceArtifactory: int_default_artifactory
  
 pipelines:
-  - name: test_signed_start_1
+  - name: test_signed_start_2
     steps:
-      - name: create_info
+      - name: create_info_001
         type: Bash
         configuration:
           inputResources:
@@ -39,13 +39,13 @@ pipelines:
           onExecute:
             - validate_artifact buildInfo --build-name $JFROG_CLI_BUILD_NAME --build-number $JFROG_CLI_BUILD_NUMBER
         
-  - name: test_signed_stop_1
+  - name: test_signed_stop_2
     steps:
-      - name: validate_info
+      - name: validate_info_001
         type: Bash
         configuration:
           inputResources:
-            - name: signed_buildinfo_1
+            - name: signed_buildinfo_2
         execution:
           onExecute:
             # - response=$(validate_artifact buildInfo --build-name ${res_signed_buildinfo_1_buildName} --build-number ${res_signed_buildinfo_1_buildNumber})
