@@ -14,7 +14,7 @@ resources:
 pipelines:
   - name: test_signed_start_2
     steps:
-      - name: create_info_001
+      - name: create_info
         type: Bash
         configuration:
           inputResources:
@@ -41,7 +41,7 @@ pipelines:
         
   - name: test_signed_stop_2
     steps:
-      - name: validate_info_001
+      - name: validate_info
         type: Bash
         configuration:
           inputResources:
