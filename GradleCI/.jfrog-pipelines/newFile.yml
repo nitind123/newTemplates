@@ -45,7 +45,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: signed_buildinfo_2
+            - name: signed_buildinfo_001
         execution:
           onExecute:
             # - response=$(validate_artifact buildInfo --build-name ${res_signed_buildinfo_1_buildName} --build-number ${res_signed_buildinfo_1_buildNumber})
