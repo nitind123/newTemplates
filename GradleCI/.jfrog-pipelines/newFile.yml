@@ -1,5 +1,5 @@
 resources:
-  - name: signed_git
+  - name: signed_git_002
     type: GitRepo
     configuration:
       gitProvider: github_nitin
@@ -18,14 +18,14 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: signed_git
+            - name: signed_git_002
           integrations:
             - name: int_default_artifactory
           outputResources:
             - name: signed_buildinfo_1
         execution:
           onExecute:
-            - cd $res_signed_git_resourcePath
+            - cd $res_signed_git_002_resourcePath
             - touch server.js
             - jfrog rt upload server.js km-generic-local
             - jfrog rt build-publish --detailed-summary $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER > summaryOutput.json
