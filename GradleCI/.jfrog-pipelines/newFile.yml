@@ -6,7 +6,7 @@ resources:
       path: nitind123/newTemplates
       branches:
         include: {{ gitBranch }}
-  - name: signed_buildinfo_1
+  - name: signed_buildinfo_001
     type: BuildInfo
     configuration:
       sourceArtifactory: int_default_artifactory
@@ -22,7 +22,7 @@ pipelines:
           integrations:
             - name: int_default_artifactory
           outputResources:
-            - name: signed_buildinfo_1
+            - name: signed_buildinfo_001
         execution:
           onExecute:
             - cd $res_signed_git_002_resourcePath
