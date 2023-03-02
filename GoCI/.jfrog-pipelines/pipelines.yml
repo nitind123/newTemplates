@@ -3,14 +3,14 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: s_artifactory
-      pattern: "test-automation-generic-local_10509/package-lock.json"
+      pattern: "test-automation-generic-local-10509/package-lock.json"
 pipelines:
   - name: P_PS_10509_001
     steps:
       - name: P_PS_10509_001
         type: UploadArtifact
         configuration:
-          targetPath: "test-automation-generic-local/tool/"
+          targetPath: "test-automation-generic-local-10509/tool/"
           integrations:
             - name: s_artifactory
           inputResources:
