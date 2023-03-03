@@ -1,4 +1,4 @@
-valuesFilePath: ./values/helm/values.yml
+
 
 resources:
   - name: PS_Sync_10509
