@@ -1,12 +1,17 @@
+valuesFilePath: ./values/helm/values.yml
 
-pipelines:
-  - name: Nitin
-    steps:
-      - name: EXT_S_SYC_AU_0012
-        type: UploadArtifact
-        configuration:
-          targetPath: "test-automation-generic-local/EXT_S_SYC_AU_0012"
-          regExp: true
-          integrations:
-            - name: s_artifactory
-          
+resources:
+  - name: PS_Sync_10509
+    type: Artifact
+    configuration:
+      sourcePlatformProvider: jfrogAccessToken_10509
+      repository: test-automation-generic-local
+      artifactPath:
+        include: tools/*
+        exclude: exclude/*
+      buildOn:
+        deployed: true
+        cached: true
+        deleted: true
+        copied: false
+        moved: false
