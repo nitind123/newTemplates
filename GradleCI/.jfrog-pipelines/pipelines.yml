@@ -1,17 +1,23 @@
 
-
 resources:
-  - name: PS_Sync_10509
+  - name: artifact_test
     type: Artifact
     configuration:
-      sourcePlatformProvider: jfrogAccessToken_10509
-      repository: test-automation-generic-local
+      jfrogPlatformProvider: jfrogAccessToken_10509
+      repositories:
+        - test-automation-generic-local
       artifactPath:
-        include: tools/*
-        exclude: exclude/*
+        include:
+          - tools/*
+        exclude:
+          - tools/exclude/*
       buildOn:
         deployed: true
         cached: true
         deleted: true
         copied: false
         moved: false
+      branches:
+        include: artifactResource
+        exclude: master
+
