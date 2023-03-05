@@ -22,4 +22,4 @@ pipelines:
           integrations:
             - name: s_artifactory
           inputResources:
-            - name: P_PS_10509_fileSpec
+            - name: pipelines_utp_bitbucket
