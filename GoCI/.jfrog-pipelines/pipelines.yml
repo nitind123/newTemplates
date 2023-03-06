@@ -1,23 +1,17 @@
 resources:
-  - name: pipelines_utp_bitbucket
-    type: GitRepo
+  - name: P_PS_10509_fileSpec
+    type: FileSpec
     configuration:
-      path: nitind123/newTemplates
-      gitProvider: gitad
-      branches:
-        include: test1
-      buildOn:
-        branchDelete: true
+      sourceArtifactory: s_artifactory
+      pattern: "test-automation-generic-local_10509/package-lock.json"
 pipelines:
-  - name: my_pipe_1
-    configuration:
-      jfrogCliVersion: 2
+  - name: P_PS_10509_001
     steps:
-      - name: step_1
-        type: Bash
+      - name: P_PS_10509_001
+        type: UploadArtifact
         configuration:
+          targetPath: "test-automation-generic-local/tool/"
+          integrations:
+            - name: s_artifactory
           inputResources:
-            - name: pipelines_utp_bitbucket
-        execution:
-          onExecute:
-            - echo "executing step_1"
+            - name: P_PS_10509_fileSpec
