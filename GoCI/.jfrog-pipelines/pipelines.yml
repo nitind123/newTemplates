@@ -7,7 +7,7 @@ resources:
       branches:
         include: test1
       buildOn:
-        branchDelete: false
+        branchDelete: true
 pipelines:
   - name: my_pipe_1
     configuration:
