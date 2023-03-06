@@ -9,7 +9,7 @@ resources:
       path: pip/controlplane
       gitProvider: JFrog_bitbucket
       branches:
-        include: ^{{gitBranch}}$
+        include: test1
       buildOn:
         branchDelete: true
 pipelines:
