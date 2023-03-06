@@ -6,8 +6,8 @@ resources:
   - name: pipelines_utp_bitbucket
     type: GitRepo
     configuration:
-      path: pip/controlplane
-      gitProvider: JFrog_bitbucket
+      path: nitind123/newTemplates
+      gitProvider: gitad
       branches:
         include: test1
       buildOn:
