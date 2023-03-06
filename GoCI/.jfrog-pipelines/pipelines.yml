@@ -1,8 +1,4 @@
 resources:
-  - name: utp_deployment_incoming_webhook_pipelines
-    type: IncomingWebhook
-    configuration:
-      webhookName: utp_deployment
   - name: pipelines_utp_bitbucket
     type: GitRepo
     configuration:
