@@ -13,7 +13,7 @@ resources:
       buildOn:
         branchDelete: true
 pipelines:
- - name: my_pipe_1
+  - name: my_pipe_1
     configuration:
       jfrogCliVersion: 2
     steps:
