@@ -11,7 +11,7 @@ resources:
       branches:
         include: ^{{gitBranch}}$
       buildOn:
-        branchDelete: test1
+        branchDelete: true
 pipelines:
   - name: P_PS_10509_001
     steps:
