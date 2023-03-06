@@ -13,13 +13,15 @@ resources:
       buildOn:
         branchDelete: true
 pipelines:
-  - name: P_PS_10509_001
+ - name: my_pipe_1
+    configuration:
+      jfrogCliVersion: 2
     steps:
-      - name: P_PS_10509_001
-        type: UploadArtifact
+      - name: step_1
+        type: Bash
         configuration:
-          targetPath: "test-automation-generic-local-10509/tool/"
-          integrations:
-            - name: s_artifactory
           inputResources:
             - name: pipelines_utp_bitbucket
+        execution:
+          onExecute:
+            - echo "executing step_1"
