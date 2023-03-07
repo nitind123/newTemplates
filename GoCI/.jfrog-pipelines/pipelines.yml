@@ -27,4 +27,4 @@ pipelines:
         execution:
           onExecute:
             - ls 
-            - jfrog rt upload steplet.json jfrogpipelines/tools/steplet.json
+            - jfrog rt upload steplet.json example-repo-local/tools/steplet.json
