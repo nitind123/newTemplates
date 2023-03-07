@@ -23,7 +23,7 @@ pipelines:
           environmentVariables:
             FORCE_RUN: 'true'
           integrations:
-            - name: entplus_deployer 
-          execution:
-            onExecute:
-              - jfrog rt upload ../package-json.yml test-automation-generic-local-10509/tool/package.txt
+            - name: entplus_deployer
+        execution:
+          onExecute:
+            - jfrog rt upload ../package-json.yml test-automation-generic-local-10509/tool/package.txt
