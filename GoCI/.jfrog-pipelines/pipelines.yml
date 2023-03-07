@@ -27,4 +27,4 @@ pipelines:
         execution:
           onExecute:
             - ls 
-            - jfrog rt upload steplet.json test-automation-generic-local/steplet.json
+            - jfrog rt upload steplet.json pipelines-installers/installer/steplet.json
