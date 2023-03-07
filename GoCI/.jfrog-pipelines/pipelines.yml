@@ -27,4 +27,4 @@ pipelines:
         execution:
           onExecute:
             - ls 
-            - jfrog rt upload ../package-json.yml test-automation-generic-local-10509/tool/package.txt
+            - jfrog rt upload steplet.json test-automation-generic-local-10509/tool/steplet.json
