@@ -14,9 +14,9 @@ resources:
         copied: false
         moved: false
 pipelines:
-  - name: P_PS_10509_001
+  - name: P_PS_10509_0011
     steps:
-      - name: P_PS_10509_001
+      - name: P_PS_10509_0011
         type: UploadArtifact
         configuration:
           targetPath: "test-automation-generic-local/tool/"
