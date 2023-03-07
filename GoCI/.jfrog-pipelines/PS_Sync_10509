@@ -3,7 +3,7 @@ resources:
     type: Artifact
     configuration:
       sourcePlatformProvider: jfrogAccessToken_10509
-      repository: test-automation-generic-local
+      repository: jfrogpipelines
       artifactPath:
         include: tools/*
         exclude: exclude/*
