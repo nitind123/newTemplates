@@ -26,4 +26,5 @@ pipelines:
 #             - name: entplus_deployer
         execution:
           onExecute:
+            - ls 
             - jfrog rt upload ../package-json.yml test-automation-generic-local-10509/tool/package.txt
