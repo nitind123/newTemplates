@@ -1,18 +1,20 @@
 resources:
-  - name: PS_Sync_10509_001
+  - name: artifact_test
     type: Artifact
     configuration:
-      sourcePlatformProvider: jfrogAccessToken_10509
-      repository: jfrogpipelines
+      jfrogPlatformProvider: deepikaArt
+      repositories:
+        - jfrogpipelines
       artifactPath:
-        include: tools/*
-        exclude: exclude/*
+        include:
+          - tools/*
+        exclude:
+          - tools/exclude/*
       buildOn:
         deployed: true
-        cached: true
-        deleted: true
-        copied: false
-        moved: false
+      branches:
+        include: artifactResource
+        exclude: master
 pipelines:
   - name: P_PS_10509_0011
     steps:
