@@ -1,0 +1,15 @@
+resources:
+  - name: PS_Sync_10509
+    type: Artifact
+    configuration:
+      sourcePlatformProvider: jfrogAccessToken_10509
+      repository: test-automation-generic-local
+      artifactPath:
+        include: tools/*
+        exclude: exclude/*
+      buildOn:
+        deployed: true
+        cached: true
+        deleted: true
+        copied: false
+        moved: false
