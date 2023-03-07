@@ -13,3 +13,14 @@ resources:
         deleted: true
         copied: false
         moved: false
+pipelines:
+  - name: P_PS_10509_001
+    steps:
+      - name: P_PS_10509_001
+        type: UploadArtifact
+        configuration:
+          targetPath: "test-automation-generic-local/tool/"
+          integrations:
+            - name: s_artifactory
+          inputResources:
+            - name: PS_Sync_10509        
