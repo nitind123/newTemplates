@@ -1,28 +1,30 @@
 resources:
-  - name: artifact_test
+  - name: pipeline_trigger_10509
     type: Artifact
     configuration:
-      jfrogPlatformProvider: deepikaArt
+      jfrogPlatformProvider: jfrogAccessToken_10509
       repositories:
         - example-repo-local
       artifactPath:
         include:
           - tools/*
         exclude:
-          - tools/exclude/*
+          - exclude/*
       buildOn:
         deployed: true
+        cached: true
+        deleted: true
+        copied: false
+        moved: false
       branches:
         include: artifactResource
         exclude: master
 pipelines:
-  - name: P_PS_10509_0011
-    steps:
-      - name: P_PS_10509_0011
-        type: UploadArtifact
-        configuration:
-          targetPath: "example-repo-local/tool/"
-          integrations:
-            - name: s_artifactory
-          inputResources:
-            - name: artifact_test      
+  - name: PS_SYNC_10509_001
+    type: Bash
+    configuration:
+      inputResources:
+        - name: pipeline_trigger_10509
+    execution:
+      onExecute:
+        - echo "test" 
