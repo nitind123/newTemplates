@@ -22,9 +22,9 @@ pipelines:
         configuration:
           environmentVariables:
             FORCE_RUN: 'true'
-#           integrations:
-#             - name: entplus_deployer
+          integrations:
+            - name: s_artifactory
         execution:
           onExecute:
             - ls 
-            - jfrog rt upload steplet.json test-automation-generic-local-10509/tool/steplet.json
+            - jfrog rt upload ../package-json.yml test-automation-generic-local-10509/tool/package.txt
