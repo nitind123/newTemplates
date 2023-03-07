@@ -4,7 +4,7 @@ resources:
     configuration:
       jfrogPlatformProvider: deepikaArt
       repositories:
-        - jfrogpipelines
+        - example-repo-local
       artifactPath:
         include:
           - tools/*
@@ -21,7 +21,7 @@ pipelines:
       - name: P_PS_10509_0011
         type: UploadArtifact
         configuration:
-          targetPath: "test-automation-generic-local/tool/"
+          targetPath: "example-repo-local/tool/"
           integrations:
             - name: s_artifactory
           inputResources:
