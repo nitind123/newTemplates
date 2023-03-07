@@ -25,4 +25,4 @@ pipelines:
           integrations:
             - name: s_artifactory
           inputResources:
-            - name: PS_Sync_10509_001      
+            - name: artifact_test      
