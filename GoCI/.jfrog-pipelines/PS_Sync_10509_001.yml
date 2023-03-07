@@ -21,10 +21,12 @@ resources:
         exclude: master
 pipelines:
   - name: PS_SYNC_10509_001
-    type: Bash
-    configuration:
-      inputResources:
-        - name: pipeline_trigger_10509
-    execution:
-      onExecute:
-        - echo "test" 
+    steps:
+      - name: PS_001
+        type: Bash
+        configuration:
+          inputResources:
+            - name: pipeline_trigger_10509
+        execution:
+          onExecute:
+            - echo "test" 
