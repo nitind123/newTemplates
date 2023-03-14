@@ -2,7 +2,7 @@ resources:
   - name: MB_G_006_resource
     type: PropertyBag
     configuration:
-      creatingBranch: {{gitBranch}}
+      creatingBranch: {{ gitBranch }}
 
 pipelines:
   - name: pipeline_MB_G_006
