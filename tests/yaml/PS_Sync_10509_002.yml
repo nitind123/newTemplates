@@ -1,0 +1,16 @@
+valuesFilePath: ./values/helm/values.yml
+
+resources:
+  - name: PS_Sync_10509
+    type: Artifact
+    configuration:
+      sourcePlatformProvider: jfrogAccessToken_10509
+      repository: jfrogPipelines
+      artifactPath:
+        include: /
+      buildOn:
+        deployed: true
+        cached: true
+        deleted: true
+        copied: true
+        moved: true

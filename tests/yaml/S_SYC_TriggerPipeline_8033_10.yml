@@ -1,0 +1,15 @@
+pipelines:
+  - name: S_SYC_TriggerPipeline_8033_10
+    steps:
+      - name: S_SYC_TriggerPipeline_8033_10_01
+        type: TriggerPipeline
+        configuration:
+          pipelineName: foo
+          stepName: foo
+          projectKey: foo
+          branchName: foo
+        execution:
+          onStart:
+            - echo "starting"
+          onComplete:
+            - echo "done"

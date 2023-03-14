@@ -1,0 +1,11 @@
+pipelines:
+- name: pipelines_R_generic_6256_0001
+  steps:
+    - name: R_generic_6256_0001
+      type: Bash
+      configuration:
+        inputResources:
+          - name: R_generic_6256_0001_resource
+      execution:
+        onExecute:
+          - echo 'hello'

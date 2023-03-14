@@ -1,0 +1,19 @@
+resources:
+  - name: WH_DeleteBranch_8878_001
+    type: PropertyBag
+    configuration:
+      commitSha: 1
+      runID: 1
+
+pipelines:
+  - name: WH_DeleteBranch_8878_001
+    steps:
+      - name: WH_DeleteBranch_8878_001
+        type: Bash
+        configuration:
+          inputResources:
+            - name: WH_DeleteBranch_8878_001
+        execution:
+          onExecute:
+            - printenv
+            - echo "hi"

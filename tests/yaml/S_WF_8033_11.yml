@@ -1,0 +1,25 @@
+pipelines:
+  - name: S_WF_8033_11_pipe
+    steps:
+      - name: S_WF_8033_11_step
+        type: TriggerPipeline
+        configuration:
+          integrations:
+            - name: WF_TriggerPipeline_8033_JFrogPlatformToken
+          pipelineName: S_WF_8033_11_target
+          stepName: S_WF_8033_11_target_step
+        execution:
+          onFailure:
+            - echo "hello failure"
+
+  - name: S_WF_8033_11_target
+    steps:
+      - name: S_WF_8033_11_target_step
+        type: Bash
+        configuration:
+          timeoutSeconds: 10
+        execution:
+          onExecute:
+            - echo "Hello world"
+            - sleep 300
+            - exit 1

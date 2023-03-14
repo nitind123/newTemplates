@@ -1,0 +1,9 @@
+pipelines:
+
+  - name: NP_Generic_0006
+    steps:
+      - name: NP_Generic_0006
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing step..."

@@ -1,0 +1,13 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: P_Sync_6832_002_HelmChart
+    type: HelmChart
+    configuration:
+      sourceArtifactory: s_artifactory
+      repository: helm-remote
+      chart: chart
+      version: 1.0.0
+      pin:
+        version: 1.0.0-pin

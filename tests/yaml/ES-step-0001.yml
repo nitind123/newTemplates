@@ -1,0 +1,10 @@
+pipelines:
+  - name: pipeline_ES
+    steps:
+      - name: ES_step_0001_valid
+        type: shippable/sampleStep
+        syntaxVersion: 1.11.1
+
+      - name: ES_step_0001
+        type: shippable/sampleStep
+        syntaxVersion: 1.11.11

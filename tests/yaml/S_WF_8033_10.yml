@@ -1,0 +1,26 @@
+pipelines:
+  - name: S_WF_8033_10_pipe
+    steps:
+      - name: S_WF_8033_10_step
+        type: TriggerPipeline
+        configuration:
+          integrations:
+            - name: WF_TriggerPipeline_8033_JFrogPlatformToken
+          pipelineName: S_WF_8033_10_target
+          stepName: S_WF_8033_10_target_step
+        execution:
+          onFailure:
+            - echo "hello failure"
+
+  - name: S_WF_8033_10_target
+    steps:
+      - name: S_WF_8033_10_target_step
+        type: Bash
+        execution:
+          onExecute:
+            - echo "Hello world"
+            - sleep 5
+            - export payload="{\"statusCode\":\"4013\"}"
+            - curl -XPUT -H "Authorization:Bearer $builder_api_token" -H "Content-type:application/json" $pipelines_api_url/steps/$step_id -d "$payload"
+            - sleep 60
+            - exit 1

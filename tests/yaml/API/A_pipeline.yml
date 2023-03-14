@@ -1,0 +1,14 @@
+pipelines:
+  - name: A_pipeline_6495_1
+    steps:
+      - name: S_A_pipeline_6495
+        type: Bash
+#         configuration:
+#           integrations:
+#             - name: s_gitHub
+        execution:
+          onExecute:
+            - echo "hi"
+          onComplete:
+            - echo "state=pipeline2" > pipeline_state.txt
+            - add_pipeline_files pipeline_state.txt pipeline_state_file 

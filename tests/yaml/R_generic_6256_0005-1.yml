@@ -1,0 +1,5 @@
+resources:
+  - name: R_generic_6256_0005_resource
+    type: PropertyBag
+    configuration:
+      creatingBranch: {{gitBranch}}

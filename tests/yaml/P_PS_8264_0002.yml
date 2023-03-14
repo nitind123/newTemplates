@@ -1,0 +1,8 @@
+pipelines:
+  - name: P_PS_8264_0002
+    steps:
+      - name: P_PS_8264_0002_1
+        type: Mash
+        execution:
+          onExecute:
+            - echo "hello..."

@@ -1,0 +1,29 @@
+template: true
+valuesFilePath: ./cd-values.yml
+
+resources:
+  - name: ba_config_gitRepo_cd
+    type: GitRepo
+    configuration:
+      path: {{.jfrog-pipelines.sourceRepository}}
+      gitProvider: s_gitHub
+      branches:
+        include: ^master$
+
+
+pipelines:
+  {{- range $serviceKey, $serviceValue := .Values.services }}
+  {{- range $environment := $serviceValue }}
+  {{- range $_, $actionValue := $.Values.actions }}
+- name: {{ $serviceKey | replace "-" "_" }}_{{ $environment }}_{{ $actionValue }}
+  configuration:
+    chronological: true
+  steps:
+    - name: {{ $actionValue }}
+      type: Bash
+      execution:
+        onExecute:
+          - echo {{gitBranch}}
+  {{ end }}
+  {{ end }}
+  {{ end }}

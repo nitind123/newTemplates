@@ -1,0 +1,15 @@
+pipelines:
+  - name: pipelines_N_DyNodeAWS_8302_005
+    configuration:
+      jfrogCliVersion: 2
+    steps:
+      - name: N_DyNodeAWS_8302_005
+        type: PowerShell
+        configuration:
+          nodePool: AWS_dynamic_node_win19
+        execution:
+          onExecute:
+            - Write-Output ${jfrog_cli_path}
+            - jfrog --version
+            - if (((jfrog --version) -split ('\s+',0,'regexmatch'))[2] -lt "2.0.0") {throw "Wrong jfrog version"}
+            - if (((jf --version) -split ('\s+',0,'regexmatch'))[2] -lt "2.0.0") {throw "Wrong jf version"}

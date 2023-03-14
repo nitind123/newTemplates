@@ -1,0 +1,114 @@
+pipelines:
+
+  - name: S_WF_028
+    configuration:
+      nodePool: win_2019
+    steps:
+
+      - name: S_WF_028_001
+        type: PowerShell
+        execution:
+          onStart:
+            - add_run_variables step_1_var="step_1"
+          onExecute:
+            - Write-Output "step 1 is running"
+
+      - name: S_WF_028_002
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_028_001
+          affinityGroup: ag_foo
+          priority: 4
+        execution:
+          onStart:
+            - if (-not (Test-Path -Path $shared_workspace/step_4 -PathType Leaf)) { throw "Missing file from step_4" }
+            - Set-Content -Path ${shared_workspace}/step_2 -Value step_2
+          onExecute:
+            - Write-Output "step 2 is running"
+
+      - name: S_WF_028_003
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_028_001
+          affinityGroup: ag_foo
+          priority: 1
+        execution:
+          onStart:
+            - if ("$step_1_var" -ne "step_1") { throw "variable does not match expected value" }
+            - if (Test-Path -Path $shared_workspace/step_2 -PathType Leaf) { throw "step_2 ran first" }
+            - if (Test-Path -Path $shared_workspace/step_3 -PathType Leaf) { throw "step_3 ran first" }
+            - if (Test-Path -Path $shared_workspace/step_4 -PathType Leaf) { throw "step_4 ran first" }
+            - if (Test-Path -Path $shared_workspace/step_5 -PathType Leaf) { throw "step_5 ran first" }
+            - if (Test-Path -Path $shared_workspace/step_6 -PathType Leaf) { throw "step_6 ran first" }
+            - Set-Content -Path ${shared_workspace}/step_3 -Value step_3
+          onExecute:
+            - Write-Output "step 3 is running"
+
+      - name: S_WF_028_004
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_028_001
+          affinityGroup: ag_foo
+          priority: 3
+        execution:
+          onStart:
+            - if (-not (Test-Path -Path $shared_workspace/step_3 -PathType Leaf)) { throw "Missing file from step_3" }
+            - Set-Content -Path ${shared_workspace}/step_4 -Value step_4
+          onExecute:
+            - Write-Output "step 4 is running"
+
+      - name: S_WF_028_005
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_028_002
+            - name: S_WF_028_003
+            - name: S_WF_028_004
+          affinityGroup: ag_foo
+          priority: 4
+        execution:
+          onStart:
+            - if (-not (Test-Path -Path $shared_workspace/step_6 -PathType Leaf)) { throw "Missing file from step_6" }
+            - Set-Content -Path ${shared_workspace}/step_5 -Value step_5
+          onExecute:
+            - Write-Output "step 5 is running"
+
+      - name: S_WF_028_006
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_028_002
+            - name: S_WF_028_003
+            - name: S_WF_028_004
+          affinityGroup: ag_foo
+          priority: 2
+        execution:
+          onStart:
+            - if (-not (Test-Path -Path $shared_workspace/step_2 -PathType Leaf)) { throw "Missing file from step_2" }
+            - if (-not (Test-Path -Path $shared_workspace/step_3 -PathType Leaf)) { throw "Missing file from step_3" }
+            - if (-not (Test-Path -Path $shared_workspace/step_4 -PathType Leaf)) { throw "Missing file from step_4" }
+            - Set-Content -Path ${shared_workspace}/step_6 -Value step_6
+          onExecute:
+            - Write-Output "step 6 is running"
+
+      - name: S_WF_028_007
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_028_005
+            - name: S_WF_028_006
+          affinityGroup: ag_foo
+          priority: 2
+        execution:
+          onStart:
+            - if ("$step_1_var" -ne "step_1") { throw "variable does not match expected value" }
+            - if (-not (Test-Path -Path $shared_workspace/step_2 -PathType Leaf)) { throw "Missing file from step_2" }
+            - if (-not (Test-Path -Path $shared_workspace/step_3 -PathType Leaf)) { throw "Missing file from step_3" }
+            - if (-not (Test-Path -Path $shared_workspace/step_4 -PathType Leaf)) { throw "Missing file from step_4" }
+            - if (-not (Test-Path -Path $shared_workspace/step_5 -PathType Leaf)) { throw "Missing file from step_5" }
+            - if (-not (Test-Path -Path $shared_workspace/step_6 -PathType Leaf)) { throw "Missing file from step_6" }
+          onExecute:
+            - Write-Output "step 7 is running"

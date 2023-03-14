@@ -1,0 +1,26 @@
+template: true
+valuesFilePath: ./values/syncTemplate/values.yml
+resources:
+  - name: Git_template_10097_006
+    type: GitRepo
+    configuration:
+      path: {{.jfrog-pipelines.sourceRepository}}
+      gitProvider: s_gitHub
+      branches:
+        include: ^{{gitBranch}}$
+
+pipelines:
+  - name: PS_Sync_template_10097_006
+    steps:
+      - name: PS_Sync_template_10097_006
+        type: Bash
+        configuration:
+          runtime:
+            type: host
+          {{ if contains "{{gitBranch}}" "main1" }}
+          inputResources:
+              - name: Git_template_10097_006
+          {{ end }}
+        execution:
+          onExecute:
+            - echo hi

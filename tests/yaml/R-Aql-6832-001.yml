@@ -1,0 +1,10 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: R_Aql_6832_001
+    type: Aql
+    configuration:
+      sourceArtifactory: s_artifactory
+      query: items.find({"@build.name":{"$eq":"artifactory"}})
+      pinVersion: "1"

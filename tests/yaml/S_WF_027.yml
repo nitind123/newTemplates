@@ -1,0 +1,50 @@
+pipelines:
+
+  - name: S_WF_027
+    configuration:
+      nodePool: win_2019
+    steps:
+
+      - name: S_WF_027_001
+        type: PowerShell
+        execution:
+          onExecute:
+            - Write-Output "Step 1 is running"
+
+      - name: S_WF_027_002
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_027_001
+          affinityGroup: some_ag
+        execution:
+          onStart:
+            - add_run_variables step_2_var="foo"
+          onExecute:
+            - Write-Output "Step 2 is running"
+
+      - name: S_WF_027_003
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_027_001
+          affinityGroup: some_ag
+        execution:
+          onStart:
+            - add_run_variables step_3_var="bar"
+          onExecute:
+            - Write-Output "Step 3 is running"
+
+      - name: S_WF_027_004
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_027_002
+            - name: S_WF_027_003
+          affinityGroup: some_ag
+        execution:
+          onExecute:
+            - Write-Output "step_2_var - ${step_2_var}"
+            - Write-Output "step_3_var - ${step_3_var}"
+            - if ("$step_2_var" -ne "foo") { throw "variable does not match expected value" }
+            - if ("$step_3_var" -ne "bar") { throw "variable does not match expected value" }

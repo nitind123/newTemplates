@@ -1,0 +1,16 @@
+resources:
+  - name: P_PS_6916_0004_imageName
+    type: Image
+    configuration:
+      registry: P_PS_6916_0004_docker_integration
+      sourceRepository: docker-local
+      imageName: P_PS_6916_0004_imageName
+      imageTag: latest
+pipelines:
+  - name: P_PS_6916_0004
+    steps:
+      - name: P_PS_6916_0004
+        type: Bash
+        execution:
+          onExecute:
+            - printenv

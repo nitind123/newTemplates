@@ -1,0 +1,56 @@
+pipelines:
+  - name: S_Bash_CancelRun_PIPE_5929
+    steps:
+      - name: S_Bash_CancelRun_PIPE_5929_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "S_Bash_CancelRun_PIPE_5929_1"
+      - name: S_Bash_CancelRun_PIPE_5929_2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_Bash_CancelRun_PIPE_5929_1
+        execution:
+          onExecute:
+            - echo "hello world"
+      - name: S_Bash_CancelRun_PIPE_5929_3
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_Bash_CancelRun_PIPE_5929_1
+        execution:
+          onExecute:
+            - echo "hello world"
+      - name: S_Bash_CancelRun_PIPE_5929_4
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_Bash_CancelRun_PIPE_5929_1
+        execution:
+          onExecute:
+            - echo "hello world"
+      - name: S_Bash_CancelRun_PIPE_5929_5
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_Bash_CancelRun_PIPE_5929_1
+        execution:
+          onExecute:
+            - echo "hello world"
+      - name: S_Bash_CancelRun_PIPE_5929_6
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_Bash_CancelRun_PIPE_5929_1
+        execution:
+          onExecute:
+            - echo "hello world"
+      - name: S_Bash_CancelRun_PIPE_5929_7
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_Bash_CancelRun_PIPE_5929_1
+        execution:
+          onExecute:
+            - echo "hello world"

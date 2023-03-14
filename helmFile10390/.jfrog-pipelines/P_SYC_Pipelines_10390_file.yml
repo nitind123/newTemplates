@@ -1,0 +1,19 @@
+pipelines:
+  - name: P_files
+    steps:
+      - name: S_files
+        type: Bash
+        configuration:
+          environmentVariables:
+            env1: gitBranch
+            env2: sourceRepository
+        execution:
+          onExecute:
+            - echo {{ .Files.Get "config.toml" }}
+            - echo {{ .Files.Get "config.txt" }}
+            - echo {{ get (.Files.Get "config.json" | fromJson) "message" }}
+            - echo {{ get (.Files.Get "config.yml" | fromYaml) "message" }}
+            - echo {{ get (.Files.Get ".jfrog-pipelines/config.yml" | fromYaml) "message" }}
+            - echo {{ get (.Files.Get "../config.yml" | fromYaml) "message" }}
+            - echo {{ get (.Files.Get "config1.yml" | fromYaml) "message" }}
+            - echo {{ tpl (.Files.Get "config.yml") . | b64enc }}

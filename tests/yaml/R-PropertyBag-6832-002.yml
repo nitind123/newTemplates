@@ -1,0 +1,10 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: P_Sync_6832_002_Property_Bag
+    type: PropertyBag
+    configuration:
+      test: value
+      pin:
+        test: pinned

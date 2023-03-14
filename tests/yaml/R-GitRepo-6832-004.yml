@@ -1,0 +1,12 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: P_Sync_6832_004_GitRepo
+    type: GitRepo
+    configuration:
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+      branches:
+        include: master
+      gitProvider: s_gitHub
+#ADD_PIN_CONFIG_HERE

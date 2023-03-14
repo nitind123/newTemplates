@@ -1,0 +1,10 @@
+pipelines:
+  - name: S_SYC_TriggerPipeline_8033_01
+    steps:
+      - name: S_SYC_TriggerPipeline_8033_01_01
+        type: TriggerPipeline
+        execution:
+          onStart:
+            - echo "starting"
+          onComplete:
+            - echo "done"

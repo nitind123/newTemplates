@@ -1,0 +1,42 @@
+resources:
+  - name: A_Search_Pipelines_8804_0001_property_bag
+    type: PropertyBag
+    configuration:
+      value: notSet
+
+pipelines:
+  - name: A_Search_Pipelines_8804_0001_1
+    steps:
+      - name: A_Search_Pipelines_8804_0001_1_1
+        type: Bash
+        configuration:
+          outputResources:
+            - name: A_Search_Pipelines_8804_0001_property_bag
+        execution:
+          onExecute:
+            - write_output A_Search_Pipelines_8804_0001_property_bag value=${run_id}
+      - name: A_Search_Pipelines_8804_0001_1_2
+        type: Bash
+        configuration:
+          inputResources:
+            - name: A_Search_Pipelines_8804_0001_property_bag
+        execution:
+          onExecute:
+            - echo ${res_A_Search_Pipelines_8804_0001_property_bag_value}
+  - name: A_Search_Pipelines_8804_0001_2
+    steps:
+      - name: A_Search_Pipelines_8804_0001_2_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: A_Search_Pipelines_8804_0001_property_bag
+        execution:
+          onExecute:
+            - echo ${res_A_Search_Pipelines_8804_0001_property_bag_value}
+  - name: A_Search_Pipelines_8804_0001_3
+    steps:
+      - name: A_Search_Pipelines_8804_0001_3_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo ${run_id}

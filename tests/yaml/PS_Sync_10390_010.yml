@@ -1,0 +1,13 @@
+
+pipelines:
+  - name: P_files
+    steps:
+      - name: S_files
+        type: Bash
+        configuration:
+          environmentVariables:
+            env1: gitBranch
+            env2: sourceRepository
+        execution:
+          onExecute:
+            - echo {{ get (.Files.Get "config.yml" | fromYaml) "message" }}

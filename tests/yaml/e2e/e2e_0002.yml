@@ -1,0 +1,150 @@
+resources:
+  - name: e2e_0002_gitRepo
+    type: GitRepo
+    configuration:
+      path: jfbetapipeorg/Org_test_Automation
+      gitProvider: e2e_0002_github
+      branches: 
+        include: {{gitBranch}}
+
+  - name: e2e_0002_releaseBundle
+    type: ReleaseBundle
+    configuration:
+      sourceDistribution: e2e_0002_distribution
+      name: e2e_0002_${run_number}
+      version: ${run_number}
+
+  - name: e2e_0002_signedReleaseBundle
+    type: ReleaseBundle
+    configuration:
+      sourceDistribution: e2e_0002_distribution
+      name: e2e_0002_${run_number}
+      version: ${run_number}
+
+  - name: e2e_0002_promotedInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: e2e_0002_artifactory
+
+  - name: e2e_0002_buildInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: e2e_0002_artifactory
+
+  - name: e2e_0002_outPut_image      
+    type: Image
+    configuration:
+      registry: e2e_0002_artifactory
+      sourceRepository: e2e_0002_docker_local 
+      imageName: ${artifactory_registry_url}/docker-local/node
+      imageTag:  ${run_number}# required if registry is Artifactory
+
+  - name: e2e_0002_distributionRule
+    type: DistributionRule
+    configuration:
+      sourceDistribution: e2e_0002_distribution
+      serviceName: "*"
+      siteName: "*"
+      cityName: "*"
+      countryCodes:
+        - "*"
+
+
+pipelines:
+  - name: e2e_0002
+
+    steps:
+      - name: e2e_0002_dockerBuild
+        type: DockerBuild
+        configuration:
+          affinityGroup: "e2e_0002"
+          dockerFileLocation: .
+          dockerFileName: Dockerfile
+          dockerImageName:  ${artifactory_registry_url}/${docker_repo_name}/node
+          dockerImageTag: ${run_number}
+          integrations:
+            - name: e2e_0002_artifactory
+          inputResources:
+            - name: e2e_0002_gitRepo
+        execution:
+          onStart:
+            - generic_repo_name="e2e-0001-002-generic-local"
+            - docker_repo_name="e2e-0001-002-docker-local"
+            - jfrog rt repo-delete ${generic_repo_name} || true
+            - jfrog rt repo-delete ${docker_repo_name} || true
+            - request='{"key":"e2e-0001-002-generic-local", "rclass":"local", "packageType":"generic", "description":"This repo is a test repo used by e2e pipelines", "repoLayoutRef":"simple-default"}'
+            - echo $request > request.json
+            - jfrog rt repo-create request.json
+            - request1='{"key":"e2e-0001-002-docker-local", "rclass":"local", "packageType":"docker", "description":"This repo is a test repo used by e2e pipelines", "repoLayoutRef":"simple-default"}'
+            - echo $request1 > request.json
+            - jfrog rt repo-create request.json
+            - artifactory_registry_url=$(echo "$int_e2e_0002_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
+            - echo $artifactory_registry_url
+            - cd $res_e2e_0002_gitRepo_resourcePath
+            - echo "FROM hello-world" > Dockerfile
+
+      - name: e2e_0002_dockerPush
+        type: DockerPush
+        configuration:
+          affinityGroup: "e2e_0002"
+          autoPublishBuildInfo: true 
+          forceXrayScan: true
+          failOnScan: false
+          targetRepository: ${docker_repo_name} #required
+          integrations:
+            - name: e2e_0002_artifactory
+          inputSteps:
+            - name: e2e_0002_dockerBuild
+          outputResources:
+            - name: e2e_0002_buildInfo
+            - name: e2e_0002_outPut_image
+        execution:
+          onStart:
+            - generic_repo_name="e2e-0001-002-generic-local"
+            - docker_repo_name="e2e-0001-002-docker-local"
+
+      - name: e2e_0002_promoteBuild
+        type: PromoteBuild
+        configuration:
+          targetRepository: ${generic_repo_name}
+          integrations:
+            - name: e2e_0002_artifactory
+          inputResources:
+            - name: e2e_0002_buildInfo
+          inputSteps:
+            - name: e2e_0002_dockerPush
+          outputResources:
+            - name: e2e_0002_promotedInfo
+        execution:
+          onStart:
+            - generic_repo_name="e2e-0001-002-generic-local"
+            - docker_repo_name="e2e-0001-002-docker-local"
+#skipping until upload of gpg key happens on deploy step
+      # - name: e2e_0002_createReleaseBundle
+      #   type: CreateReleaseBundle
+      #   configuration:
+      #     #inherits from bash
+      #     releaseBundleName: e2e_0002_${run_number}
+      #     releaseBundleVersion: ${run_number}
+      #     inputResources:
+      #       - name: e2e_0002_promotedInfo
+      #     outputResources:
+      #       - name: e2e_0002_releaseBundle
+      #     dryRun: false
+
+
+      # - name: e2e_0002_signReleaseBundle
+      #   type: SignReleaseBundle
+      #   configuration:
+      #     inputResources:
+      #       - name: e2e_0002_releaseBundle
+      #     outputResources:
+      #       - name: e2e_0002_signedReleaseBundle
+      # skipping this until self distribution works
+      # - name: e2e_0002_distributeReleaseBundle
+      #   type: DistributeReleaseBundle
+      #   configuration:
+      #     dryRun: false                
+      #     inputResources:
+      #       - name: e2e_0002_signedReleaseBundle    
+      #       - name: e2e_0002_distributionRule

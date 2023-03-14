@@ -1,0 +1,8 @@
+pipelines:
+  - name: A_Search_Pipelines_6594_0032
+    steps:
+      - name: A_Search_Pipelines_6594_0032_step_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "step was triggerred"

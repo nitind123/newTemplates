@@ -1,0 +1,13 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: P_Sync_6832_001_Image
+    type: Image
+    configuration:
+      registry: s_artifactory
+      sourceRepository: docker-local
+      imageName: image
+      imageTag: 1.0.0
+      pin:
+       versionId: "1"

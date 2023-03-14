@@ -1,0 +1,9 @@
+resources:
+  - name: r_BuildInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: s_artifactory
+  - name: r_BuildInfo
+    type: PropertyBag
+    configuration:
+      sourceArtifactory: s_artifactory

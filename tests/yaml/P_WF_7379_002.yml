@@ -1,0 +1,352 @@
+resources:
+  - name: P_WF_7379_002_1
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_2
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_3
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_4
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_5
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_6
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_7
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_8
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_9
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_10
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_11
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_12
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_13
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_14
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_15
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_16
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_17
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_18
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_19
+    type: PropertyBag
+    configuration:
+      property: value
+  - name: P_WF_7379_002_20
+    type: PropertyBag
+    configuration:
+      property: value
+
+pipelines:
+  - name: pipeline_P_WF_7379_002_trigger
+    steps:
+      - name: P_WF_7379_002_trigger
+        type: Bash
+        configuration:
+          outputResources:
+            - name: P_WF_7379_002_1
+            - name: P_WF_7379_002_2
+            - name: P_WF_7379_002_3
+            - name: P_WF_7379_002_4
+            - name: P_WF_7379_002_5
+            - name: P_WF_7379_002_6
+            - name: P_WF_7379_002_7
+            - name: P_WF_7379_002_8
+            - name: P_WF_7379_002_9
+            - name: P_WF_7379_002_10
+            - name: P_WF_7379_002_11
+            - name: P_WF_7379_002_12
+            - name: P_WF_7379_002_13
+            - name: P_WF_7379_002_14
+            - name: P_WF_7379_002_15
+            - name: P_WF_7379_002_16
+            - name: P_WF_7379_002_17
+            - name: P_WF_7379_002_18
+            - name: P_WF_7379_002_19
+            - name: P_WF_7379_002_20
+        execution:
+          onExecute:
+            - echo "Testing..."
+            - write_output P_WF_7379_002_1 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_2 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_3 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_4 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_5 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_6 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_7 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_8 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_9 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_10 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_11 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_12 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_13 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_14 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_15 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_16 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_17 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_18 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_19 testCaseIdentifier="${testCaseIdentifier}"
+            - write_output P_WF_7379_002_20 testCaseIdentifier="${testCaseIdentifier}"
+
+  - name: pipeline_P_WF_7379_002_1
+    steps:
+      - name: P_WF_7379_002_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_1
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_2
+    steps:
+      - name: P_WF_7379_002_2
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_2
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_3
+    steps:
+      - name: P_WF_7379_002_3
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_3
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_4
+    steps:
+      - name: P_WF_7379_002_4
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_4
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_5
+    steps:
+      - name: P_WF_7379_002_5
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_5
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_6
+    steps:
+      - name: P_WF_7379_002_6
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_6
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_7
+    steps:
+      - name: P_WF_7379_002_7
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_7
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_8
+    steps:
+      - name: P_WF_7379_002_8
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_8
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_9
+    steps:
+      - name: P_WF_7379_002_9
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_9
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_10
+    steps:
+      - name: P_WF_7379_002_10
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_10
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_11
+    steps:
+      - name: P_WF_7379_002_11
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_11
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_12
+    steps:
+      - name: P_WF_7379_002_12
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_12
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_13
+    steps:
+      - name: P_WF_7379_002_13
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_13
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_14
+    steps:
+      - name: P_WF_7379_002_14
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_14
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_15
+    steps:
+      - name: P_WF_7379_002_15
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_15
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_16
+    steps:
+      - name: P_WF_7379_002_16
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_16
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_17
+    steps:
+      - name: P_WF_7379_002_17
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_17
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_18
+    steps:
+      - name: P_WF_7379_002_18
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_18
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_19
+    steps:
+      - name: P_WF_7379_002_19
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_19
+        execution:
+          onExecute:
+            - echo "Testing..."
+
+  - name: pipeline_P_WF_7379_002_20
+    steps:
+      - name: P_WF_7379_002_20
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_002_20
+        execution:
+          onExecute:
+            - echo "Testing..."

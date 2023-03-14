@@ -1,0 +1,25 @@
+valuesFilePath: ./values/helm/values.yml
+
+resources:
+  - name: PS_Sync_10390
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.repoName }}
+      branches:
+        include: {{ .Values.repoBranch }}
+
+pipelines:
+  - name: PS_Sync_10390
+    steps:
+      - name: PS_Sync_10390
+        type: Bash
+        configuration:
+          environmentVariables:
+            env1: gitBranch
+        execution:
+          onExecute:
+            - echo {{ .Values.repoBranch | quote }}
+            - echo {{ printf "%s branch of %d repo." .Values.repoBranch .Values.repoName }}
+            - echo {{ initials "branch master" }}
+            - echo {{ wrapWith 5 "\t" "Hello World" }}

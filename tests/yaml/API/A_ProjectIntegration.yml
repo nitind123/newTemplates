@@ -1,0 +1,8 @@
+pipelines:
+  - name: pipeline_A_ProjectIntegration
+    steps:
+      - name: A_ProjectIntegration
+        type: Bash
+        execution:
+          onExecute:
+            - echo "hi"

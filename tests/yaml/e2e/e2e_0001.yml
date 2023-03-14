@@ -1,0 +1,8 @@
+pipelines:
+  - name: e2e_0001
+    steps:
+      - name: e2e_0001_hello
+        type: Bash
+        execution:
+          onExecute:
+            - echo "Hello, World!"

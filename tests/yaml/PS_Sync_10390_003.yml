@@ -1,0 +1,19 @@
+valuesFilePath: ./values/helm/values.yml
+
+pipelines:
+  - name: P_data
+    steps:
+      - name: S_data
+        type: Bash
+        configuration:
+          environmentVariables:
+            env1: gitBranch
+            env2: sourceRepository
+        execution:
+          onExecute:
+            {{ $myDict := dict "name1" "value1" "name2" "value2" "name3" "value 3" }}
+            - echo {{ get $myDict "name1" }}
+            - echo {{ empty .Values.arg }}
+            - echo {{ coalesce 0 1 2 }}
+            - echo {{ true | ternary .Values.arg "master" }}
+            - echo {{ pick $myDict "name1" "name2" }}

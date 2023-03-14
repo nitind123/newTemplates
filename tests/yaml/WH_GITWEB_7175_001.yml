@@ -1,0 +1,27 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+ - name: WH_GITWEB_7175_001_RES
+   type: GitRepo
+   configuration:
+     gitProvider: s_gitHub
+     path: {{ .Values.GitHub.Org_test_Automation.path }}
+     buildOn:
+      commit: false
+      pullRequestCreate: true
+      pullRequestClose: true
+     branches:
+       include: ^{{gitBranch}}$
+
+pipelines:
+ - name: WH_GITWEB_7175_001
+   steps:
+     - name: WH_GITWEB_7175_001_STEP
+       type: Bash
+       configuration:
+         inputResources:
+           - name: WH_GITWEB_7175_001_RES
+       execution:
+         onExecute:
+           - echo "Test PR create and close"

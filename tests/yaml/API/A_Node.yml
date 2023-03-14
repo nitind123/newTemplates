@@ -1,0 +1,8 @@
+pipelines:
+  - name: pipeline_A_Node
+    steps:
+      - name: A_Node
+        type: Bash
+        execution:
+          onExecute:
+            - echo "hi"

@@ -1,0 +1,16 @@
+pipelines:
+  - name: pipeline_ES_5690_0018
+    steps:
+      - name: step_ES_5690_0018
+        type: test/ApprovalGates
+        configuration:
+          requiresApproval:
+            timeoutSeconds: 86400
+            approvers:
+              - admin
+            notifications:
+              - integrationName: ES_5690_0018_SMTP
+                recipients:
+                  - pipelines.release@gmail.com
+                  - email@example.com
+              - integrationName: ES_5690_0018_SLACK

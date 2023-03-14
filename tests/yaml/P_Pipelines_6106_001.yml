@@ -1,0 +1,46 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+pipelines:
+  - name: P_Pipelines_6106_001
+    configuration:
+      jfrogCliVersion: 2
+      runtime:
+        type: image
+        image:
+          custom:
+            registry: s_artifactory
+            sourceRepository: test-automation-docker-local
+            name: ${artifactoryRegistry_url}/test-automation-docker-local/p_pipelines_6106_001
+            tag: $run_id
+            autoPull: true
+    steps:
+      - name: push_image_artifactory
+        type: Bash
+        configuration:
+          runtime:
+            type: image
+            image:
+              auto:
+                language: node
+                versions:
+                  - 14
+          integrations:
+            - name: s_artifactory
+        execution:
+          onExecute:
+            - echo $artifactoryRegistry_url
+            - echo "FROM ${step_image_name}:${step_image_tag}" > Dockerfile
+            - docker build -t $artifactoryRegistry_url/test-automation-docker-local/p_pipelines_6106_001:$run_id .
+            - jfrog docker push $artifactoryRegistry_url/test-automation-docker-local/p_pipelines_6106_001:$run_id
+
+      - name: P_Pipelines_6106_001
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: push_image_artifactory
+        execution:
+          onExecute:
+            - echo $artifactoryRegistry_url
+            - echo $step_image_name
+            - if ! [[ "$step_image_name" =~ "test-automation-docker-local/p_pipelines_6106_001" ]]; then return 1; fi

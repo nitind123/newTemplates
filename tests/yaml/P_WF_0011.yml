@@ -1,0 +1,12 @@
+pipelines:
+
+  - name: P_WF_0011
+    configuration:
+      dependencyMode:
+        waitOnChildComplete: false
+    steps:
+      - name: P_WF_0011
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing step..."

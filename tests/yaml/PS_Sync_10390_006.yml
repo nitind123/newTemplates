@@ -1,0 +1,14 @@
+valuesFilePath: ./values/helm/values.yml
+
+pipelines:
+  - name: P_data
+    steps:
+      - name: S_data
+        type: Bash
+        execution:
+          onExecute:
+            - echo {{ concat (append  ( list 1 2 ) 3)  ( list 4 5 ) }}
+            - echo {{ until 5 }}
+            - echo {{ base "foo/bar/baz" }}
+            - echo {{ max 1 2 5 }}
+            - echo {{ semver "1.4.3" | (semver "1.2.3").Compare }}

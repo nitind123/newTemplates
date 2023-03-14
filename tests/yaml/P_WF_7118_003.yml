@@ -1,0 +1,5 @@
+resources:
+  - name: P_WF_7118_003_resource
+    type: PropertyBag
+    configuration:
+      test: test

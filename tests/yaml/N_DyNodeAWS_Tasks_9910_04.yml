@@ -1,0 +1,48 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: N_DyNodeAWS_Tasks_9910_04_repo
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+      branches:
+        include: {{ gitBranch }}
+
+pipelines:
+  - name: N_DyNodeAWS_Tasks_9910_04_pipeline
+    configuration:
+      jfrogCliVersion: 2
+    steps:
+      - name: N_DyNodeAWS_Tasks_9910_04_step
+        type: Bash
+        configuration:
+          nodePool: test_automation_kubernetesNodePool_u18
+          environmentVariables:
+            taskVersion: "v2.4.${run_id}"
+          integrations:
+            - name: s_artifactory
+          inputResources:
+            - name: N_DyNodeAWS_Tasks_9910_04_repo
+              trigger: false
+        execution:
+          onStart:
+            - mkdir -p "$step_tmp_dir/task"
+            - cp -r $res_N_DyNodeAWS_Tasks_9910_04_repo_resourcePath/tests/tasks/hello/* $step_tmp_dir/task/
+            - cd $step_tmp_dir/
+            - jf rt u "task/*" "test-automation-tasks-local/jfrog/hello/@v/${taskVersion}.zip" --archive zip
+          onExecute:
+            - task: jfrog/hello@${taskVersion}
+              repository: test-automation-tasks-local
+              id: N_DyNodeAWS_Tasks_9910_04_task
+              input:
+                target: "execute"
+          onComplete:
+            - echo "on Complete"
+            - jf rt del "test-automation-tasks-local/jfrog/hello/@v/${taskVersion}.zip" || true
+          onSuccess:
+            - echo "on Success"
+          onFailure:
+            - echo "on Failure"
+

@@ -1,0 +1,14 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: P_Sync_6832_002_ReleaseBundle
+    type: ReleaseBundle
+    configuration:
+      sourceDistribution: s_distribution
+      name: release
+      version: v1.0
+      isSigned: false
+      pin:
+        name: release-pin
+        version: v1.0-pin

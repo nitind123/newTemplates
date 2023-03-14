@@ -1,0 +1,259 @@
+template: true 
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: P_Pipelines_0076_Repo1
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo2
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo3
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo4
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo5
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo6
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo7
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo8
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo9
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo10
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo11
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo12
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo13
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo14
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo15
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo16
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo17
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo18
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo19
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo20
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo21
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo22
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo23
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo24
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo25
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo26
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo27
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo28
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo29
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo30
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo31
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo32
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo33
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo34
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo35
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo36
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo37
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo38
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo39
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo40
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo41
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo42
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo43
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo44
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo45
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo46
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo47
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo48
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo49
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo50
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}
+  - name: P_Pipelines_0076_Repo51
+    type: GitRepo
+    configuration:
+        gitProvider: s_gitHub
+        path: {{ .Values.GitHub.Org_test_Automation.path }}

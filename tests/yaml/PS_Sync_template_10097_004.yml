@@ -1,0 +1,33 @@
+resources:
+  - name: Git_template_10097_004
+    type: GITRepo
+    configuration:
+      path: {{.jfrog-pipelines.sourceRepository}}
+      gitProvider: s_gitHub
+      branches:
+        include: master
+
+  - name: Pro_template_10097_004
+    type: PropertyBag
+    configuration:
+      foo: bar
+      foo1: bar1
+      foo2: bar2
+pipelines:
+  - name: PS_Sync_template_10097_004
+    configuration:
+      integrations:
+        - name: s_gitHub
+    steps:
+      - name: PS_Sync_template_10097_004
+        type: Bash
+        configuration:
+          inputResources:
+            - name: Git_template_10097_004
+          outputResources:
+            - name: Pro_template_10097_004
+          integrations:
+            - name: s_gitHub
+        execution:
+          onExecute:
+            - write_output propertyBag "foo=$run_number"

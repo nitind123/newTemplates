@@ -1,0 +1,11 @@
+pipelines:
+
+  - name: P_WF_0003
+    configuration:
+      chronological: "false"
+    steps:
+      - name: P_WF_0003
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing step..."

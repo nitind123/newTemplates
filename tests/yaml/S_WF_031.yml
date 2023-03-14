@@ -1,0 +1,31 @@
+pipelines:
+
+  - name: S_WF_031
+    configuration:
+      nodePool: win_2019
+    steps:
+  
+      - name: S_WF_031_001
+        type: PowerShell
+        execution:
+          onExecute:
+            - Write-Output "Step 1 is running"
+  
+      - name: S_WF_031_002
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_031_001
+        execution:
+          onExecute:
+            - Write-Output "Step 2 is running"
+            - throw "intentionally failing the step"
+  
+      - name: S_WF_031_003
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_031_002
+        execution:
+          onExecute:
+            - Write-Output "I should not be running"

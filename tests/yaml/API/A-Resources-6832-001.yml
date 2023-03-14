@@ -1,0 +1,10 @@
+template: true
+valuesFilePath: ../../values/gitRepoValues.yml
+
+resources:
+  - name: A_Resources_6832_001_Resource
+    type: PropertyBag
+    configuration:
+      test: value
+      pin:
+        test: pinnedValue

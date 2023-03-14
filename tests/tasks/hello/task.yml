@@ -1,0 +1,21 @@
+name: hello
+description: say hello to somebody
+source: github.com/jfbetapipeorg/Org_test_Automation_bash
+input:
+  - name: target
+    description: to whom or what you'd like to say hello
+output:
+  - name: message
+    description: message written to output for external use
+execution:
+  - echo "main"
+  - echo "Hello $IN_target"
+  - . bin/$JFROG_SCRIPT_EXTENSION/verifyEnvs.$JFROG_SCRIPT_EXTENSION
+  - . bin/$JFROG_SCRIPT_EXTENSION/hello.$JFROG_SCRIPT_EXTENSION
+hooks:
+  onStepComplete:
+    - echo "on Step Complete"
+  onStepSuccess:
+    - echo "on Step Success"
+  onStepFailure:
+    - echo "on Step Failure"

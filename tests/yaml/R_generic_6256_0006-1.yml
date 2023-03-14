@@ -1,0 +1,5 @@
+resources:
+  - name: r_BuildInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: s_artifactory

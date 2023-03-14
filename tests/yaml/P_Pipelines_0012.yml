@@ -1,0 +1,16 @@
+pipelines:
+  - name: P_Pipelines_0012
+    configuration: 
+      runtime:       
+        type: image
+        image:
+          custom:
+            name: shippabledocker/helloworldtext
+            tag: work
+            registry: s_dockerRegistry
+    steps:
+      - name: P_Pipelines_0012
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing step..."

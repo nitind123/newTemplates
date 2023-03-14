@@ -1,0 +1,10 @@
+pipelines:
+  - name: pipelines_NP_DyGCP_0041
+    steps:
+      - name: NP_DyGCP_0041
+        type: Bash
+        configuration:
+          nodePool: test_automation_np_required_fields
+        execution:
+          onExecute:
+            - echo "hi"

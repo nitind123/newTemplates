@@ -1,0 +1,9 @@
+resources:
+  - name: image_art
+    type: Image
+    configuration:
+       registry: s_artifa
+       sourceRepository: docker-local  # required if Docker registry is Artifactory
+       imageName: ubuntu
+       imageTag: latest
+       autoPull: true

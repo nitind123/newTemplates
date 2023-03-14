@@ -1,0 +1,6 @@
+# used for testing 2 repos, a duplicate file is org_test_automation_MultiBranch
+resources:
+  - name: MB_G_6256_0004_resource
+    type: PropertyBag
+    configuration:
+      creatingBranch: {{gitBranch}}

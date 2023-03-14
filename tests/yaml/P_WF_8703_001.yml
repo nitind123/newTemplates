@@ -1,0 +1,32 @@
+resources:
+  - name: P_WF_8703_001_PB_1
+    type: PropertyBag
+    configuration:
+      key: value1
+  - name: P_WF_8703_001_PB_2
+    type: PropertyBag
+    configuration:
+      key: value2
+
+pipelines:
+  - name: pipeline_P_WF_8703_001
+    steps:
+      - name: P_WF_8703_001_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_8703_001_PB_1
+        execution:
+          onExecute:
+            - if [ "$res_P_WF_8703_001_PB_1_key" != "value1" ]; then exit 1; fi
+
+      - name: P_WF_8703_001_2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: P_WF_8703_001_1
+          inputResources:
+            - name: P_WF_8703_001_PB_2
+        execution:
+          onExecute:
+            - if [ "$res_P_WF_8703_001_PB_2_key" != "value2" ]; then exit 1; fi

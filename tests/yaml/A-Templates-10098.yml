@@ -1,0 +1,21 @@
+resources:
+  - name: PS_variable_resolved_10098_File
+    type: FileSpec
+    configuration:
+      sourceArtifactory: {{.jfrog-pipelines.sourceRepository}}
+      pattern: {{ rootBucket }}/tools/pipelines-template
+
+pipelines:
+  - name: PS_variable_resolved_10098
+    steps:
+      - name: PS_variable_resolved_10098
+        type: Bash
+        configuration:
+          integrations:
+            - name: {{.jfrog-pipelines.sourceRepository}}
+          environmentVariables:
+            env1: {{ rootBucket }}
+        execution:
+          onExecute:
+            - echo hi
+          

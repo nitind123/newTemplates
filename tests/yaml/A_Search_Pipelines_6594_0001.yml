@@ -1,0 +1,36 @@
+pipelines:
+  - name: A_Search_Pipelines_6594_0001_1
+    steps:
+      - name: A_Search_Pipelines_6594_0001_1_step_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "step was triggerred"
+  - name: A_Search_Pipelines_6594_0001_2
+    steps:
+      - name: A_Search_Pipelines_6594_0001_2_step_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "step was triggerred"
+  - name: A_Search_Pipelines_6594_0001_3
+    steps:
+      - name: A_Search_Pipelines_6594_0001_3_step_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "step was triggerred"
+  - name: A_Search_Pipelines_6594_0001_4
+    steps:
+      - name: A_Search_Pipelines_6594_0001_4_step_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "step was triggerred"
+  - name: A_Search_Pipelines_6594_0001_5
+    steps:
+      - name: A_Search_Pipelines_6594_0001_5_step_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "step was triggerred"

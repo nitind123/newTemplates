@@ -1,0 +1,17 @@
+resources:
+  - name: R_generic_6256_0003_resource
+    type: PropertyBag
+    configuration:
+      creatingBranch: {{gitBranch}}
+
+pipelines:
+- name: pipelines_R_generic_6256_0003
+  steps:
+    - name: R_generic_6256_0003
+      type: Bash
+      configuration:
+        inputResources:
+          - name: R_generic_6256_0003_resource
+      execution:
+        onExecute:
+          - echo 'hello'

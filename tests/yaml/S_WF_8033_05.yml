@@ -1,0 +1,19 @@
+
+pipelines:
+  - name: S_WF_8033_05_pipe
+    steps:
+      - name: S_WF_8033_05_step
+        type: TriggerPipeline
+        configuration:
+          integrations:
+            - name: WF_TriggerPipeline_8033_JFrogPlatformToken
+          pipelineName: S_WF_8033_05_fakepipe
+          stepName: S_WF_8033_05_target_step
+
+  - name: S_WF_8033_05_target
+    steps:
+      - name: S_WF_8033_05_target_step
+        type: Bash
+        execution:
+          onExecute:
+            - echo "Hello world"

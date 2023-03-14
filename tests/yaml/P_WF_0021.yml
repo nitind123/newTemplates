@@ -1,0 +1,38 @@
+pipelines:
+
+  - name: P_WF_0021_1
+    configuration:
+      chronological: true
+    steps:
+      - name: P_WF_0021_1
+        type: Bash
+        configuration:
+          outputResources:
+            - name: P_WF_0021_resource
+        execution:
+          onExecute:
+            - echo "executing step..."
+            - sleep 10
+            - write_output P_WF_0021_resource test=$run_number
+
+  - name: P_WF_0021_2
+    configuration:
+      dependencyMode:
+        waitOnParentComplete: true
+    steps:
+      - name: P_WF_0021_2
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_0021_resource
+        execution:
+          onExecute:
+            - echo "executing step..."
+            - sleep 10
+
+
+resources:
+  - name: P_WF_0021_resource
+    type: PropertyBag
+    configuration:
+      test: test

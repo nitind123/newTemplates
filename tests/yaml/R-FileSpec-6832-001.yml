@@ -1,0 +1,10 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: R_FileSpec_6832_001
+    type: FileSpec
+    configuration:
+      sourceArtifactory: s_artifactory
+      pattern: "artifactory-build*"
+      pinVersion: "1"

@@ -1,0 +1,56 @@
+# integrations
+artifactoryIntegration: s_artifactory
+kubernetesIntegration: s_kubernetes
+
+# pipeline resources
+GitRepo:
+  name: T_HelmPublishAndDeploy_0006_GitRepoRes
+  type: GitRepo
+  gitProvider: s_gitHub
+  path: jfbetapipeorg/Org_test_Automation
+  files:
+    include: tests/core/helmdeploy/simplehelm.*
+  branches:
+    include: master
+
+HelmChart:
+  name: T_HelmPublishAndDeploy_0006_HelmChartRes
+  chartName: simplehelm
+  chartVersion: 0.3.0
+  repository: helmpublishanddeploy-local
+  helmVersion: 3
+  namespace: pipe-master-pool
+
+BuildInfo:
+  name: T_HelmPublishAndDeploy_0006_BuildInfoRes
+  buildName: foo
+  buildNumber: ${run_number}
+
+BuildInfoPromoted:
+  name: T_HelmPublishAndDeploy_0006_BuildInfoPromotedRes
+
+# pipeline
+Pipeline:
+  name: T_HelmPublishAndDeploy_0006_HelmPublishAndDeployIncorrect
+
+# steps
+HelmPublish:
+  name: HelmPublishStep
+  # required chart path not provided
+  # chartPath: 'tests/core/helmdeploy/simplehelm'
+
+PromoteBuild:
+  name: PromoteBuildStep
+  targetRepository: helmpublishanddeploy-promote
+
+HelmDeploy:
+  name: HelmDeployStep
+  # required chart path not provided
+  # chartPath: '.'
+  releaseName: simplehelm-${run_id}
+  flags: '--force --wait --timeout 900s --set image.repository=trriplejay/simplehelm --set image.tag=latest'
+  lint: true
+  lintFlags: '--strict'
+  valueFilePaths:
+    - values.yaml
+  test: true

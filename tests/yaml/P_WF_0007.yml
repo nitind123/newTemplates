@@ -1,0 +1,12 @@
+pipelines:
+
+  - name: P_WF_0007
+    configuration:
+      dependencyMode:
+        waitOnParentSuccess: true
+    steps:
+      - name: P_WF_0007
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing step..."

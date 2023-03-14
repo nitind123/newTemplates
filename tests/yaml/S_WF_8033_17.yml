@@ -1,0 +1,22 @@
+pipelines:
+  - name: S_WF_8033_17_pipe
+    steps:
+      - name: S_WF_8033_17_step
+        type: TriggerPipeline
+        configuration:
+          integrations:
+            - name: WF_TriggerPipeline_8033_JFrogPlatformToken
+          pipelineName: S_WF_8033_17_target
+          stepName: S_WF_8033_17_target_step
+
+  - name: S_WF_8033_17_target
+    steps:
+      - name: S_WF_8033_17_target_step
+        type: Bash
+        configuration:
+          integrations:
+            - name: S_WF_8033_17_integration_bad
+        execution:
+          onExecute:
+            - echo "Hello world"
+            - sleep 5

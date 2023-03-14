@@ -1,0 +1,17 @@
+pipelines:
+  - name: S_SYC_TriggerPipeline_8033_11
+    steps:
+      - name: S_SYC_TriggerPipeline_8033_11_01
+        type: TriggerPipeline
+        configuration:
+          integrations:
+            - name: BS_TriggerPipeline_8033_artifactory
+          pipelineName: foo
+          stepName: foo
+          projectKey: foo
+          branchName: foo
+        execution:
+          onStart:
+            - echo "starting"
+          onComplete:
+            - echo "done"

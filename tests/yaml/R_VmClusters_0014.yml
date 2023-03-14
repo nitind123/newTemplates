@@ -1,0 +1,3 @@
+resources:
+  - name: VmCluster_resource
+    type: VmCluster

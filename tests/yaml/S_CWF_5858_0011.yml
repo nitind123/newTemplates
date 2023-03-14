@@ -1,0 +1,53 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: S_Bash_Generic_5858_0011
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+      
+pipelines:
+  - name: Pipeline_S_Bash_Generic_5858_0011
+    steps:
+      - name: Step_S_Bash_Generic_5858_0011_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: S_Bash_Generic_5858_0011
+        execution:
+          onExecute:
+            - echo "executing Step_S_Bash_Generic_5858_0011_1"
+      - name: Step_S_Bash_Generic_5858_0011_2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: Step_S_Bash_Generic_5858_0011_1
+        execution:
+          onExecute:
+            - echo "executing Step_S_Bash_Generic_5858_0011_2"
+            - blah
+      - name: Step_S_Bash_Generic_5858_0011_3
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: Step_S_Bash_Generic_5858_0011_1
+        execution:
+          onExecute:
+            - echo "executing Step_S_Bash_Generic_5858_0011_3"
+
+      - name: Step_S_Bash_Generic_5858_0011_4
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: Step_S_Bash_Generic_5858_0011_3
+              status:
+                - success
+            - name: Step_S_Bash_Generic_5858_0011_2
+              status:
+                - failure
+                - error
+        execution:
+          onExecute:
+            - echo "executing Step_S_Bash_Generic_5858_0011_4"

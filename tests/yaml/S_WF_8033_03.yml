@@ -1,0 +1,28 @@
+pipelines:
+  - name: S_WF_8033_03_pipe
+    steps:
+      - name: S_WF_8033_03_step
+        type: TriggerPipeline
+        configuration:
+          integrations:
+            - name: WF_TriggerPipeline_8033_JFrogPlatformToken
+          pipelineName: S_WF_8033_03_target
+          stepName: S_WF_8033_03_target_step
+        execution:
+          onFailure:
+            - if [ -z "$nested_run_status" ]; then exit 1; fi
+            - if [ "$nested_run_status" != "failure" ]; then exit 1; fi
+            - if [ -z "$nested_run_duration_seconds" ]; then exit 1; fi
+            - if [ -z "$nested_run_id" ]; then exit 1; fi
+            - if [ -z "$nested_run_number" ]; then exit 1; fi
+            - if [ -z "$nested_run_url" ]; then exit 1; fi
+
+  - name: S_WF_8033_03_target
+    steps:
+      - name: S_WF_8033_03_target_step
+        type: Bash
+        execution:
+          onExecute:
+            - echo "Hello world"
+            - sleep 5
+            - exit 1

@@ -1,0 +1,23 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: A_6805_0001_GitRepo
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+      branches:
+        include: {{gitBranch}}
+
+pipelines:
+  - name: A_6805_0001
+    steps:
+      - name: A_6805_0001_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: A_6805_0001_GitRepo
+        execution:
+          onExecute:
+            - save_tests "$res_A_6805_0001_GitRepo_resourcePath/tests/junit/v3_example_1.xml"

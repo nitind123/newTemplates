@@ -1,0 +1,12 @@
+pipelines:
+  - name: pipelines_N_DyNodeAWS_10154_004
+    steps:
+      - name: N_DyNodeAWS_10154_004
+        type: PowerShell
+        configuration:
+          nodePool: AWS_dynamic_node_win19
+          runtime:
+            type: host
+        execution:
+          onExecute:
+            - node18 -v

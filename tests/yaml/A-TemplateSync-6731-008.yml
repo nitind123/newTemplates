@@ -1,0 +1,37 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: A_TemplateSync_6731_008_GitRepo
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitlab
+      path: {{ .Values.GitLab.templates.path }}
+      branches:
+        include: ^A-TemplateSync-6731-008$
+
+pipelines:
+  - name: pipeline_A_TemplateSync_6731_008_update
+    steps:
+      - name: A_TemplateSync_6731_008_pushCommit
+        type: Bash
+        configuration:
+          inputResources:
+            - name: A_TemplateSync_6731_008_GitRepo
+              trigger: false
+          integrations:
+            - name: s_gitlab
+        execution:
+          onExecute:
+            - cd $res_A_TemplateSync_6731_008_GitRepo_resourcePath
+            - git checkout -b A-TemplateSync-6731-008
+            - echo "Last updated by run $run_id" > templates/shippable/A_TemplateSync_6731_008_1/readme.md
+            - git add templates/shippable/A_TemplateSync_6731_008_1/readme.md
+            - git commit -m "$run_id"
+            - origin=$(git config remote.origin.url | sed "s#ssh://##" | sed "s#https://##" | sed "s#:#/#" | sed "s#git@##")
+            - host=$(echo "$origin" | cut -d '/' -f 1 )
+            - git remote set-url origin https://$origin
+            - git config --global credential.helper store
+            - echo "https://token:${int_s_gitlab_token}@${host}" > ~/.git-credentials
+            - git push origin A-TemplateSync-6731-008 -f
+            - rm ~/.git-credentials

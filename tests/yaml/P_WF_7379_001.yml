@@ -1,0 +1,17 @@
+resources:
+  - name: P_WF_7379_001
+    type: PropertyBag
+    configuration:
+      property: value
+
+pipelines:
+  - name: pipeline_P_WF_7379_001
+    steps:
+      - name: P_WF_7379_001
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_7379_001
+        execution:
+          onExecute:
+            - echo "Testing..."

@@ -1,0 +1,11 @@
+pipelines:
+  - name: pipelines_NP_DyKubernetes_0041
+    steps:
+      - name: NP_DyKubernetes_0041
+        type: Bash
+        configuration:
+          nodePool: NP_DyKubernetes_0041
+        execution:
+          onExecute:
+            - echo "executing step on k8s dynamic node pool"
+            - df -h

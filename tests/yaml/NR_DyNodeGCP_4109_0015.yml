@@ -1,0 +1,10 @@
+pipelines:
+  - name: pipelines_NR_DyNodeGCP_4109_0015
+    steps:
+      - name: NR_DyNodeGCP_4109_0015
+        type: Bash
+        configuration:
+          nodePool: GCP_dynamic_node_u20_rootless
+        execution:
+          onExecute:
+            - echo "executing step on GCP dynamic node pool"

@@ -1,0 +1,10 @@
+pipelines:
+  - name: P_Pipelines_8302_004
+    configuration:
+      jfrogCliVersion: "2"
+    steps:
+      - name: P_Pipelines_8302_004
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing step..."

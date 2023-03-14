@@ -1,0 +1,11 @@
+pipelines:
+  - name: A_PSObjectPermission_6495
+    steps:
+      - name: S_A_PSObjectPermission_6495_1
+        type: Bash
+        configuration:
+          integrations:
+            - name: s_gitHub
+        execution:
+          onExecute:
+            - echo "hi"

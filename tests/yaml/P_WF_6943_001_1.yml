@@ -1,0 +1,16 @@
+pipelines:
+  - name: pipeline_P_WF_6943_001
+    steps:
+      - name: P_WF_6943_001_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing step..."
+      - name: P_WF_6943_001_2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: P_WF_6943_001_1
+        execution:
+          onExecute:
+            - echo "executing step..."

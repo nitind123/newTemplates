@@ -1,0 +1,15 @@
+pipelines:
+  - name: Prefix_A_Search_Pipelines_6594_0004_1
+    steps:
+      - name: Prefix_A_Search_Pipelines_6594_0004_1_step_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "step was triggerred"
+  - name: A_Search_Pipelines_6594_0004_1
+    steps:
+      - name: A_Search_Pipelines_6594_0004_1_step_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "step was triggerred"

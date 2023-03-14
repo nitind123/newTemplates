@@ -1,0 +1,12 @@
+pipelines:
+
+  - name: pipelines_P_Pipelines_0063
+    configuration:
+      retentionPolicy:
+        maxAgeDays: 1
+    steps:
+      - name: P_Pipelines_0063_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing step..."

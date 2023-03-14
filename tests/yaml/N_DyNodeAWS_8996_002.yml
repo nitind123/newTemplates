@@ -1,0 +1,27 @@
+pipelines:
+  - name: pipelines_N_DyNodeAWS_8996_002
+    steps:
+      - name: N_DyNodeAWS_8996_002
+        type: PowerShell
+        configuration:
+          nodePool: AWS_dynamic_node_win19
+          runtime:
+            type: host
+        execution:
+          onExecute:
+            - echo "Running"
+            - Get-Process -Name node
+            - |
+              $ps = Get-Process -Name node;
+              $idFilter = "";
+              $ps | ForEach-Object {
+                $id = $_.Id;
+                $idFilter = "$idFilter ParentProcessId=$Id or";
+              }
+              $idFilterLength = $idFilter.length;
+              $idFilter = $idFilter.substring(0, $idFilterLength -3);
+              $cp = Get-WmiObject Win32_Process -Filter "($idFilter) and Name = 'node.exe'";
+              $workerPid = $cp.ProcessId;
+              Set-Variable -Name "workerPid" -Value "$workerPid" -Scope "Script";
+            - echo $script:workerPid
+            - taskkill /F /PID $script:workerPid

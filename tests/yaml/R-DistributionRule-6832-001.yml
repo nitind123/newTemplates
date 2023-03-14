@@ -1,0 +1,14 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: P_Sync_6832_001_DistributionRule
+    type: DistributionRule
+    configuration:
+      sourceDistribution: s_distribution
+      serviceName: svce
+      siteName: "*"
+      cityName: "*"
+      countryCodes:
+        - US
+      pinVersion: "1"

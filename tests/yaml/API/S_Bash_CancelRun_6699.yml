@@ -1,0 +1,15 @@
+pipelines:
+  - name: S_Bash_CancelRun_6699_0001
+    steps:
+      - name: S_Bash_CancelRun_6699_0001_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo hello
+  - name: S_Bash_CancelRun_6699_0002
+    steps:
+      - name: S_Bash_CancelRun_6699_0002_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo hello

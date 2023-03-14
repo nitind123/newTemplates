@@ -1,0 +1,11 @@
+pipelines:
+  - name: pipelines_I_Generic_9998_001
+    steps:
+      - name: I_Generic_9998_001
+        type: Bash
+        configuration:
+          integrations:
+            - name: I_Generic_9998_001_artifactory
+        execution:
+          onExecute:
+            - echo "test"

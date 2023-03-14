@@ -1,0 +1,35 @@
+sample_step_1:
+  name: sample_step_1
+  type: Bash
+Pipeline:
+  name: PS_Sync_template_Foo_10097
+
+GitRepo:
+  name: PS_Sync_template_GitRepo_10097
+  gitProvider: s_gitHub
+  path: {{.jfrog-pipelines.sourceRepository}}
+  branches:
+    exclude: 'master'
+    include: {{gitBranch}}
+
+artifactoryIntegration: s_artifactory
+
+Image:
+  name: PS_Sync_template_Image_10097
+  sourceRepository: foo
+  autoPull: false
+
+DockerBuild:
+  name: PS_Sync_template_build_10097
+  dockerImageName: foo
+  dockerFileName: foo
+  dockerFileLocation: '.'
+  dockerImageTag: ${run_number}
+
+DockerPush:
+  name: PS_Sync_template_Push_10097
+  targetRepository: foo
+
+BuildInfo:
+  autoPublishBuildInfo: true
+  name: PS_Sync_template_Info_10097

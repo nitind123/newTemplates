@@ -1,0 +1,10 @@
+pipelines:
+  - name: S_Bash_6152_0002
+    steps:
+      - name: S_Bash_6152_0002
+        type: Bash
+        configuration:
+          nodePool: u18k8sdynamic_6080         
+        execution:
+          onExecute:
+            - docker run --rm --privileged -v /dev/sdb:/dev/sdb alpine mkdir -p test && mount /dev/sdb test

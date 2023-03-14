@@ -1,0 +1,10 @@
+pipelines:
+  - name: pipelines_NP_DyAzure_0040
+    steps:
+      - name: NP_DyAzure_0040
+        type: Bash
+        configuration:
+          nodePool: NP_DyAzure_0040_AZ_test
+        execution:
+          onExecute:
+            - sleep 5m

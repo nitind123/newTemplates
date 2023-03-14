@@ -1,0 +1,38 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: WH_DeleteBranch_8878
+    type: PropertyBag
+    configuration:
+      commitSha: 1
+      runID: 1
+  - name: WH_DeleteBranch_8878_01
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+
+pipelines:
+  - name: WH_DeleteBranch_8878
+    steps:
+      - name: WH_DeleteBranch_8878
+        type: Bash
+        configuration:
+          inputResources:
+            - name: WH_DeleteBranch_8878
+        execution:
+          onExecute:
+            - printenv
+            - echo "hi"
+      - name: WH_DeleteBranch_8878_1
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: WH_DeleteBranch_8878
+          inputResources:
+            - name: WH_DeleteBranch_8878_01
+        execution:
+          onExecute:
+            - printenv
+            - echo "hi"

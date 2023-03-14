@@ -1,0 +1,8 @@
+pipelines:
+- name: pipelines_R_generic_6256_0002
+  steps:
+    - name: R_generic_6256_0002_1
+      type: Bash
+      execution:
+        onExecute:
+          - echo 'hello'

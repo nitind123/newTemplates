@@ -1,0 +1,5 @@
+resources:
+  - name: R_propertyBag_0003
+    type: PropertyBag
+    configuration:
+      key1: ""

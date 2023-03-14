@@ -1,0 +1,9 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: r_gitLab
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitlab
+      path: {{ .Values.GitLab.jfrogtesting.path }}

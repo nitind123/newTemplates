@@ -1,0 +1,10 @@
+pipelines:
+  - name: pipelines_NR_DyNodeAzure_4109_0010
+    steps:
+      - name: NR_DyNodeAzure_4109_0010
+        type: Bash
+        configuration:
+          nodePool: azure_dynamic_node_u20_rootless
+        execution:
+          onExecute:
+            - echo "executing step on Azure dynamic node pool"

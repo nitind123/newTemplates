@@ -1,0 +1,8 @@
+resources:
+  - name: R_Image
+    type: Image
+    configuration:
+       registry: google
+       imageName: gcr.io/ship-rc/ubuntu
+       imageTag: latest
+       autoPull: true

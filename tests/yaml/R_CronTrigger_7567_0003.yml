@@ -1,0 +1,20 @@
+resources:
+  - name: R_CronTrigger_7567_0003_resource
+    type: CronTrigger
+    configuration:
+      interval: "* * * * *"
+      branches:
+        - branch1
+        - branch2
+
+pipelines:
+  - name: R_CronTrigger_7567_0003
+    steps:
+      - name: R_CronTrigger_7567_0003_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: R_CronTrigger_7567_0003_resource
+        execution:
+          onExecute:
+            - echo hello

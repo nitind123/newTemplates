@@ -1,0 +1,13 @@
+pipelines:
+  - name: pipelines_N_DyNodeAWS_8302_007
+    steps:
+      - name: N_DyNodeAWS_8302_007
+        type: Bash
+        configuration:
+          nodePool: AWS_dynamic_node_u20
+        execution:
+          onExecute:
+            - echo "${jfrog_cli_path}"
+            - which jfrog
+            - jfrog --version
+            - if [ "$(jfrog --version | awk '{print $3}' | cut -d '.' -f 1)" != "1" ]; then return 1; fi

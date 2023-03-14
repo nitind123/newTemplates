@@ -1,0 +1,19 @@
+valuesFilePath: ./values/helm/values.yml
+
+pipelines:
+  - name: P_tpl
+    steps:
+      - name: S_tpl
+        type: Bash
+        configuration:
+          environmentVariables:
+            {{- range $k, $v := .Values.environmentVariables }}
+              {{ $k }}: {{ $v }}
+              {{- end }}
+
+        execution:
+          onExecute:
+            - echo {{ tpl (toYaml .Values.repoName) . | quote }}
+            - echo {{ and .Values.arg .Values.repoBranch }}
+            - echo {{ ge 5 4 }}
+            - echo {{ default "master" .Values.arg }}

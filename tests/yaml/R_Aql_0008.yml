@@ -1,0 +1,16 @@
+resources:
+ - name: R_Aql_0008
+   type: Aql
+   configuration:
+     sourceArtifactory: s_art_Inalid
+     query: items.find({"@build.name":{"$eq":"artifactory"}})
+     addedProperties:
+       key1: value1
+       key2: value2
+     mappings:
+       - name: mapping1
+         input: IN
+         output: test1
+       - name: mapping2
+         input: IN
+         output: test2

@@ -1,0 +1,20 @@
+resources:
+  - name: R_CronTrigger_7567_0008_resource
+    type: CronTrigger
+    configuration:
+      interval: "* * * * *"
+      branches:
+        # include should have no effect for single branch pipelineSources
+        include: "foo"
+
+pipelines:
+  - name: R_CronTrigger_7567_0008
+    steps:
+      - name: R_CronTrigger_7567_0008_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: R_CronTrigger_7567_0008_resource
+        execution:
+          onExecute:
+            - echo hello

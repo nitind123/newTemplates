@@ -1,0 +1,13 @@
+Pipeline:
+  name: Pipeline_10767
+# pipeline resources
+GitRepo:
+  name: GitRepoRes
+  type: GitRepo
+  gitProvider: s_gitHub
+  path: {{.jfrog-pipelines.sourceRepository}}
+  files:
+    include: tests/core/helmdeploy/simplehelm.*
+  branches:
+    include: master
+

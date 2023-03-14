@@ -1,0 +1,8 @@
+GitRepo:
+  name: fooGitRepo
+  gitProvider: s_gitHub
+  path: jfbetapipeorg/Org_test_Automation
+  branch: master
+  branches:
+    exclude: test
+    include: master

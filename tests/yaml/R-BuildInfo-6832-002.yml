@@ -1,0 +1,13 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: R_BuildInfo_6832_002
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: s_artifactory
+      buildName: P_Sync_6832_002
+      buildNumber: 1
+      pin:
+        buildName: P_Sync_6832_002
+        buildNumber: 1-pin

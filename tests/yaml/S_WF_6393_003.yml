@@ -1,0 +1,33 @@
+resources:
+  - name: S_WF_6393_003_resource1
+    type: PropertyBag
+    configuration:
+      runNumber: 0
+  - name: S_WF_6393_003_resource2
+    type: PropertyBag
+    configuration:
+      runNumber: 0
+
+pipelines:
+  - name: pipeline_S_WF_6393_003
+    steps:
+      - name: S_WF_6393_003_1
+        type: Bash
+        configuration:
+          outputResources:
+            - name: S_WF_6393_003_resource1
+            - name: S_WF_6393_003_resource2
+        execution:
+          onExecute:
+            - echo "test"
+      - name: S_WF_6393_003_2
+        type: Bash
+        configuration:
+          inputResources:
+            - name: S_WF_6393_003_resource1
+              newVersionOnly: true
+            - name: S_WF_6393_003_resource2
+              newVersionOnly: true
+        execution:
+          onExecute:
+            - echo "test"

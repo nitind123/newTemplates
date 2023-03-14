@@ -1,0 +1,19 @@
+resources:
+  - name: PS-Sync-9494
+    type: PropertyBag
+    configuration:
+      commitSha: 1
+      runID: 1
+
+pipelines:
+  - name: PS-Sync-9494
+    steps:
+      - name: PS-Sync-9494
+        type: Bash
+        configuration:
+          inputResources:
+            - name: PS-Sync-9494
+        execution:
+          onExecute:
+            - printenv
+            - echo "hi"

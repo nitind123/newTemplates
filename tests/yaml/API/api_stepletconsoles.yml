@@ -1,0 +1,21 @@
+pipelines:
+  - name: api_stepletconsoles
+    steps:
+      - name: s_stepletconsoles
+        type: Bash
+        configuration:
+          runtime:
+            type: host
+        execution:
+          onExecute:
+            - echo "hi"
+  - name: api_stepletconsoles_ProjectAdmin
+    steps:
+      - name: s_stepletconsoles_projectAdmin
+        type: Bash
+        configuration:
+          runtime:
+            type: host
+        execution:
+          onExecute:
+            - echo "hi"

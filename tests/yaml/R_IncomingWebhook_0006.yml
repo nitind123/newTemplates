@@ -1,0 +1,3 @@
+resources:
+  - name: r_IncomingWebhook
+    type: IncomingWebhook

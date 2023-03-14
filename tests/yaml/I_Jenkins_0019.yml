@@ -1,0 +1,13 @@
+pipelines:
+  - name: pipelines_I_Jenkins_0019
+    steps:
+      - name: I_Jenkins_0019                  
+        type: Jenkins
+        configuration:
+          jenkinsJobName: var-pipeline-proj    # Jenkins job/pipeline name. required   
+          priority: 2         
+          buildParameters:
+            key1: 1
+            key2: 2                   
+          integrations:
+            - name: i_testJenkins   # required Jenkins integration         

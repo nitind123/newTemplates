@@ -1,0 +1,12 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: bitbucketServer
+    type: GitRepo
+    configuration:
+      gitProvider: bitbucketServer
+      path: {{ .Values.BitbucketServer.test.path }}
+      files:  # optional
+        include: <regularExp>
+        exclude:

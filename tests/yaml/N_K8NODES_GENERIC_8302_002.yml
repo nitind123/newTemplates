@@ -1,0 +1,13 @@
+pipelines:
+  - name: pipelines_N_K8NODES_GENERIC_8302_002
+    steps:
+      - name: N_K8NODES_GENERIC_8302_002
+        type: Bash
+        configuration:
+          nodePool: test_automation_kubernetesNodePool_u18
+        execution:
+          onExecute:
+            - echo "${jfrog_cli_path}"
+            - which jfrog
+            - jfrog --version
+            - if [ "$(jfrog --version | awk '{print $3}' | cut -d '.' -f 1)" != "1" ]; then return 1; fi

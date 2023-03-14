@@ -1,0 +1,12 @@
+pipelines:
+
+  - name: P_WF_0013
+    configuration:
+      chronological: true
+    steps:
+      - name: P_WF_0013
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing step..."
+            - sleep 10

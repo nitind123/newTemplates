@@ -1,0 +1,31 @@
+{{- define "pipe.additionalEnvs" -}}
+env3: additional
+{{ end -}}
+
+resources:
+  #GIT RESOURCES
+  - name: Publish_Template_10390_Helm_002
+    type: GitRepo
+    configuration:
+      path: jfbetapipeorg/Org_test_Automation
+      gitProvider: {{ .Values.GitRepo.gitProvider}}
+      branches:
+        include: {{ .Values.GitRepo.branch}}
+
+pipelines:
+  {{ if eq "master" (.Values.GitRepo.branch | toString) }}
+  - name: Publish_Template_10390_Helm_002
+    steps:
+      - name: Publish_Template_10390_Helm_002
+        type: Bash
+        configuration:
+          environmentVariables:
+            {{ include "pipe.additionalEnvs" . }}
+            env1: "test"
+        execution:
+          onExecute:
+            - echo {{ sha256sum .Values.GitRepo.branch }}
+            - echo {{ "30tEfhuJSVRhpG97XCuWgz2okj7L8vQ1s6V9zVUPeDQ=" | decryptAES "secretkey" }}
+            - echo {{ now | date "2022-01-02" }}
+            - echo {{ indent 4 "pipe.additionalEnvs" }}            
+  {{ end }}

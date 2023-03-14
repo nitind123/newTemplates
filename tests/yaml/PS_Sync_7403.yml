@@ -1,0 +1,21 @@
+resources:
+  - name: myFirstRepo
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ invalidVariable }}
+      branches:
+        include: 'master'
+
+pipelines:
+  - name: Ps_variable_resolved_6730
+    steps:
+      - name: Ps_variable_resolved_6730
+        type: Bash
+        configuration:
+          environmentVariables:
+            env2: {{ invalidVariable }}
+        execution:
+          onExecute:
+            - echo {{ invalidVariable }}
+            - cd /tmp

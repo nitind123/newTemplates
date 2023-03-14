@@ -1,0 +1,8 @@
+pipelines:
+  - name: pipelineSyncStatus_automation
+    steps:
+      - name: api_pipelineSyncStatus
+        type: Bash
+        execution:
+          onExecute:
+            - echo "hi"

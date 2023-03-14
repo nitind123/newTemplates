@@ -1,0 +1,15 @@
+pipelines:
+  - name: Pipelines_WH_resync_0004
+    steps:
+      - name: WH_resync_0004
+        type: Matrix
+        stepMode: Bash
+        stepletMultipliers:
+          environmentVariables:
+            - foo: 1
+              bar: echo bar1
+            - foo: 2
+              bar: echo bar2
+        execution:
+          onExecute:
+            - echo "Hello world"

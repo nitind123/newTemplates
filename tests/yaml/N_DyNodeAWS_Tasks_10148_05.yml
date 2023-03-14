@@ -1,0 +1,49 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: N_D_Tasks_10148_05_repo
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+      branches:
+        include: {{ gitBranch }}
+
+pipelines:
+  - name: N_DyNodeAWS_Tasks_10148_05_pipeline
+    configuration:
+      jfrogCliVersion: 2
+    steps:
+      - name: N_DyNodeAWS_Tasks_10148_05_step
+        type: PowerShell
+        configuration:
+          nodePool: AWS_dynamic_node_win19
+          integrations:
+            - name: s_artifactory
+          inputResources:
+            - name: N_D_Tasks_10148_05_repo
+              trigger: false
+        execution:
+          onStart:
+            - Set-Variable -Name "taskVersion" -Scope "Global" -Value "v2.5.${run_id}"
+            - New-Item -Path "$step_tmp_dir/task" -ItemType Container
+            - Copy-Item -Path "${res_N_D_Tasks_10148_05_repo_resourcePath}/tests/tasks/hello/*" -Destination $step_tmp_dir/task/ -Recurse -Force
+            - Push-Location $step_tmp_dir/
+            - jf rt u "task/*" "test-automation-tasks-local/jfrog/hello/@v/${taskVersion}.zip" --archive zip
+            - pop-location
+            - Remove-Item -Path "$step_tmp_dir/task" -Recurse -Force
+          onExecute:
+            - task: jfrog/hello@${taskVersion}
+              repository: test-automation-tasks-local
+              id: N_DyNodeAWS_Tasks_10148_05_task
+              input:
+                target: "execute"
+          onComplete:
+            - echo "on Complete"
+            - try { jf rt del "test-automation-tasks-local/jfrog/hello/@v/${taskVersion}.zip" } catch {}
+          onSuccess:
+            - echo "on Success"
+          onFailure:
+            - echo "on Failure"
+

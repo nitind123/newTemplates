@@ -1,0 +1,12 @@
+pipelines:
+  - name: pipelines_N_DyNodeAWS_10154_003
+    steps:
+      - name: N_DyNodeAWS_10154_003
+        type: Bash
+        configuration:
+          nodePool: AWS_dynamic_node_u20
+          runtime:
+            type: host
+        execution:
+          onExecute:
+            - node18 -v

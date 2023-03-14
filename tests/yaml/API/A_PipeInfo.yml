@@ -1,0 +1,66 @@
+template: true
+valuesFilePath: ../../values/gitRepoValues.yml
+
+resources:
+  - name: resource_A_Pipeinfo_gitRepo
+    type: GitRepo
+    configuration:
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+      branches:
+        include: master
+      gitProvider: s_gitHub
+
+  - name: resource_A_Pipeinfo_propertyBag
+    type: PropertyBag
+    configuration:
+      commitSha: 1
+      runID: 1
+
+pipelines:
+  - name: p_stepArtifacts
+    steps:
+      - name: s_stepArtifacts_001
+        type: Bash
+        configuration:
+          inputResources:
+            - name: resource_A_Pipeinfo_gitRepo
+          integrations:
+            - name: s_gitHub
+        execution:
+          onExecute:
+            - echo "executing step api_pipeinfo_step1"
+          onComplete:
+            - add_run_variables current_runid=$run_id
+            - add_run_variables commitSha=$res_jatin_gitrepo2_commitSha
+      - name: s_stepArtifacts_002
+        type: Matrix
+        stepMode: Bash
+        configuration:
+          inputSteps:
+            - name: s_stepArtifacts_001
+        stepletMultipliers:
+          environmentVariables:
+            - animal:    dog
+              mineral:   copper
+              vegetable: carrot
+            - animal:    goat
+              mineral:   iron
+              vegetable: broccoli
+            - animal:    lizard
+              mineral:   lead
+        execution:
+          onExecute:
+            - echo "I am executing matrix steplet ${steplet_id}"
+            - echo "Envs animal= $animal , mineral = $mineral , vegetable = $vegetable"
+      - name: s_stepArtifacts_003
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: s_stepArtifacts_002
+          outputResources:
+            - name: resource_A_Pipeinfo_propertyBag
+        execution:
+          onExecute:
+            - echo $current_runid
+            - add_pipeline_variables prev_runid=$run_id
+            - write_output resource_A_Pipeinfo_propertyBag commitSha=$commitSha runID=$current_runid

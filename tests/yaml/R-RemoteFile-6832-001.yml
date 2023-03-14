@@ -1,0 +1,10 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
+resources:
+  - name: P_Sync_6832_001_RemoteFile
+    type: RemoteFile
+    configuration:
+      source: s_artifactory
+      fileLocation: gs://pipelines_bucker_01
+      pinVersion: "1"

@@ -1,0 +1,32 @@
+template: true
+valuesFilePath: ../../values/gitRepoValues.yml
+
+resources:
+  - name: r_stepletTestReports
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: {{ .Values.GitHub.Org_test_Automation.path }}
+
+pipelines:
+  - name: P_stepletTestReports_matrix
+    steps:
+      - name: s_stepletTestReports
+        type: Matrix
+        stepMode: Bash
+        configuration:
+          inputResources:
+            - name: r_stepletTestReports
+        stepletMultipliers:
+          environmentVariables:
+            - env1: one
+        execution:
+          onExecute:
+            - cd $res_r_stepletTestReports_resourcePath
+            - python3 -m py_compile tests/core/sampleExecutionFile/calc.py
+            - pip install --upgrade pip
+            - hash -d pip
+            - pip install pytest
+            - cd $res_r_stepletTestReports_resourcePath
+            - py.test --verbose --junit-xml test-reports/results.xml tests/core/sampleExecutionFile/test_calc.py
+            - save_tests $res_r_stepletTestReports_resourcePath/test-reports/results.xml

@@ -1,0 +1,42 @@
+pipelines:
+     
+  - name: S_WF_029
+    configuration:
+      nodePool: win_2019
+    steps:
+  
+      - name: S_WF_029_001
+        type: PowerShell
+        execution:
+          onExecute:
+            - Write-Output "Step 1 is running"
+  
+      - name: S_WF_029_002
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_029_001
+          affinityGroup: some_ag
+        execution:
+          onExecute:
+            - throw "intentionally failing the step"
+  
+      - name: S_WF_029_003
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_029_002
+          affinityGroup: some_ag
+        execution:
+          onExecute:
+            - Write-Output "I should not be running."
+  
+      - name: S_WF_029_004
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: S_WF_029_003
+          affinityGroup: some_ag
+        execution:
+          onExecute:
+            - Write-Output "I should not be running too."

@@ -1,0 +1,21 @@
+pipelines:
+  - name: pipeline_S_WF_7289_001
+    configuration:
+      chronological: true
+    steps:
+      - name: S_WF_7289_001_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "Testing..."
+            - sleep 600
+      - name: S_WF_7289_001_2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_WF_7289_001_1
+              status:
+                - cancelled
+        execution:
+          onExecute:
+            - echo "Testing..."

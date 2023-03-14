@@ -1,0 +1,9 @@
+resources:
+  - name: image_art
+    type: Image
+    configuration:
+       registry: s_artifactory
+       sourceRepository: docker-local  # required if Docker registry is Artifactory
+       imageName: u16node
+       imageTag: 0.9.1
+       autoPull: true

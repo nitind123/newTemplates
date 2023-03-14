@@ -1,0 +1,15 @@
+pipelines:
+  - name: S_SYC_TriggerPipeline_8033_05
+    steps:
+      - name: S_SYC_TriggerPipeline_8033_05_01
+        type: TriggerPipeline
+        configuration:
+          integrations:
+            - name: BS_TriggerPipeline_8033_JFrogPlatformToken
+          pipelineName: foo
+          stepName: 123
+        execution:
+          onStart:
+            - echo "starting"
+          onComplete:
+            - echo "done"

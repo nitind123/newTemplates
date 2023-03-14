@@ -1,0 +1,38 @@
+resources:
+  - name: P_WF_9181_001_PB_2
+    type: PropertyBag
+    configuration:
+      key: value1
+  - name: P_WF_9181_001_PB_3
+    type: PropertyBag
+    configuration:
+      key: value2
+
+pipelines:
+  - name: pipeline_P_WF_9181_001
+    steps:
+      - name: P_WF_9181_001_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "step 1..."
+      - name: P_WF_9181_001_2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: P_WF_9181_001_1
+          inputResources:
+            - name: P_WF_9181_001_PB_2
+        execution:
+          onExecute:
+            - echo "step 2..."
+      - name: P_WF_9181_001_3
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: P_WF_9181_001_2
+          inputResources:
+            - name: P_WF_9181_001_PB_3
+        execution:
+          onExecute:
+            - echo "step 3..."

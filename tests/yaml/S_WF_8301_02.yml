@@ -1,0 +1,30 @@
+pipelines:
+  - name: S_WF_8301_02_pipe
+    steps:
+      - name: S_WF_8301_02_step
+        type: TriggerPipeline
+        configuration:
+          integrations:
+            - name: WF_TriggerPipeline_8033_JFrogPlatformToken
+          pipelineName: S_WF_8301_02_target
+          stepName: S_WF_8301_02_target_step_01
+        execution:
+          onStart:
+            - set_trigger_payload pipelineVariables "abc=abc" "def=def"
+
+  - name: S_WF_8301_02_target
+    steps:
+      - name: S_WF_8301_02_target_step_01
+        type: Bash
+        execution:
+          onExecute:
+            - if [ -z "$abc" ] || [ -z "$def" ]; then exit 1; fi
+
+      - name: S_WF_8301_02_target_step_02
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_WF_8301_02_target_step_01
+        execution:
+          onExecute:
+            - if [ -z "$abc" ] || [ -z "$def" ]; then exit 1; fi

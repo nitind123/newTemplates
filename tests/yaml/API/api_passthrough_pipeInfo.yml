@@ -1,0 +1,8 @@
+pipelines:
+ - name: api_passthrough_pipeInfo_pipeline
+   steps:
+   - name: A_PipeInfoJsons_001
+     type: Bash
+     execution:
+       onExecute:
+         - echo "hi"

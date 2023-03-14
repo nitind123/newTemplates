@@ -1,0 +1,10 @@
+pipelines:
+  - name: pipeline_S_WF_6393_004
+    steps:
+      - name: S_WF_6393_004
+        type: Bash
+        configuration:
+          nodePool: nodePool_6393_004
+        execution:
+          onExecute:
+            - echo "test"

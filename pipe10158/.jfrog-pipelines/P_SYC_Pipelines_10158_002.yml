@@ -1,0 +1,20 @@
+template: true
+pipelines:
+  - name: P_SYC_Pipelines_10158_002_pipe
+    steps:
+      - name: P_SYC_Pipelines_10158_002_step1
+        type: Bash
+        execution:
+          onExecute:
+            - echo {{gitBranch}}
+
+      {{ if eq "master" "{{gitBranch}}" }}
+      - name: P_SYC_Pipelines_10158_002_step2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: P_SYC_Pipelines_10158_002_step1
+        execution:
+          onExecute:
+            - echo {{gitBranch}}
+      {{ end }}
