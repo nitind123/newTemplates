@@ -1,28 +1,23 @@
-resources:
-  - name: MB_G_006_resource
-    type: PropertyBag
-    configuration:
-      creatingBranch: {{ gitBranch }}
+{{- define "pipe.additionalEnvs" -}}
+env3: additional
+  {{ end -}}
+
+valuesFilePath: ./values/helm/values.yml
 
 pipelines:
-  - name: pipeline_MB_G_006
+  - name: P_define
     steps:
-      - name: MB_G_006_step1
+      - name: S_define
         type: Bash
         configuration:
-          inputResources:
-            - name: MB_G_006_resource
+          environmentVariables:
+            env1: gitBranch
+            env2: sourceRepository
+            {{ include "pipe.additionalEnvs" . }}
         execution:
           onExecute:
-            - if [ "$res_MB_G_006_resource_creatingBranch" != "{{gitBranch}}" ]; then return 1; fi
-      - name: MB_G_006_step2
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: MB_G_006_step1
-          inputResources:
-            - name: MB_G_006_resource
-              branch: main
-        execution:
-          onExecute:
-            - if [ "$res_MB_G_006_resource_creatingBranch" != "master" ]; then return 1; fi
+            - echo {{ regexFind "[a-zA-Z][1-9]" "abcd1234" }}
+            - echo {{ contains "org" ".Values.repoName" }}
+            - echo {{ indent 4 "pipe.additionalEnvs" }}
+            - echo {{ "pipeline controleplane repo " | replace " " "-" }}
+            - echo {{ list 1 2 3 | toStrings }}
