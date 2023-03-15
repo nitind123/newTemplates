@@ -3,12 +3,12 @@ resources:
     type: GitRepo
     configuration:
       gitProvider: github_gitRepo_integration
-      path: jfbetapipeorg/Org_test_Automation
+      path:nitind123/newTemplates
   - name: R_Bash_GitRepo_8618_0016_gitRepo2
     type: GitRepo
     configuration:
       gitProvider: github_gitRepo_integration
-      path: jfbetapipeorg/Org_test_Automation
+      path:nitind123/newTemplates
 
 pipelines:
   - name: R_Bash_GitRepo_8618_0016_pipeline

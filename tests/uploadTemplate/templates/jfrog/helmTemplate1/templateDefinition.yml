@@ -8,7 +8,7 @@ resources:
   - name: Publish_Template_10390_002
     type: GitRepo
     configuration:
-      path:  jfbetapipeorg/Org_test_Automation
+      path: nitind123/newTemplates
       gitProvider: {{ .Values.GitRepo.gitProvider}}
       branches:
         include: {{ .Values.GitRepo.branch}}

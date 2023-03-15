@@ -2,7 +2,7 @@ resources:
   - name: WH_resync_0002_repo
     type: GitRepo
     configuration:
-      path: jfbetapipeorg/Org_test_Automation
+      path:nitind123/newTemplates
       gitProvider: s_gitHub
       branches:
         include: ^{{gitBranch}}$

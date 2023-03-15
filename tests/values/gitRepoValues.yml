@@ -1,18 +1,18 @@
 GitHub:
   Org_test_Automation:
-    path: jfbetapipeorg/Org_test_Automation
+    path:nitind123/newTemplates
   Org_test_Automation_bash:
-    path: jfbetapipeorg/Org_test_Automation_bash
+    path:nitind123/newTemplates_bash
   Org_test_Automation_PowerShell:
-    path: jfbetapipeorg/Org_test_Automation_PowerShell
+    path:nitind123/newTemplates_PowerShell
   templates:
     path: jfbetapipeorg/templates
   Org_test_Automation_Webhooks:
-      path: jfbetapipeorg/Org_test_Automation_Webhooks
+      path:nitind123/newTemplates_Webhooks
 
 GitHubEnterprise:
   Org_test_Automation:
-    path: jfbetapipeorg/Org_test_Automation
+    path:nitind123/newTemplates
   test_automation:
     path: jfbeta/test_automation
   test:

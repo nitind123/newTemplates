@@ -1,7 +1,7 @@
 GitRepo:
   name: fooGitRepo
   gitProvider: s_gitHub
-  path: jfbetapipeorg/Org_test_Automation
+  path:nitind123/newTemplates
   branch: master
   branches:
     exclude: test

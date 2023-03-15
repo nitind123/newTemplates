@@ -3,7 +3,7 @@ resources:
     type: GitRepo
     configuration:
       gitProvider: github_integration
-      path: jfbetapipeorg/Org_test_Automation
+      path:nitind123/newTemplates
   - name: R_Bash_GitRepo_8618_0017_gitRepo2
     type: GitRepo
     configuration:

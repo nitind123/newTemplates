@@ -7,7 +7,7 @@ GitRepo:
   name: T_HelmPublishAndDeploy_0006_GitRepoRes
   type: GitRepo
   gitProvider: s_gitHub
-  path: jfbetapipeorg/Org_test_Automation
+  path:nitind123/newTemplates
   files:
     include: tests/core/helmdeploy/simplehelm.*
   branches:

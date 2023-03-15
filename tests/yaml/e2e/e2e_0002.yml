@@ -2,7 +2,7 @@ resources:
   - name: e2e_0002_gitRepo
     type: GitRepo
     configuration:
-      path: jfbetapipeorg/Org_test_Automation
+      path:nitind123/newTemplates
       gitProvider: e2e_0002_github
       branches: 
         include: {{gitBranch}}

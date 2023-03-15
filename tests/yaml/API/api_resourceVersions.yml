@@ -6,7 +6,7 @@ resources:
     type: PropertyBag
     configuration:
      gitProvider: s_gitHub
-     path: jfbetapipeorg/Org_test_Automation
+     path:nitind123/newTemplates
 
   - name: r_6495_GitRepo_resourceVersion
     type: GitRepo
@@ -18,7 +18,7 @@ resources:
     type: PropertyBag
     configuration:
      gitProvider: s_gitHub
-     path: jfbetapipeorg/Org_test_Automation
+     path:nitind123/newTemplates
 
 pipelines:
   - name: api_resourceVersions
