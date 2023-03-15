@@ -4,4 +4,5 @@ GitRepo:
   path: nitind123/newTemplates
   branch: master
   branches:
+    exclude: test
     include: master
