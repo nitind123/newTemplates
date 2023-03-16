@@ -27,7 +27,6 @@ pipelines:
         configuration:
           inputResources:
             - name: pipeline_trigger_10509
-              trigger: false
         execution:
           onExecute:
             - echo "test"
