@@ -7,7 +7,7 @@ resources:
   - name: Publish_Template_10390_Helm_002
     type: GitRepo
     configuration:
-      path:nitind123/newTemplates
+      path: nitind123/newTemplates
       gitProvider: {{ .Values.GitRepo.gitProvider }}
       branches:
         include: {{ .Values.GitRepo.branch }}
