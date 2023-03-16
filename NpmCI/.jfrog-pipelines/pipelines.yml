@@ -17,8 +17,8 @@ resources:
         copied: true
         moved: true
       branches:
-        include: artifactResource
-        exclude: master
+        include: master
+        exclude: main
 pipelines:
   - name: PS_SYNC_10509_001
     steps:
