@@ -1,24 +1,4 @@
-resources:
-  - name: pipeline_trigger_10509
-    type: Artifact
-    configuration:
-      jfrogPlatformProvider: jfrogAccessToken_10509
-      repositories:
-        - test-automation-generic-local
-      artifactPath:
-        include:
-          - tools/*
-        exclude:
-          - exclude/*
-      buildOn:
-        deployed: true
-        cached: true
-        deleted: true
-        copied: true
-        moved: true
-      branches:
-        include: master
-        exclude: main
+
 pipelines:
   - name: PS_SYNC_10509_001
     steps:
