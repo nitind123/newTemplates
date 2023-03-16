@@ -18,7 +18,7 @@ resources:
         moved: true
       branches:
         include: master
-      #  exclude: main
+        exclude: main
 pipelines:
   - name: PS_SYNC_10509_001
     steps:
