@@ -1,21 +1,33 @@
-{{- define "pipe.additionalEnvs" -}}
-env3: additional
-  {{ end -}}
-
-
+resources:
+  - name: pipeline_trigger_10509
+    type: Artifact
+    configuration:
+      jfrogPlatformProvider: jfrogAccessToken_10509
+      repositories:
+        - test-automation-generic-local
+      artifactPath:
+        include:
+          - tools/*
+        exclude:
+          - exclude/*
+      buildOn:
+        deployed: false
+        cached: true
+        deleted: true
+        copied: true
+        moved: true
+      branches:
+        include: master
+        exclude: main
 pipelines:
-  - name: P_define
+  - name: PS_SYNC_10509_001
     steps:
-      - name: S_define
+      - name: PS_SYNC_10509_001
         type: Bash
         configuration:
-          environmentVariables:
-            env1: gitBranch
-            env2: sourceRepository
-            {{ include "pipe.additionalEnvs" . }}
+          inputResources:
+            - name: pipeline_trigger_10509
+              trigger: false
         execution:
           onExecute:
-            - echo {{ regexFind "[a-zA-Z][1-9]" "abcd1234" }}
-            - echo {{ indent 4 "pipe.additionalEnvs" }}
-            - echo {{ "pipeline controleplane repo " | replace " " "-" }}
-            - echo {{ list 1 2 3 | toStrings }}
+            - echo "test"
