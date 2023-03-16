@@ -8,9 +8,9 @@ resources:
     type: GitRepo
     configuration:
       path:nitind123/newTemplates
-      gitProvider: {{ .Values.GitRepo.gitProvider}}
+      gitProvider: {{ .Values.GitRepo.gitProvider }}
       branches:
-        include: {{ .Values.GitRepo.branch}}
+        include: {{ .Values.GitRepo.branch }}
 
 pipelines:
   {{ if eq "master" (.Values.GitRepo.branch | toString) }}
