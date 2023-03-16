@@ -1,7 +1,7 @@
 templateRepository:
   gitProvider: s_gitHub
-  path: "{{.jfrog-pipelines.sourceRepository}}"
-  branch: "{{gitBranch}}"
+  path: nitind123/newTemplates
+  branch: master
   templateFolder: tests/uploadTemplate/templates/jfrog/helmTemplate
 
 publishTemplate:
