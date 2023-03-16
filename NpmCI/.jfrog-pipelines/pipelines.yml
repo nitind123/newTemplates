@@ -11,7 +11,7 @@ resources:
         exclude:
           - exclude/*
       buildOn:
-        deployed: false
+        deployed: true
         cached: true
         deleted: true
         copied: true
