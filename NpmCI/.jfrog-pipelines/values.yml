@@ -1,6 +1,6 @@
 ## This string will prefix the resources and pipeline, allowing you to add
 ## the pipeline source multiple times with unique names.
-namePrefix: npm_sample_nitin
+namePrefix: npm_sample_nitin1
  
 ## The name of your Artifactory integration
 artIntegration: myArtifactory
