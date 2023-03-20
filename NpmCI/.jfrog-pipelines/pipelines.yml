@@ -19,7 +19,7 @@ resources:
       branches:
         include: main
         exclude: test
-pipelines1:
+pipelines:
   - name: PS_SYNC_10509_001
     steps:
       - name: PS_SYNC_10509_001
