@@ -1,6 +1,4 @@
-{{- define "pipe.additionalEnvs" -}}
-env3: additional
-  {{ end -}}
+
 pipelines:
   - name: P_files
     steps:
@@ -10,8 +8,6 @@ pipelines:
           environmentVariables:
             env1: gitbranch
             env2: sourceRepository
-            {{ include "pipe.additionalEnvs" . }}
-            helperName: {{ include "sanity.name" . }}
         execution:
           onExecute:
-            - echo {{ get (.Files.Get "config.yml" | fromYaml) "message11" }}
+            - echo 'test'
