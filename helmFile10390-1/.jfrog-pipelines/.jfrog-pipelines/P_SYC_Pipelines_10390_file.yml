@@ -14,4 +14,4 @@ pipelines:
             helperName: {{ include "sanity.name" . }}
         execution:
           onExecute:
-            - echo {{ get (.Files.Get "config.yml" | fromYaml) "message" }}
+            - echo {{ get (.Files.Get "config.yml" | fromYaml) "message1" }}
