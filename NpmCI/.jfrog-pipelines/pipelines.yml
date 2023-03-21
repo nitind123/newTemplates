@@ -16,9 +16,7 @@ resources:
         deleted: true
         copied: true
         moved: true
-      branches:
-        include: main
-        exclude: test
+      
 pipelines:
   - name: PS_SYNC_10509_001
     steps:
