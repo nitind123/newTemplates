@@ -1,5 +1,5 @@
 resources:
-  - name: pipeline_trigger_10509_1
+  - name: pipeline_trigger_10509
     type: Artifact
     configuration:
       jfrogPlatformProvider: jfrogAccessToken_10509
