@@ -1,5 +1,5 @@
 resources:
-  - name: pipeline_trigger_10509
+  - name: pipeline_trigger_10509_1
     type: Artifact
     configuration:
       jfrogPlatformProvider: jfrogAccessToken_10509
@@ -16,6 +16,9 @@ resources:
         deleted: true
         copied: true
         moved: true
+      branches:
+        include: master|main
+        
       
 pipelines:
   - name: PS_SYNC_10509_001
