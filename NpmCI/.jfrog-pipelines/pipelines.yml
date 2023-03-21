@@ -16,6 +16,8 @@ resources:
         deleted: true
         copied: true
         moved: true
+      branches:
+        include: master|main  
       
 pipelines:
   - name: PS_SYNC_10509_001
