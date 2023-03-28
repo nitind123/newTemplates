@@ -6,7 +6,7 @@ resources:
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
-      path: {{ .Values.GitHub.Automation.path }}
+      path: {{ .Values.GitHub1.Automation.path }}
       branches:
         include: master
 
