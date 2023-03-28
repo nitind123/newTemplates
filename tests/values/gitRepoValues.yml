@@ -1,6 +1,6 @@
 GitHub:
-  Org_test_Automation:
-    path: jfbetapipeorg/templates
+  templates1:
+    path: nitind123/newTemplates
   Org_test_Automation_bash:
     path: nitind123/newTemplates_bash
   Org_test_Automation_PowerShell:
