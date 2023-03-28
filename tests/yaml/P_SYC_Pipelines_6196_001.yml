@@ -2,7 +2,7 @@ template: true
 valuesFilePath: ../values/gitRepoValues.yml
 
 resources:
-  - name: P_SYC_Pipelines_6196_001_git_repo
+  - name: P_SYC_Pipelines_6196_001_git_repo_1
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
