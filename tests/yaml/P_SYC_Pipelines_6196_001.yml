@@ -11,7 +11,7 @@ resources:
         include: master
 
 pipelines:
-  - name: test_pipeline1
+  - name: test_pipeline12
     steps:
       - name: step1
         type: Bash
