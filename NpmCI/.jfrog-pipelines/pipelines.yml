@@ -17,7 +17,7 @@ resources:
         copied: true
         moved: true
       branches:
-        include: master|main  
+        include: master|main | Test  
       
 pipelines:
   - name: PS_SYNC_10509_001
