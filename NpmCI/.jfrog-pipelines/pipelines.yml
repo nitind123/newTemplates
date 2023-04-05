@@ -1,32 +1,37 @@
 resources:
-  - name: pipeline_trigger_10509
-    type: Artifact
+  - name: myRepo
+    type: GITRepo
     configuration:
-      jfrogPlatformProvider: jfrogAccessToken_10509
-      repositories:
-        - test-automation-generic-local
-      artifactPath:
-        include:
-          - tools/*
-        exclude:
-          - exclude/*
-      buildOn:
-        deployed: true
-        cached: true
-        deleted: true
-        copied: true
-        moved: true
+      path: nitind123/newTemplates
+      gitProvider: s_gitHub
       branches:
-        include: master|main | Test  
-      
+        include: submodule_provate
+      recurseSubmodules: true
+
+  - name: propertyBag
+    type: PropertyBag
+    configuration:
+      foo: bar
+      foo1: bar1
+      foo2: bar2
+
 pipelines:
-  - name: PS_SYNC_10509_001
+  - name: demo_manual
+    configuration:
+      integrations:
+        - name: s_gitHub
     steps:
-      - name: PS_SYNC_10509_001
+      - name: manual_trigger
         type: Bash
         configuration:
           inputResources:
-            - name: pipeline_trigger_10509
+            - name: myRepo
+          outputResources:
+            - name: propertyBag
+          integrations:
+            - name: s_gitHub
         execution:
           onExecute:
-            - echo "test"
+            - pushd $res_myRepo_resourcePath
+            - ls
+            - write_output propertyBag "foo=$run_number"
