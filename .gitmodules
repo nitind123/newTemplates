@@ -1,0 +1,3 @@
+[submodule "jfrog-pipelines-extensions-sample"]
+	path = jfrog-pipelines-extensions-sample
+	url = git@github.com:nitind123/jfrog-pipelines-extensions-sample.git
