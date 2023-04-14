@@ -10,7 +10,7 @@ pipelines:
         readOnly:
           pipelineEnv:
             secure: false
-            default: "somePipValue"
+            default: ""
     steps:
       - name: S_A_pipeline_11878
         type: Bash
