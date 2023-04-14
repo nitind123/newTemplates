@@ -1,37 +1,27 @@
 resources:
-  - name: myRepo
-    type: GITRepo
-    configuration:
-      path: nitind123/newTemplates
-      gitProvider: s_gitHub
-      branches:
-        include: submodule_provate
-      recurseSubmodules: true
-
-  - name: propertyBag
+  - name: A_pipeline_11878_res
     type: PropertyBag
     configuration:
-      foo: bar
-      foo1: bar1
-      foo2: bar2
-
+      key1: value1
 pipelines:
-  - name: demo_manual
+  - name: A_pipeline_11878
     configuration:
-      integrations:
-        - name: s_gitHub
+      environmentVariables:
+        readOnly:
+          pipelineEnv:
+            secure: true
+            default: "somePipValue"
     steps:
-      - name: manual_trigger
+      - name: S_A_pipeline_11878
         type: Bash
         configuration:
+          environmentVariables:
+            mySecureEnv:
+              allowCustom: true
+              secure: true
+              default: "someValue"
           inputResources:
-            - name: myRepo
-          outputResources:
-            - name: propertyBag
-          integrations:
-            - name: s_gitHub
+            - name: A_pipeline_11878_res
         execution:
           onExecute:
-            - pushd $res_myRepo_resourcePath
-            - ls
-            - write_output propertyBag "foo=$run_number"
+            - echo "executing"
