@@ -9,7 +9,7 @@ pipelines:
       environmentVariables:
         readOnly:
           pipelineEnv:
-            secure: false
+            secure: true
             default: ""
     steps:
       - name: S_A_pipeline_11878
@@ -18,7 +18,7 @@ pipelines:
           environmentVariables:
             mySecureEnv:
               allowCustom: true
-              secure: false
+              secure: true
               default: "someValue"
           inputResources:
             - name: A_pipeline_11878_res
