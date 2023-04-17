@@ -1,27 +1,37 @@
 resources:
-  - name: A_pipeline_11878_res
+  - name: myRepo
+    type: GITRepo
+    configuration:
+      path: nitind123/newTemplates
+      gitProvider: nitind
+      branches:
+        include: submodule_provate
+      recurseSubmodules: true
+
+  - name: propertyBag
     type: PropertyBag
     configuration:
-      key1: value1
+      foo: bar
+      foo1: bar1
+      foo2: bar2
+
 pipelines:
-  - name: A_pipeline_11878
+  - name: demo_manual
     configuration:
-      environmentVariables:
-        readOnly:
-          pipelineEnv:
-            secure: true
-            default: ""
+      integrations:
+        - name: nitind
     steps:
-      - name: S_A_pipeline_11878
+      - name: manual_trigger
         type: Bash
         configuration:
-          environmentVariables:
-            mySecureEnv:
-              allowCustom: true
-              secure: true
-              default: "someValue"
           inputResources:
-            - name: A_pipeline_11878_res
+            - name: myRepo
+          outputResources:
+            - name: propertyBag
+          integrations:
+            - name: nitind
         execution:
           onExecute:
-            - echo "executing"
+            - pushd $res_myRepo_resourcePath
+            - ls
+            - write_output propertyBag "foo=$run_number"
