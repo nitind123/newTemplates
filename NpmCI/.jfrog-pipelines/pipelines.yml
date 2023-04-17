@@ -3,7 +3,7 @@ resources:
     type: GITRepo
     configuration:
       path: {{.jfrog-pipelines.sourceRepository}}
-      gitProvider: s_gitHub
+      gitProvider: nitind
       branches:
         include: {{gitBranch}}
       recurseSubmodules: true
@@ -29,7 +29,7 @@ pipelines:
           outputResources:
             - name: propertyBag
           integrations:
-            - name: s_gitHub
+            - name: nitind
         execution:
           onExecute:
             - pushd $res_myRepo_resourcePath
