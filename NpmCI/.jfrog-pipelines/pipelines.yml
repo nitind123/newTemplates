@@ -1,11 +1,11 @@
 resources:
-  - name: myRepo
+  - name: PS_Sync_9756_res
     type: GITRepo
     configuration:
-      path: nitind123/newTemplates
-      gitProvider: nitind
+      path: {{.jfrog-pipelines.sourceRepository}}
+      gitProvider: s_gitHub
       branches:
-        include: submodule_provate
+        include: {{gitBranch}}
       recurseSubmodules: true
 
   - name: propertyBag
@@ -16,22 +16,24 @@ resources:
       foo2: bar2
 
 pipelines:
-  - name: demo_manual
+  - name: PS_Sync_9756
     configuration:
       integrations:
-        - name: nitind
+        - name: s_gitHub
     steps:
-      - name: manual_trigger
+      - name: PS_Sync_9756
         type: Bash
         configuration:
           inputResources:
-            - name: myRepo
+            - name: PS_Sync_9756_res
           outputResources:
             - name: propertyBag
           integrations:
-            - name: nitind
+            - name: s_gitHub
         execution:
           onExecute:
             - pushd $res_myRepo_resourcePath
-            - ls
-            - write_output propertyBag "foo=$run_number"
+            - |
+              if ./somecommand | grep -q 'string'; then
+                echo "matched"
+              fi
