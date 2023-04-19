@@ -1,56 +1,36 @@
 resources:
-  - name: signed_git_002
-    type: GitRepo
+  - name: PS_Sync_9756_res
+    type: GITRepo
     configuration:
-      gitProvider: github_nitin
-      path: nitind123/newTemplates
+      path: {{.jfrog-pipelines.sourceRepository}}
+      gitProvider: s_gitHub
       branches:
-        include: {{ gitBranch }}
-  - name: signed_buildinfo_001
-    type: BuildInfo
+        include: {{gitBranch}}
+      recurseSubmodules: true
+
+  - name: propertyBag
+    type: PropertyBag
     configuration:
-      sourceArtifactory: int_default_artifactory
- 
+      foo: bar
+      foo1: bar1
+      foo2: bar2
+
 pipelines:
-  - name: test_signed_start_2
+  - name: PS_Sync_9756
+    configuration:
+      integrations:
+        - name: s_gitHub
     steps:
-      - name: create_info
+      - name: PS_Sync_9756
         type: Bash
         configuration:
           inputResources:
-            - name: signed_git_002
-          integrations:
-            - name: int_default_artifactory
+            - name: PS_Sync_9756_res
           outputResources:
-            - name: signed_buildinfo_001
+            - name: propertyBag
+          integrations:
+            - name: s_gitHub
         execution:
           onExecute:
-            - cd $res_signed_git_002_resourcePath
-            - touch server.js
-            - jfrog rt upload server.js km-generic-local
-            - jfrog rt build-publish --detailed-summary $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER > summaryOutput.json
-            - save_artifact_info 'buildInfo' './summaryOutput.json' --build-name $JFROG_CLI_BUILD_NAME --build-number $JFROG_CLI_BUILD_NUMBER
-      - name: print_info
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: create_info
-        execution:
-          onExecute:
-            - validate_artifact buildInfo --build-name $JFROG_CLI_BUILD_NAME --build-number $JFROG_CLI_BUILD_NUMBER
-        
-  - name: test_signed_stop_2
-    steps:
-      - name: validate_info
-        type: Bash
-        configuration:
-          inputResources:
-            - name: signed_buildinfo_001
-        execution:
-          onExecute:
-            # - response=$(validate_artifact buildInfo --build-name ${res_signed_buildinfo_1_buildName} --build-number ${res_signed_buildinfo_1_buildNumber})
-            - validate_artifact 'buildInfo' --build-name 'test_signed_start_1' --build-number 4
-            - response=$(validate_artifact 'buildInfo' --build-name test_signed_start_1 --build-number 4)
-            - echo $response
-            - validateResult=$(echo "$response" | jq '.result')
-            - if [ "$validateResult" != "true" ]; then echo "failed validation" && exit 1; fi
+            - pushd $res_myRepo_resourcePath
+            - ls
