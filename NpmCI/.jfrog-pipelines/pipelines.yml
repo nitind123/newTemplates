@@ -31,5 +31,6 @@ pipelines:
             - name: goithub
         execution:
           onExecute:
+            - ls
             - task: jfrog/setup-go@latest
             
