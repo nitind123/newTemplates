@@ -32,5 +32,5 @@ pipelines:
             - name: s_gitHub
         execution:
           onExecute:
-            - pushd $res_myRepo_resourcePath
+            - pushd $PS_Sync_9756_res
             - ls
