@@ -33,7 +33,4 @@ pipelines:
           onExecute:
             - pushd $res_myRepo_resourcePath
             - task: jfrog/setup-go@latest
-            - |
-              if ./ls | grep -q 'test'; then
-                echo "matched"
-              fi
+            
