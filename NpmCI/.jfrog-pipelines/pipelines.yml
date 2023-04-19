@@ -3,7 +3,7 @@ resources:
     type: GITRepo
     configuration:
       path: {{.jfrog-pipelines.sourceRepository}}
-      gitProvider: nitind
+      gitProvider: goithub
       branches:
         include: {{gitBranch}}
       recurseSubmodules: true
