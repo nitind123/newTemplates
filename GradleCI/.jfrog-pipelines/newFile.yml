@@ -2,7 +2,7 @@ resources:
   - name: PS_Sync_9756_res
     type: GITRepo
     configuration:
-      path: nitind123/newTemplates
+      path: {{.jfrog-pipelines.sourceRepository}}
       gitProvider: s_gitHub
       branches:
         include: {{gitBranch}}
@@ -33,4 +33,7 @@ pipelines:
         execution:
           onExecute:
             - pushd $res_PS_Sync_9756_res_resourcePath
-            - ls
+            - |
+              if ./ls | grep -q 'NpmCI'; then
+                echo "matched"
+              fi
