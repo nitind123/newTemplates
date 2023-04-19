@@ -6,7 +6,6 @@ resources:
       gitProvider: goithub
       branches:
         include: {{gitBranch}}
-      recurseSubmodules: true
 
   - name: propertyBag
     type: PropertyBag
