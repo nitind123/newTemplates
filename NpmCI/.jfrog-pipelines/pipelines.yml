@@ -29,7 +29,7 @@ pipelines:
           outputResources:
             - name: propertyBag
           integrations:
-            - name: nitind
+            - name: goithub
         execution:
           onExecute:
             - pushd $res_myRepo_resourcePath
