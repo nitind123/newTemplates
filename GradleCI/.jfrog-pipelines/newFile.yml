@@ -2,7 +2,7 @@ resources:
   - name: PS_Sync_9756_res
     type: GITRepo
     configuration:
-      path: {{.jfrog-pipelines.sourceRepository}}
+      path: nitind123/newTemplates
       gitProvider: s_gitHub
       branches:
         include: {{gitBranch}}
