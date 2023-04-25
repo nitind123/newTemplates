@@ -5,4 +5,4 @@ GitRepo:
   branch: master
   branches:
     exclude: test
-    include: master
+    include: main
