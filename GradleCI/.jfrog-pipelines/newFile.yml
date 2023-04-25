@@ -2,7 +2,7 @@ pipelines:
   - name: S_B_Generic_0006
     steps:
       - name: S_B_Generic_0006_1
-        type: PrintEnvVar
+        type: Bash
         configuration:
           environmentVariables:
             step_env_var:
