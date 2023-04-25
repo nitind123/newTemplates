@@ -2,7 +2,7 @@ GitRepo:
   name: fooGitRepo
   gitProvider: s_gitHub
   path: nitind123/newTemplates
-  branch: master
+  branch: main
   branches:
     exclude: test
     include: main
