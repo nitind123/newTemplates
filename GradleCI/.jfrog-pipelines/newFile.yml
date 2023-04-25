@@ -3,7 +3,7 @@ resources:
     type: GITRepo
     configuration:
       path: {{.jfrog-pipelines.sourceRepository}}
-      gitProvider: s_gitHub
+      gitProvider: goithub
       branches:
         include: {{gitBranch}}
       recurseSubmodules: true
@@ -19,7 +19,7 @@ pipelines:
   - name: PS_Sync_9756
     configuration:
       integrations:
-        - name: s_gitHub
+        - name: goithub
     steps:
       - name: PS_Sync_9756
         type: Bash
@@ -29,7 +29,7 @@ pipelines:
           outputResources:
             - name: propertyBag
           integrations:
-            - name: s_gitHub
+            - name: goithub
         execution:
           onExecute:
             - pushd $res_PS_Sync_9756_res_resourcePath
