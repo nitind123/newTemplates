@@ -1,40 +1,11 @@
-resources:
-  - name: PS_Sync_9756_res
-    type: GITRepo
-    configuration:
-      path: {{.jfrog-pipelines.sourceRepository}}
-      gitProvider: goithub
-      branches:
-        include: {{gitBranch}}
-      recurseSubmodules: true
-
-  - name: propertyBag
-    type: PropertyBag
-    configuration:
-      foo: bar
-      foo1: bar1
-      foo2: bar2
-
 pipelines:
-  - name: PS_Sync_9756
-    configuration:
-      integrations:
-        - name: goithub
+  - name: S_B_Generic_0006
     steps:
-      - name: PS_Sync_9756
-        type: Bash
+      - name: S_B_Generic_0006_1
+        type: test/PrintEnvVar
         configuration:
-          inputResources:
-            - name: PS_Sync_9756_res
-          outputResources:
-            - name: propertyBag
-          integrations:
-            - name: goithub
-        execution:
-          onExecute:
-            - pushd $res_PS_Sync_9756_res_resourcePath
-            - ls
-            - |
-              if ls | grep -q 'NpmCI'; then
-                echo "matched"
-              fi
+          environmentVariables:
+            step_env_var:
+              description: step description
+              default: step_default_value
+          envVarName:  step_env_var
