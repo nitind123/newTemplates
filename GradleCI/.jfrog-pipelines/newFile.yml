@@ -35,6 +35,6 @@ pipelines:
             - pushd $res_PS_Sync_9756_res_resourcePath
             - ls
             - |
-              if ./ls | grep -q 'NpmCI'; then
+              if ls | grep -q 'NpmCI'; then
                 echo "matched"
               fi
