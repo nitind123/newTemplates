@@ -30,10 +30,10 @@ pipelines:
           integrations:
             - name: goithub
             - name: jfrogPlatformToken
+            - name: slackIntegration
         execution:
           onExecute:
             - ls
             - task: jfrog/slack-notify@latest
-            - task: jfrog/frogbot@latest
             
             
