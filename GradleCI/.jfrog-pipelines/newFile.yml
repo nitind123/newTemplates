@@ -1,11 +1,32 @@
+resources:
+  - name: P_WF_5933_004_resource
+    type: PropertyBag
+    configuration:
+      test: test
+
 pipelines:
-  - name: S_B_Generic_0006
+  - name: pipeline_P_WF_5933_004
+    configuration:
+      integrations:
+        - name: s_artifactory
     steps:
-      - name: S_B_Generic_0006_1
+      - name: P_WF_5933_004_1
         type: Bash
         configuration:
-          environmentVariables:
-            step_env_var:
-              description: step description
-              default: step_default_value
-          envVarName:  step_env_var
+          inputResources:
+            - name: P_WF_5933_004_resource
+        execution:
+          onExecute:
+            - echo "executing step..."
+      - name: P_WF_5933_004_2
+        type: Bash
+        configuration:
+          integrations:
+            - name: s_artifactory
+          inputResources:
+            - name: P_WF_5933_004_resource
+          inputSteps:
+            - name: P_WF_5933_004_1
+        execution:
+          onExecute:
+            - echo "executing step..."
