@@ -1,3 +1,11 @@
+resources:
+  - name: PS_Sync_9756_res
+    type: GITRepo
+    configuration:
+      path: {{.jfrog-pipelines.sourceRepository}}
+      gitProvider: s_gitHub
+      branches:
+        include: {{gitBranch}}
 pipelines:
   - name: pipeline_S_WF_5976_001
     steps:
@@ -14,6 +22,8 @@ pipelines:
               custom:
                 name: releases-docker.jfrog.io/jfrog/pipelines-u20java
                 tag: '17'
+          inputResources:
+            - name: PS_Sync_9756_res      
 
         execution:
           onStart:
