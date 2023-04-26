@@ -32,8 +32,7 @@ pipelines:
             - name: jfrogPlatformToken
             - name: slackIntegration
         execution:
-          onExecute:
-            - ls
+          onStart:
             - task: jfdev-ci-commons/setup-step-commons@v0.0.1
             
             
