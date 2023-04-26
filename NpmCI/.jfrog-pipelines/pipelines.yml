@@ -7,24 +7,12 @@ resources:
       branches:
         include: {{gitBranch}}
 pipelines:
-  - name: pipeline_S_WF_5976_001
-    steps:
-      - name: S_WF_5976_001
-        type: MvnBuild
+  - name: PS_Sync_9756
+        type: Bash
         configuration:
-          sourceLocation: frontend/package
-          configFileLocation: ../../build/ci/.conf
-          configFileName: maven-config
-          mvnCommand: '${MVN_COMMAND}'
-          runtime:
-            type: image
-            image:
-              custom:
-                name: releases-docker.jfrog.io/jfrog/pipelines-u20java
-                tag: '17'
           inputResources:
-            - name: PS_Sync_9756_res      
-
+            - name: PS_Sync_9756_res
+          
         execution:
           onStart:
             - task: jfdev-ci-commons/setup-step-commons@v0.0.1
