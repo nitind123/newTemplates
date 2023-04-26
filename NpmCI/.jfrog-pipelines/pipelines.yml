@@ -1,38 +1,17 @@
-resources:
-  - name: PS_Sync_9756_res
-    type: GITRepo
+- name: access_frontend_package
+    type: MvnBuild
     configuration:
-      path: {{.jfrog-pipelines.sourceRepository}}
-      gitProvider: goithub
-      branches:
-        include: {{gitBranch}}
-
-  - name: propertyBag
-    type: PropertyBag
-    configuration:
-      foo: bar
-      foo1: bar1
-      foo2: bar2
-
-pipelines:
-  - name: PS_Sync_9756
-    configuration:
-      integrations:
-        - name: s_gitHub
-    steps:
-      - name: PS_Sync_9756
-        type: Bash
-        configuration:
-          inputResources:
-            - name: PS_Sync_9756_res
-          outputResources:
-            - name: propertyBag
-          integrations:
-            - name: goithub
-            - name: jfrogPlatformToken
-            - name: slackIntegration
-        execution:
-          onStart:
-            - task: jfdev-ci-commons/setup-step-commons@v0.0.1
-            
-            
+      sourceLocation: frontend/package
+      configFileLocation: ../../build/ci/.conf
+      configFileName: maven-config
+      mvnCommand: '${MVN_COMMAND}'
+      runtime:
+        type: image
+        image:
+          custom:
+            name: releases-docker.jfrog.io/jfrog/pipelines-u20java
+            tag: '17'
+      
+    execution:
+      onStart:
+        - task: jfdev-ci-commons/setup-step-commons@v0.0.1
