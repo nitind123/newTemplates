@@ -3,7 +3,7 @@ resources:
     type: GITRepo
     configuration:
       path: {{.jfrog-pipelines.sourceRepository}}
-      gitProvider: s_gitHub
+      gitProvider: goithub
       branches:
         include: {{gitBranch}}
 pipelines:
