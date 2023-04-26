@@ -8,6 +8,8 @@ resources:
         include: {{gitBranch}}
 pipelines:
   - name: PS_Sync_9756
+    steps:
+      - name: PS_Sync_9756
         type: Bash
         configuration:
           inputResources:
