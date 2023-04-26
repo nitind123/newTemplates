@@ -33,7 +33,5 @@ pipelines:
           onExecute:
             - ls
             - task: jfrog/setup-go@latest
-            - task: jfrog/setup-node@latest
-            - task: jfrog/slack-notify@latest
-            - task: jfrog/frogbot@latest
+            
             
