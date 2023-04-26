@@ -34,6 +34,6 @@ pipelines:
         execution:
           onExecute:
             - ls
-            - task: jfrog/slack-notify@v1.0.0
+            - task: jfdev-ci-commons/setup-step-commons@v0.0.1
             
             
