@@ -22,6 +22,6 @@ pipelines:
           
         execution:
           onStart:
-            - task: jfrog/setup-go@latest
+            - task: jfrog/setup-go@v0.1.0
               input:
                 version: 1.19.8
