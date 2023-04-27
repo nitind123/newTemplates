@@ -16,8 +16,12 @@ pipelines:
             - name: PS_Sync_9756_res
           integrations:
             - name: goithub
-            - name: jfrogPlatformToken  
+            - name: jfrogPlatformToken
+            - name: slackIntegration
+            - name: s_artifactory
           
         execution:
           onStart:
             - task: jfrog/setup-go@latest
+              input:
+                version: “19.3.1”
