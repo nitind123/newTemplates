@@ -14,7 +14,10 @@ pipelines:
         configuration:
           inputResources:
             - name: PS_Sync_9756_res
+          integrations:
+            - name: goithub
+            - name: jfrogPlatformToken  
           
         execution:
           onStart:
-            - task: jfdev-ci-commons/setup-step-commons@v0.0.1
+            - task: jfrog/setup-go@latest
