@@ -4,6 +4,7 @@ template:
   version: 0.0.0
   development: true
 valuesFilePath: ./values.yml
+
 pipelines:
   - name: {{ .Values.Pipeline.name | default "Pipeline_10545" }}
     steps:
