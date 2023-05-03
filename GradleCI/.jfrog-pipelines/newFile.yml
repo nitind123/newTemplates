@@ -21,7 +21,7 @@ pipelines:
           onExecute:
             - ls
             - echo "first_step"
-            - echo ${env1}
+            - echo '${env1}'
       - name: second_step
         type: Bash   
         configuration:
