@@ -1,32 +1,31 @@
 resources:
-  - name: P_WF_5933_004_resource
-    type: PropertyBag
+  - name: myRepo_native
+    type: GITRepo
     configuration:
-      test: test
+      path: nitind123/newTemplates
+      gitProvider: s_gitHub
+      branches:
+        include: master
 
 pipelines:
-  - name: pipeline_P_WF_5933_004
-    configuration:
-      integrations:
-        - name: s_artifactory
+  - name: myPipeline_native
     steps:
-      - name: P_WF_5933_004_1
-        type: Bash
-        configuration:
-          inputResources:
-            - name: P_WF_5933_004_resource
-        execution:
-          onExecute:
-            - echo "executing step..."
-      - name: P_WF_5933_004_2
+      - name: first_step
         type: Bash
         configuration:
           integrations:
-            - name: s_artifactory
-          inputResources:
-            - name: P_WF_5933_004_resource
-          inputSteps:
-            - name: P_WF_5933_004_1
+            - name: {{.jfrog-pipelines.localArtifactory}}
         execution:
           onExecute:
-            - echo "executing step..."
+            - ls
+            - echo "first_step"
+            - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
+      - name: second_step
+        type: Bash   
+        configuration:
+          inputSteps:
+            - name: first_step
+        execution:
+          onExecute:
+            - echo "second_step"
+            - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
