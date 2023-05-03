@@ -16,7 +16,7 @@ pipelines:
           integrations:
             - name: {{.jfrog-pipelines.localArtifactory}}
           environmentVariables:
-            env1: {{.jfrog-pipelines.localArtifactory}}
+            FORCE_RUN: 'true'
         execution:
           onExecute:
            - ls
