@@ -15,11 +15,13 @@ pipelines:
         configuration:
           integrations:
             - name: {{.jfrog-pipelines.localArtifactory}}
+          environmentVariables:
+            env1: {{.jfrog-pipelines.localArtifactory}}
         execution:
           onExecute:
             - ls
             - echo "first_step"
-            - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
+            - echo ${env1}
       - name: second_step
         type: Bash   
         configuration:
