@@ -19,9 +19,8 @@ pipelines:
             env1: {{.jfrog-pipelines.localArtifactory}}
         execution:
           onExecute:
-            - ls
-            - echo "first_step"
-            - echo '${env1}'
+           - ls
+           - jfrog rt upload steplet.json test-automation-generic-local/tools/steplet.json
       - name: second_step
         type: Bash   
         configuration:
