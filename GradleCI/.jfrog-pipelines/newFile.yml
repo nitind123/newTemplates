@@ -20,7 +20,7 @@ pipelines:
         execution:
           onExecute:
            - ls
-           - jfrog config add jftest --url https://f11912.jfrog-pipelines.com
+           - jfrog config add jftest --url https://f11912.jfrog-pipelines.com --access-token {{.jfrog-pipelines.localArtifactory}}
            - jfrog rt upload steplet.json example-repo-local/steplet.json
       - name: second_step
         type: Bash   
