@@ -1,27 +1,12 @@
-resources:
-  - name: PS_Sync_9756_res
-    type: GITRepo
-    configuration:
-      path: {{.jfrog-pipelines.sourceRepository}}
-      gitProvider: goithub
-      branches:
-        include: {{gitBranch}}
 pipelines:
-  - name: PS_Sync_9756
+  - name: P_PS_11836_001
     steps:
-      - name: PS_Sync_9756
+      - name: P_PS_11836_001_step_1
         type: Bash
         configuration:
-          inputResources:
-            - name: PS_Sync_9756_res
           integrations:
-            - name: goithub
-            - name: jfrogPlatformToken
-            - name: slackIntegration
+            - name: wrong_s_artifactory
             - name: s_artifactory
-          
         execution:
-          onStart:
-            - task: jfrog/setup-go@v0.1.0
-              input:
-                version: 1.19.8
+          onExecute:
+            - echo "test"
