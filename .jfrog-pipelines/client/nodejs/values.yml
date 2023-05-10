@@ -1,0 +1,9 @@
+mainService: "access_nodejs_client"
+includedServices: "access_nodejs_client"
+gitRepoPath: "nitind123/newTemplates"
+buildPipelineFirstStep: "trigger_all"
+serviceReleaseMinor: "false"
+slackReleaseIntegrationChannel: "platform-release-pipeline"
+serviceMilestoneCronInterval: "0 1 * * *"
+servicePipelineSourceDir: ".jfrog-pipelines/client/nodejs"
+jfdevCiCommonsDefaultVersion: 1.*
