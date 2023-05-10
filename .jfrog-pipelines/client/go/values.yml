@@ -1,0 +1,9 @@
+mainService: "access_go_client"
+includedServices: "access_go_client"
+gitRepoPath: "infs/access"
+buildPipelineFirstStep: "trigger_all"
+serviceReleaseMinor: "false"
+slackReleaseIntegrationChannel: "platform-release-pipeline"
+serviceMilestoneCronInterval: "0 1 * * *"
+servicePipelineSourceDir: ".jfrog-pipelines/client/go"
+jfdevCiCommonsDefaultVersion: 1.*
