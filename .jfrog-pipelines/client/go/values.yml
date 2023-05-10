@@ -1,6 +1,6 @@
 mainService: "access_go_client"
 includedServices: "access_go_client"
-gitRepoPath: "infs/access"
+gitRepoPath: "nitind123/newTemplates"
 buildPipelineFirstStep: "trigger_all"
 serviceReleaseMinor: "false"
 slackReleaseIntegrationChannel: "platform-release-pipeline"
