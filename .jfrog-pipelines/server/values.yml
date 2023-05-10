@@ -1,0 +1,9 @@
+mainService: "access"
+includedServices: "access"
+gitRepoPath: "nitind123/newTemplates"
+buildPipelineFirstStep: "trigger_all"
+serviceReleaseMinor: "false"
+slackReleaseIntegrationChannel: "platform-release-pipeline"
+serviceMilestoneCronInterval: "0 1 * * *"
+servicePipelineSourceDir: ".jfrog-pipelines/server"
+jfdevCiCommonsDefaultVersion: 1.*
