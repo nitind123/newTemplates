@@ -1,26 +1,15 @@
-template: true
-valuesFilePath: ../tests/values/gitRepoValues.yml
-
-resources:
-  - name: P_Sync_6525_002_gitrepo
-    type: GitRepo
-    configuration:
-      gitProvider: {{ .Values.Projects.FirstProjectKey }}_s_github_duplicate_6525_2
-      path: {{ .Values.GitHub.Org_test_Automation_bash.path }}
-      branches:
-        include: {{gitBranch}}
+valuesFilePath: ./values/helm/values.yml
 
 pipelines:
-  - name: P_Sync_6525_002
-    steps:
-      - name: P_Sync_6525_002_1
-        type: Bash
-        configuration:
-          inputResources:
-            - name: P_Sync_6525_002_gitrepo
-        execution:
-          onExecute:
-            - pushd ${res_P_Sync_6525_002_gitrepo_resourcePath}
-            - ls -la
-            - popd
-
+  {{- with .Values.repoBranch }}
+- name: P_flow
+  steps:
+    - name: S_flow
+      type: Bash
+      configuration:
+        environmentVariables:
+          env1: gitBranch
+      execution:
+        onExecute:
+          - echo {{ sha256sum "Hello world!" }}
+  {{ end }}
