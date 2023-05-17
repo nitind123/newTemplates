@@ -13,7 +13,7 @@ pipelines:
 #           onExecute:
 #             - echo {{ sha256sum "Hello world!" }}
 #   {{ end }}
-{{ - define .Values.repoBranch }}
+{{- define .Values.repoBranch }}
   - name: P_flow
     steps:
       - name: S_flow
