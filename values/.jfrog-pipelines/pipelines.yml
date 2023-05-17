@@ -1,7 +1,19 @@
 valuesFilePath: ./values/helm/values.yml
 
 pipelines:
-  {{- with .Values.repoBranch }}
+#  {{- with .Values.repoBranch }}
+#   - name: P_flow
+#     steps:
+#       - name: S_flow
+#         type: Bash
+#         configuration:
+#           environmentVariables:
+#             env1: gitBranch
+#         execution:
+#           onExecute:
+#             - echo {{ sha256sum "Hello world!" }}
+#   {{ end }}
+{{ - define .Values.repoBranch }}
   - name: P_flow
     steps:
       - name: S_flow
@@ -9,7 +21,9 @@ pipelines:
         configuration:
           environmentVariables:
             env1: gitBranch
+            env2: {{  buildCustomCert "base64-encoded-ca-crt" "base64-encoded-ca-key" }}
+            env3: {{ genCA "foo-ca" 365 }}
         execution:
           onExecute:
-            - echo {{ sha256sum "Hello world!" }}
+            - echo {{ sha256sum .Values.repoBranch }}
   {{ end }}
