@@ -6,3 +6,13 @@ GitRepo:
   branches:
     exclude: test
     include: main
+    
+    
+mainService: "access"
+includedServices: "access"
+gitRepoPath: "infs/access"
+buildPipelineFirstStep: "trigger_all"
+serviceMilestoneCronInterval: ""                           #the release milestone periodic execution time - !!does not accept slashes {/} - see bug: PIPE-12367!!
+servicePipelineSourceDir: ".jfrog-pipelines/server"                 #the path to the release pipelines yml files
+jfdevCiCommonsDefaultVersion: 1.*                  
+    
