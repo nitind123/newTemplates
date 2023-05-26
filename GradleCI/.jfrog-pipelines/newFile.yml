@@ -23,7 +23,7 @@ pipelines:
            - ls
            - jfrog config add jftest --url https://f11912.jfrog-pipelines.com --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
            #- jfrog rt dl example-repo-local --server-id https://f11912.jfrog-pipelines.com --url https://f11912.jfrog-pipelines.com --flat
-           - jfrog rt upload steplet.json example-repo-local/steplet.json
+           - jfrog rt upload steplet.json native2-pipe-info/myPipeline_native?projectKey=native2/
 #            - jfrog config add jftest --url https://f11912.jfrog-pipelines.com --access-token ${admin_token}
 #            - jfrog rt upload steplet.json example-repo-local/steplet.json
       - name: second_step
