@@ -1,13 +1,14 @@
-name: P_PS_11836_001
-steps:
-  - name: P_PS_11836_001_step_1
-    type: Bash
-    configuration:
-      integrations:
-        - name: s_artifactory
-    execution:
-      onExecute:
-        - echo "tes1t"
-        - task: jfrog/setup-go@latest
-          id: my-go-setup
-          repository: pipelines-tasks-virtual
+pipelines:
+  name: P_PS_11836_001
+  steps:
+    - name: P_PS_11836_001_step_1
+      type: Bash
+      configuration:
+        integrations:
+          - name: s_artifactory
+      execution:
+        onExecute:
+          - echo "tes1t"
+          - task: jfrog/setup-go@latest
+            id: my-go-setup
+            repository: pipelines-tasks-virtual
