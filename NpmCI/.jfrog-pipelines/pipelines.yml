@@ -7,7 +7,7 @@ steps:
         - name: s_artifactory
     execution:
       onExecute:
-        - echo "test"
+        - echo "tes1t"
         - task: jfrog/setup-go@latest
           id: my-go-setup
           repository: pipelines-tasks-virtual
