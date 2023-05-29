@@ -1,18 +1,14 @@
-resources:
-  - name: EXT_S_SYC_AU_0017_fileSpec
-    type: FileSpec
-    configuration:
-      sourceArtifactory: {{.jfrog-pipelines.localArtifactory}}
-      pattern: "steplet.json"
 pipelines:
-  - name: EXT_S_SYC_AU_0017
+  - name: P_PS_10509_UploadArtifact_001
     steps:
-      - name: EXT_S_SYC_AU_0017
-        type: UploadArtifact
+      - name: P_PS_10509_UploadArtifact_001
+        type: Bash
         configuration:
-          targetPath: "native-pipe-info?projectKey=native"
-          deb: "distribution/component/architecture"
+          environmentVariables:
+            FORCE_RUN: 'true'
           integrations:
             - name: {{.jfrog-pipelines.localArtifactory}}
-          inputResources:
-            - name: EXT_S_SYC_AU_0017_fileSpec
+        execution:
+          onExecute:
+            - ls
+            - jfrog rt upload steplet.json native-pipe-info/steplet.json?projectKey=native
