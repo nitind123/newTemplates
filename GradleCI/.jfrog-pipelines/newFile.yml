@@ -1,7 +1,7 @@
 
 
 pipelines:
-  - name: myPipeline_native_write_native
+  - name: myPipeline_native_write_native1
     steps:
       - name: first_step_nats
         type: Bash
