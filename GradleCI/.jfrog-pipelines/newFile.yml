@@ -1,56 +1,34 @@
 resources:
-  - name: signed_git_002
-    type: GitRepo
+  - name: myRepo_native_write
+    type: GITRepo
     configuration:
-      gitProvider: github_nitin
       path: nitind123/newTemplates
+      gitProvider: s_gitHub
       branches:
-        include: {{ gitBranch }}
-  - name: signed_buildinfo_001
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: int_default_artifactory
- 
+        include: master
+
 pipelines:
-  - name: test_signed_start_2
+  - name: myPipeline_native_write
     steps:
-      - name: create_info
+      - name: first_step
         type: Bash
         configuration:
-          inputResources:
-            - name: signed_git_002
           integrations:
-            - name: int_default_artifactory
-          outputResources:
-            - name: signed_buildinfo_001
+            - name: {{.jfrog-pipelines.localArtifactory}}
         execution:
           onExecute:
-            - cd $res_signed_git_002_resourcePath
-            - touch server.js
-            - jfrog rt upload server.js km-generic-local
-            - jfrog rt build-publish --detailed-summary $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER > summaryOutput.json
-            - save_artifact_info 'buildInfo' './summaryOutput.json' --build-name $JFROG_CLI_BUILD_NAME --build-number $JFROG_CLI_BUILD_NUMBER
-      - name: print_info
-        type: Bash
+            - echo "first_step"
+            - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
+            - jfrog config add jftest-$step_id --url http://localhost:8082 --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
+            - touch test.txt
+            - echo "hello" > test.txt
+            - jfrog rt upload test.txt native-pipe-info/test.txt --server-id jftest-$step_id
+      - name: second_step
+        type: Bash   
         configuration:
           inputSteps:
-            - name: create_info
+            - name: first_step
         execution:
           onExecute:
-            - validate_artifact buildInfo --build-name $JFROG_CLI_BUILD_NAME --build-number $JFROG_CLI_BUILD_NUMBER
-        
-  - name: test_signed_stop_2
-    steps:
-      - name: validate_info
-        type: Bash
-        configuration:
-          inputResources:
-            - name: signed_buildinfo_001
-        execution:
-          onExecute:
-            # - response=$(validate_artifact buildInfo --build-name ${res_signed_buildinfo_1_buildName} --build-number ${res_signed_buildinfo_1_buildNumber})
-            - validate_artifact 'buildInfo' --build-name 'test_signed_start_1' --build-number 4
-            - response=$(validate_artifact 'buildInfo' --build-name test_signed_start_1 --build-number 4)
-            - echo $response
-            - validateResult=$(echo "$response" | jq '.result')
-            - if [ "$validateResult" != "true" ]; then echo "failed validation" && exit 1; fi
+            - echo "second_step"
+            - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
