@@ -1,14 +1,14 @@
 pipelines:
-  - name: P_PS_10509_UploadArtifact_001
+  - name: A_pipeline_6495_1
     steps:
-      - name: P_PS_10509_UploadArtifact_001
+      - name: S_A_pipeline_6495
         type: Bash
         configuration:
-          environmentVariables:
-            FORCE_RUN: 'true'
           integrations:
-            - name: {{.jfrog-pipelines.localArtifactory}}
+            - name: s_gitHub
         execution:
           onExecute:
-            - ls
-            - jfrog rt upload steplet.json native-pipe-info/steplet.json?projectKey=native
+            - echo "hi"
+          onComplete:
+            - echo "state=pipeline2" > pipeline_state.txt
+            - add_pipeline_files pipeline_state.txt pipeline_state_file
