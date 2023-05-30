@@ -1,5 +1,5 @@
 resources:
-  - name: myRepo_native
+  - name: myRepo_native_native
     type: GITRepo
     configuration:
       path: nitind123/newTemplates
@@ -8,9 +8,9 @@ resources:
         include: master
 
 pipelines:
-  - name: myPipeline_native
+  - name: deep_native
     steps:
-      - name: first_step
+      - name: first_step_native
         type: Bash
         configuration:
           integrations:
@@ -28,11 +28,11 @@ pipelines:
            - jfrog rt upload steplet.json native-pipe-info --server-id jftest
 #            - jfrog config add jftest --url https://f119126.jfrog-pipelines.com --access-token ${admin_token}
 #            - jfrog rt upload steplet.json native-pipe-info/ --server-id jftest
-      - name: second_step
+      - name: second_step_native
         type: Bash   
         configuration:
           inputSteps:
-            - name: first_step
+            - name: first_step_native
         execution:
           onExecute:
             - echo "second_step"
