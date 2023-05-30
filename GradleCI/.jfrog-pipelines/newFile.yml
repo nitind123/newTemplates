@@ -1,11 +1,4 @@
-resources:
-  - name: myRepo_native_write_nats
-    type: GITRepo
-    configuration:
-      path: nitind123/newTemplates
-      gitProvider: s_gitHub
-      branches:
-        include: master
+
 
 pipelines:
   - name: myPipeline_native_write_native
