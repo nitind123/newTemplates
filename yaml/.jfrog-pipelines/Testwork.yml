@@ -1,7 +1,7 @@
 pipelines:
-  - name: A_pipeline_6495_1
+  - name: A_pipeline_6495_12
     steps:
-      - name: S_A_pipeline_6495
+      - name: S_A_pipeline_64952
         type: Bash
         configuration:
           integrations:
