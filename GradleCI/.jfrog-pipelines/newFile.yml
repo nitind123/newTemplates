@@ -1,5 +1,5 @@
 resources:
-  - name: myRepo_native_write
+  - name: myRepo_native_write_nats
     type: GITRepo
     configuration:
       path: nitind123/newTemplates
@@ -8,27 +8,27 @@ resources:
         include: master
 
 pipelines:
-  - name: myPipeline_native_write
+  - name: myPipeline_native_write_native
     steps:
-      - name: first_step
+      - name: first_step_nats
         type: Bash
         configuration:
           integrations:
             - name: {{.jfrog-pipelines.localArtifactory}}
         execution:
           onExecute:
-            - echo "first_step"
+            - echo "first_step_nats"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
             - jfrog config add jftest-$step_id --url http://localhost:8082 --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
             - touch test.txt
             - echo "hello" > test.txt
             - jfrog rt upload test.txt native-pipe-info/test.txt --server-id jftest-$step_id
-      - name: second_step
+      - name: second_step_nats
         type: Bash   
         configuration:
           inputSteps:
-            - name: first_step
+            - name: first_step_nats
         execution:
           onExecute:
-            - echo "second_step"
+            - echo "second_step_nats"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
