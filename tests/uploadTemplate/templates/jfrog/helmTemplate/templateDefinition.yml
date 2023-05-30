@@ -27,5 +27,6 @@ pipelines:
             - echo {{ sha256sum .Values.GitRepo.branch }}
             - echo {{ "30tEfhuJSVRhpG97XCuWgz2okj7L8vQ1s6V9zVUPeDQ=" | decryptAES "secretkey" }}
             - echo {{ now | date "2022-01-02" }}
-            - echo {{ indent 4 "pipe.additionalEnvs" }}            
+            - echo {{ indent 4 "pipe.additionalEnvs" }}  
+            - echo "new temp"
   {{ end }}
