@@ -9,7 +9,7 @@ resources:
         include: master
 
 pipelines:
-  - name: Publish_Template_10390_0021
+  - name: Publish_Template_10390_00212
     steps:
       - name: S_flow
         type: Bash
