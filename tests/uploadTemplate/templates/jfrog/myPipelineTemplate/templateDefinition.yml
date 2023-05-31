@@ -9,7 +9,7 @@ resources:
         include: {{ .Values.GitRepo.branch}}
 
 pipelines:
-  - name: Publish_Template_10390_002
+  - name: Publish_Template_10390_0021
     steps:
       - name: S_flow
         type: Bash
