@@ -9,7 +9,7 @@ resources:
         include: master
 
 pipelines:
-  - name: Publish_Template_10390_00212
+  - name: Publish_Template_10390_002121
     steps:
       - name: S_flow
         type: Bash
@@ -18,4 +18,4 @@ pipelines:
             env1: "test"
         execution:
           onExecute:
-            - echo 'data override new 1'
+            - echo 'data override new 12'
