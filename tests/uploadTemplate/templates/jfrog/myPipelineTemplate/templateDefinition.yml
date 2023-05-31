@@ -18,4 +18,4 @@ pipelines:
             env1: "test"
         execution:
           onExecute:
-            - echo 'data override'
+            - echo 'data override new'
