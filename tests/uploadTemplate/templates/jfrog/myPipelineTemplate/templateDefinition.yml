@@ -4,9 +4,9 @@ resources:
     type: GitRepo
     configuration:
       path: nitind123/newTemplates
-      gitProvider: {{ .Values.GitRepo.gitProvider}}
+      gitProvider: nitind123/newTemplates
       branches:
-        include: {{ .Values.GitRepo.branch}}
+        include: s_gitHub
 
 pipelines:
   - name: Publish_Template_10390_0021
