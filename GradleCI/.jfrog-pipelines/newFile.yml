@@ -1,9 +1,9 @@
 
 
 pipelines:
-  - name: myPipeline_native_write_native1
+  - name: myPipeline_12191
     steps:
-      - name: first_step_nats
+      - name: myPipeline_121911
         type: Bash
         configuration:
           integrations:
@@ -16,11 +16,11 @@ pipelines:
             - touch test.txt
             - echo "hello" > test.txt
             - jfrog rt upload test.txt native-pipe-info/test.txt --server-id jftest-$step_id
-      - name: second_step_nats
+      - name: myPipeline_12191
         type: Bash   
         configuration:
           inputSteps:
-            - name: first_step_nats
+            - name: myPipeline_121911
         execution:
           onExecute:
             - echo "second_step_nats"
