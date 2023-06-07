@@ -1,27 +1,33 @@
-
-
+resources:
+  - name: pipeline_trigger_10509_005
+    type: Artifact
+    configuration:
+      jfrogPlatformProvider: jfrogAccessToken_10509
+      repositories:
+        - test-automation-generic-local
+      artifactPath:
+        include:
+          - tools/*
+        exclude:
+          - exclude/*
+      buildOn:
+        deployed: false
+        cached: true
+        deleted: true
+        copied: true
+        moved: true
+      branches:
+        include: artifactResource
+        exclude: master
 pipelines:
-  - name: myPipeline_native_write_native1
+  - name: PS_SYNC_10509_005
     steps:
-      - name: first_step_nats
+      - name: PS_SYNC_10509_005
         type: Bash
         configuration:
-          integrations:
-            - name: {{.jfrog-pipelines.localArtifactory}}
+          inputResources:
+            - name: pipeline_trigger_10509_005
+              trigger: false
         execution:
           onExecute:
-            - echo "first_step_nats"
-            - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
-            - jfrog config add jftest-$step_id --url https://f119126.jfrog-pipelines.com --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
-            - touch test.txt
-            - echo "hello" > test.txt
-            - jfrog rt upload test.txt native-pipe-info/test.txt --server-id jftest-$step_id
-      - name: second_step_nats
-        type: Bash   
-        configuration:
-          inputSteps:
-            - name: first_step_nats
-        execution:
-          onExecute:
-            - echo "second_step_nats"
-            - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
+            - echo "test"
