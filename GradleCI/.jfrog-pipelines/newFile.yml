@@ -12,7 +12,7 @@ pipelines:
             - name: {{.jfrog-pipelines.localArtifactory}}
         execution:
           onExecute:
-            - url=`echo $JFROG_PIPELINES_API_URL | sed 's/\/v1//g'`
+            - url=`echo $JFROG_PIPELINES_API_URL | sed 's/\/v1//g' | sed 's/-api//g'`
             - echo $url
             - echo "first_step_nats"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
