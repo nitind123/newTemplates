@@ -11,7 +11,7 @@ pipelines:
         execution:
           onExecute:
             - printenv
-            - echo $JFROG_PIPELINES_API_URL | cut -d "/v1" -f 1
+            - url=$JFROG_PIPELINES_API_URL | cut -d / -f 1-3
             - echo ${url}
             - echo "first_step_nats"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
