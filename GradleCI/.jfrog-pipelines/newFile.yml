@@ -16,9 +16,10 @@ pipelines:
             - echo $url
             - echo "first_step_nats"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
-            - jfrog config add jftest-$step_id --url https://f119126.jfrog-pipelines.com --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
+            - jfrog config add jftest-$step_id --url $url --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
             - touch test.txt
             - echo "hello" > test.txt
+            - echo jfrog config show
             - jfrog rt upload test.txt native-pipe-info/test.txt --server-id jftest-$step_id
       - name: myPipeline_12191
         type: Bash   
