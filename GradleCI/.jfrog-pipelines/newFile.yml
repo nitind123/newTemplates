@@ -10,11 +10,11 @@ pipelines:
             - name: {{.jfrog-pipelines.localArtifactory}}
         execution:
           onExecute:
-            - add_run_variables url=$JFROG_PIPELINES_API_URL | sed 's/\/v1//g'
-            - echo $url
+          #  - add_run_variables url=$JFROG_PIPELINES_API_URL | sed 's/\/v1//g'
+         #   - echo $url
             - echo "first_step_nats"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
-            - jfrog config add jftest-$step_id --url $url --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
+          #  - jfrog config add jftest-$step_id --url $url --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
             - touch test.txt
             - echo "hello" > test.txt
             - jfrog rt upload test.txt native-pipe-info/test.txt --server-id jftest-$step_id
