@@ -6,6 +6,8 @@ pipelines:
       - name: myPipeline_121911
         type: Bash
         configuration:
+          environmentVariables:
+            JFROG_CLI_LOG_LEVEL: DEBUG
           integrations:
             - name: {{.jfrog-pipelines.localArtifactory}}
         execution:
