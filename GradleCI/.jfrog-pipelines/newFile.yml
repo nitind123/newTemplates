@@ -17,7 +17,8 @@ pipelines:
           #  - jfrog config add jftest-$step_id --url $url --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
             - touch test.txt
             - echo "hello" > test.txt
-            - jfrog rt upload test.txt native-pipe-info/test.txt --server-id jftest-$step_id
+            - jfrog rt upload test.txt native-pipe-info/test.txt 
+            #--server-id jftest-$step_id
       - name: myPipeline_12191
         type: Bash   
         configuration:
