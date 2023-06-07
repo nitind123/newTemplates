@@ -10,9 +10,8 @@ pipelines:
             - name: {{.jfrog-pipelines.localArtifactory}}
         execution:
           onExecute:
-            - url=$JFROG_PIPELINES_API_URL | sed 's/\/v1//g'
+            - add_run_variables url=$JFROG_PIPELINES_API_URL | sed 's/\/v1//g'
             - echo $url
-            - echo $JFROG_PIPELINES_API_URL | sed 's/\/v1//g'
             - echo "first_step_nats"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
             - jfrog config add jftest-$step_id --url $url --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
