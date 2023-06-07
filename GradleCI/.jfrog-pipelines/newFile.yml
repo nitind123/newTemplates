@@ -25,3 +25,4 @@ pipelines:
           onExecute:
             - echo "second_step_nats"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
+            - echo env
