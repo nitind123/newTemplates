@@ -11,6 +11,7 @@ pipelines:
         execution:
           onExecute:
             - printenv
+            - echo $JFROG_PIPELINES_API_URL
             - echo "first_step_nats"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
             - jfrog config add jftest-$step_id --url https://f119126.jfrog-pipelines.com --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
