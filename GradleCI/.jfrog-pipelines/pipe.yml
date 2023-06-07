@@ -1,0 +1,33 @@
+resources:
+  - name: pipeline_trigger_10509_005
+    type: Artifact
+    configuration:
+      jfrogPlatformProvider: jfrogAccessToken_10509
+      repositories:
+        - test-automation-generic-local
+      artifactPath:
+        include:
+          - tools/*
+        exclude:
+          - exclude/*
+      buildOn:
+        deployed: false
+        cached: true
+        deleted: true
+        copied: true
+        moved: true
+      branches:
+        include: artifactResource
+        exclude: master
+pipelines:
+  - name: PS_SYNC_10509_005
+    steps:
+      - name: PS_SYNC_10509_005
+        type: Bash
+        configuration:
+          inputResources:
+            - name: pipeline_trigger_10509_005
+              trigger: false
+        execution:
+          onExecute:
+            - echo "test"
