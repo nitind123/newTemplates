@@ -1,0 +1,59 @@
+resources:
+  - name: go_app_gitrepo
+    type: GitRepo
+    configuration:
+      path: nitind123/newTemplates
+      gitProvider: s_gitHub
+      branches:
+        include: master
+      cloneProtocol: https
+
+  - name: docker_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: s_artifactory
+
+  - name: go_build_gitrepo
+    type: GitRepo
+    configuration:
+      path: nitind123/newTemplates
+      gitProvider: s_gitHub
+      branches:
+        include: master
+      cloneProtocol: https
+      buildOn:
+        commit: true
+
+
+pipelines:
+  - name: go_app
+    configuration:
+      jfrogCliVersion: 2
+      environmentVariables:
+        readOnly:
+          TASK_NAME: docker_build
+          TASK_VERSION: 0.0.1
+          TASK_REPOSITORY: pipelines-tasks-local
+          JFROG_TASK_DEBUG: "true"
+          JFROG_CLI_LOG_LEVEL: debug
+    steps:
+      - name: test_docker_build
+        type: Bash
+        configuration:
+          inputResources:
+            - name: go_app_gitrepo
+            - name: go_build_gitrepo
+          outputResources:
+            - name: docker_build_info
+          integrations:
+            - name: int_default_artifactory
+        execution:
+          onStart:
+            - jf c show
+            - echo $IS_K8S_BUILD_PLANE
+          onExecute:
+            - task: jfrog/setup-go@v0.1.0
+              repository: pipelines-tasks-virtual
+              id: install-go
+              input:
+                version: 1.19.5
