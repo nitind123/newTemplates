@@ -46,11 +46,10 @@ pipelines:
           outputResources:
             - name: docker_build_info
           integrations:
-            - name: int_default_artifactory
+            - name: s_artifactory
         execution:
           onStart:
             - jf c show
-            - echo $IS_K8S_BUILD_PLANE
           onExecute:
             - task: jfrog/setup-go@v0.1.0
               repository: pipelines-tasks-virtual
