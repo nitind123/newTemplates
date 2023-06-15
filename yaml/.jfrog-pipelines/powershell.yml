@@ -1,25 +1,27 @@
 pipelines:
-  - name: build
-    type: PowerShell
-    configuration:
-      environmentVariables:
-        env1: value1
-        env2:
-          default: value2
-          description: Example Variable
-          values:
-            - value2
-            - value3
-          allowCustom: false
-      runtime:
-        type: image
-        image:
-          auto:
-            language: node
-            versions:
-              - "10.18"
-    execution:
-      onExecute:
-        - Push-Location $res_src_resourcePath
-        - npm install
+  - name: Ps_variable_resolved_6730
+    steps:
+      - name: build
+        type: PowerShell
+        configuration:
+          environmentVariables:
+            env1: value1
+            env2:
+              default: value2
+              description: Example Variable
+              values:
+                - value2
+                - value3
+              allowCustom: false
+          runtime:
+            type: image
+            image:
+              auto:
+                language: node
+                versions:
+                  - "10.18"
+        execution:
+          onExecute:
+            - Push-Location $res_src_resourcePath
+            - npm install
        
