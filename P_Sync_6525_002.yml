@@ -1,26 +1,25 @@
-template: true
-valuesFilePath: ../values/gitRepoValues.yml
-
-resources:
-  - name: P_Sync_6525_002_gitrepo
-    type: GitRepo
-    configuration:
-      gitProvider: {{ .Values.Projects.FirstProjectKey }}_s_github_duplicate_6525_2
-      path: {{ .Values.GitHub.Org_test_Automation_bash.path }}
-      branches:
-        include: {{gitBranch}}
-
 pipelines:
-  - name: P_Sync_6525_002
-    steps:
-      - name: P_Sync_6525_002_1
-        type: Bash
-        configuration:
-          inputResources:
-            - name: P_Sync_6525_002_gitrepo
-        execution:
-          onExecute:
-            - pushd ${res_P_Sync_6525_002_gitrepo_resourcePath}
-            - ls -la
-            - popd 
+  - name: build
+    type: PowerShell
+    configuration:
+      environmentVariables:
+        env1: value1
+        env2:
+          default: value2
+          description: Example Variable
+          values:
+            - value2
+            - value3
+          allowCustom: false
+      runtime:
+        type: image
+        image:
+          auto:
+            language: node
+            versions:
+              - "10.18"
+    execution:
+      onExecute:
+        - Push-Location $res_src_resourcePath
+        - npm install
        
