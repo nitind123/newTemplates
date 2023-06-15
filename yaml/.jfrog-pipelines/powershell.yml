@@ -1,5 +1,5 @@
 resources:
-  - name: myFirstRepo
+  - name: myFirstRepo1
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
@@ -22,13 +22,15 @@ pipelines:
                 - value2
                 - value3
               allowCustom: false
+          inputResources:
+            - name: myFirstRepo1    
           runtime:
             type: image
             image:
               auto:
                 language: node
                 versions:
-                  - "10.18"
+                  - "10.18"      
         execution:
           onExecute:
             - Push-Location $res_src_resourcePath
