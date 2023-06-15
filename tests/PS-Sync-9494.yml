@@ -1,19 +1,24 @@
-resources:
-  - name: PS-Sync-9494
-    type: PropertyBag
-    configuration:
-      commitSha: 1
-      runID: 1
-
-pipelines:
-  - name: PS-Sync-9494
-    steps:
-      - name: PS-Sync-9494
-        type: Bash
-        configuration:
-          inputResources:
-            - name: PS-Sync-9494
-        execution:
-          onExecute:
-            - printenv
-            - echo "hi"
+- name: build
+  type: PowerShell
+  configuration:
+    environmentVariables:
+      env1: value1
+      env2:
+        default: value2
+        description: Example Variable
+        values:
+          - value2
+          - value3
+        allowCustom: false
+    runtime:
+      type: image
+      image:
+        auto:
+          language: node
+          versions:
+            - "10.18"
+  execution:
+    onExecute:
+      - Push-Location $res_src_resourcePath
+      - npm install
+      
