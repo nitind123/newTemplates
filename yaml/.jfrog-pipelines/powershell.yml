@@ -1,5 +1,5 @@
 pipelines:
-  - name: Ps_variable_resolved_6730
+  - name: Ps_variable
     steps:
       - name: build
         type: PowerShell
