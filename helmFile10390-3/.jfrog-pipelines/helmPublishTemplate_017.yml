@@ -8,8 +8,8 @@ publishTemplate:
   namespace: jfrogPipelines
   name: templateDefinition
   version: 0.0.1
-  pipelineName: Publish_Template_10390_27
+  pipelineName: Publish_Template_10390_2700
   artifactoryIntegration: s_artifactory
   jfrogAccessTokenIntegration: jfrogAccessToken_10390
-  templateRepositoryResourceName: Publish_Template_10390_027
-  templateUploadStatusResourceName: Publish_Template_10390_27
+  templateRepositoryResourceName: Publish_Template_10390_02700
+  templateUploadStatusResourceName: Publish_Template_10390_2700
