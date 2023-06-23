@@ -1,5 +1,5 @@
 namePrefix: HelloWorld
 repo:
-  integrationName: s_gitHub
+  integrationName: s_github
   path: nitind123/newTemplates
   branchPattern: "main"
