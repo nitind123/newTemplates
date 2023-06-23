@@ -20,3 +20,5 @@ pipelines:
             - mkdir -p "target/node_modules"
             - cd target
             - restore_pipeline_files jfrog_pipelines_packages_cache node_modules/
+            - ls lrt
+            - save_artifact_info buildInfo ./*.* [ -build-name PS_Sync_9494_003_002 -build-number ${run_number} ]
