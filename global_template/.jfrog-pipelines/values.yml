@@ -1,5 +1,5 @@
 namePrefix: HelloWorld
 repo:
-  integrationName: myGithub
-  path: "RjSH1/newTemplates"
+  integrationName: s_gitHub
+  path: nitind123/newTemplates
   branchPattern: "main"
