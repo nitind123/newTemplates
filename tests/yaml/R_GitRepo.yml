@@ -9,4 +9,4 @@ resources:
       path: {{ .Values.BitbucketServer.automation.path }}
       branches:
         include: master
-      gitProvider: s_bitbucketServer
+      gitProvider: s_gitHub
