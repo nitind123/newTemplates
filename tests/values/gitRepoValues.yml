@@ -28,13 +28,13 @@ GitLab:
 
 BitbucketCloud:
   jfrogtesting:
-    path: jfbeta/jfrogtesting
+    path: nitind123/newTemplates
   test_automation:
-    path: jfbeta/test_automation
+    path: nitind123/newTemplates
   org_test_automation:
-    path: jfbetapipeorg/org_test_automation
+    path: nitind123/newTemplates
   templates:
-    path: jfbetapipeorg/templates
+    path: nitind123/newTemplates
 
 BitbucketServer:
   automation:
