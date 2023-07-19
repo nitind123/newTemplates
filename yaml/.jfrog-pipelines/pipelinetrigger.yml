@@ -1,5 +1,5 @@
 resources:
-  - name: pipeline_trigger_10509
+  - name: pipeline_trigger_105091
     type: Artifact
     configuration:
       jfrogPlatformProvider: jfrogAccessToken_10509
@@ -26,7 +26,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: pipeline_trigger_10509
+            - name: pipeline_trigger_105091
         execution:
           onExecute:
             - echo "test"
