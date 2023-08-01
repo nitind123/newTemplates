@@ -1,5 +1,5 @@
 resources:
-  - name: myFirstRepo
+  - name: intro_bag
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
