@@ -1,0 +1,19 @@
+pipelines:
+  - name: PS_Sync_11228
+    configuration:
+      environmentVariables:
+        readOnly:
+          env1: "test_p1"
+          env2:
+            defaultMultipleValues: ["r,pipeline1", "r,pipeline2"]
+            description: "testing"
+            values: ["r,pipeline1", "r,pipeline2", "r,pipeline3", "r,pipeline4"]
+            allowCustom: false
+            allowMultipleValues: true
+    steps:
+      - name: PS_Sync_11228
+        type: Bash
+        execution:
+          onExecute:
+            - printenv
+            - echo ${env2[2]}
