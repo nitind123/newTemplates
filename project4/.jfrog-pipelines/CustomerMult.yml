@@ -10,7 +10,7 @@ pipelines:
             description: "testing"
             values: ["r,pipeline1", "r,pipeline2", "r,pipeline3", "r,pipeline4"]
             allowCustom: false
-            allowMultipleValues: true
+            allowMultipleValues: false
     steps:
       - name: PS_Sync_11228
         type: Bash
