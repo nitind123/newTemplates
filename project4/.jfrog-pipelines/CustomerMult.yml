@@ -17,5 +17,5 @@ pipelines:
         execution:
           onExecute:
             - printenv
-            - echo $#env2
+            - echo $env2
             - echo ${#env2[@]}
