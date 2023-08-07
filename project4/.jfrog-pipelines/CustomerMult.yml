@@ -18,4 +18,10 @@ pipelines:
           onExecute:
             - printenv
             - echo $#env2
-            - echo ${#env2[@]}
+            - d=(`echo ${!env2[@]} | cut -d ' '`)
+            - |
+              for val in ${!d[@]}
+              do
+                count=count+1
+              done 
+              
