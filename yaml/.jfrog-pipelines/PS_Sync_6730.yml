@@ -16,6 +16,8 @@ pipelines:
           environmentVariables:
             env1: {{gitBranch}}
             env2: {{.jfrog-pipelines.sourceRepository}}
+          inputResources:
+            - name: myFirstRepo
         execution:
           onExecute:
             - echo {{gitBranch}}
