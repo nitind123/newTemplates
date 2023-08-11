@@ -30,7 +30,7 @@ pipelines:
         type: PowerShell
         configuration:
           integrations:
-            - name: s_artifactory
+            - name: s_artifactory1
           inputResources:
             - name: S_PS_HBGDeploy_5978_0001_git_resource
               trigger: false
