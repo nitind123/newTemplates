@@ -47,7 +47,7 @@ configurations:
   buildTool: 'maven'
 
   # [Optional] Defaults to repository root folder
-  sourceFolder: '.jfrog-pipelines'
+  sourceFolder: 'yaml'
 
 
   # [Optional] When buildTool = Maven/Gradle
