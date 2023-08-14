@@ -8,7 +8,7 @@ metadata:
   java: "17"
 
   # [Optional] linux/windows
-  os: "windows"
+  os: "linux"
 
   # [Optional] Defaults to Ubuntu18 with Java 17
   # Allows to configure custom runtime, support all the configuration properties under runtime.image.custom
