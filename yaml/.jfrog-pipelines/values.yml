@@ -2,7 +2,7 @@
 metadata:
   
   # [Required] All the underlying pipelines & resources names will be prefixed with appName for easy identifications & search
-  packageName:  javaTemplate
+  packageName:  javaTemplate1
 
   # [Optional]
   java: "17"
