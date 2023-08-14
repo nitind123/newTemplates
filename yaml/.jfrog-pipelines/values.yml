@@ -1,0 +1,154 @@
+# [Required]
+metadata:
+  
+  # [Required] All the underlying pipelines & resources names will be prefixed with appName for easy identifications & search
+  packageName:  test
+
+  # [Optional]
+  java: "17"
+
+  # [Optional] linux/windows
+  os: "windows"
+
+  # [Optional] Defaults to Ubuntu18 with Java 17
+  # Allows to configure custom runtime, support all the configuration properties under runtime.image.custom
+  # Ref: https://jfrog.com/help/r/jfrog-pipelines-documentation/choosing-your-runtime-image
+  #  runtime:
+  #    registry: docker
+  #    sourceRepository: apps-docker-local
+  #    name: test.mycompany.io/apps-docker-local/ci/builder-node14
+  #    tag: 1.0.0
+
+  # [Optional] If not provided then default nodePool configured in platform will be used
+  #  nodePool: some_nodepool
+
+# [Required]
+inputs:
+
+  # [Required] Configure Git repository where application code is present
+  sourceRepository:
+    # Support all the Git Resource configuration properties
+    # Ref: https://jfrog.com/help/r/jfrog-pipelines-documentation/gitrepo
+    path: nitind123/newTemplates
+    gitProvider: s_gitHub
+    branches:
+      include: master
+
+  # [Required]
+  integrations:
+    
+    # [Required] Artifactory api key to configure Jfrog CLI
+    artifactory: s_artifactory
+
+# [Required]
+configurations:
+
+  # [Optional] Defaults to Maven (maven/gradle/other)
+  buildTool: 'maven'
+
+  # [Optional] Defaults to repository root folder
+  sourceFolder: ''
+
+
+  # [Optional] When buildTool = Maven/Gradle
+  # [Required] When buildTool = Other
+  steps:
+
+    lint:
+
+      # [Optional] Allows skipping step. Defaults to true
+      # enabled: true
+
+      commands:
+        # [Maven] Default to plugin: maven-checkstyle-plugin
+        - 'mvn clean checkstyle:checkstyle'
+
+        # [Gradle]
+        # - 'gradle lint'
+
+    codeQuality:
+
+      # [Optional] Allows skipping step. Defaults to true
+      # enabled: true
+
+      commands:
+        # [Maven] Default to plugin: maven-checkstyle-plugin
+        - 'mvn clean sonar:sonar'
+
+        # [Gradle]
+        #   - 'gradle sonar'
+
+    test:
+
+      # [Optional] Allows skipping step. Defaults to true
+      # enabled: true
+
+      commands:
+        # [Maven] Default to plugin: maven-surefire-plugin
+        - 'mvn clean'
+        - 'mvn test'
+
+        # [Gradle]
+        #  - 'gradle test'
+
+      # [Required] JUnit test report folder path
+      reportFolder: './'
+
+    build:
+
+      # [Optional] Allows skipping step. Defaults to true
+      # enabled: true
+
+      commands:
+        # [Maven] Default to plugin: maven-compiler-plugin
+        - 'mvn -Dmaven.test.skip=true install'
+
+        # [Gradle]
+        #  - 'gradle clean build -x test'
+
+    publish:
+
+      # [Optional] Allows skipping step. Defaults to true
+      # enabled: true
+
+      commands:
+        # [Maven] Default to plugin: maven-deploy-plugin
+        - 'mvn deploy'
+
+        # [Gradle]
+        #  - 'gradle deploy'
+
+controls:
+  
+  # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
+  # Whole pipeline from frogbot-scan will be triggered
+  triggerBy:
+    
+    # Connected source Git repository change [Defaults to true]
+    # sourceRepository: true
+    
+    # Other resource change from other pipelines
+    # externalResources:
+    #   - resourceName: dream_app_commons_build_result
+    
+    # Automated periodic triggers (Typical use case: Nightly builds)
+    # cron:
+    #   enabled: true # Defaults to false
+    #   expression: "*/3 * * * *" # No defaults, mandatory to provide when cron.enabled is set to true
+
+    # Incoming webhook
+    # incomingWebhooks:
+    #   - webhookName: 'testWebhook' # IncommingWebhook integration name
+
+
+  # [Optional]
+  logging:
+
+    # [Optional] Defaults to false
+    enableDebug: true
+
+  # [Optional] Exporting important files during run as RUN FILES
+  exporting:
+
+    # [Optional] Defaults to false
+    enabled: true
