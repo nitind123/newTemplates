@@ -73,7 +73,8 @@ configurations:
 
       commands:
         # [Maven] Default to plugin: maven-checkstyle-plugin
-        - 'mvn clean sonar:sonar'
+       # - 'mvn clean sonar:sonar'
+        - 'mvn clean install'
 
         # [Gradle]
         #   - 'gradle sonar'
