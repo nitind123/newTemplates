@@ -93,7 +93,7 @@ configurations:
         #  - 'gradle test'
 
       # [Required] JUnit test report folder path
-      reportFolder: ''
+      reportFolder: './target'
 
     build:
 
