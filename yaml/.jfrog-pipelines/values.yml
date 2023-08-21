@@ -32,7 +32,7 @@ inputs:
     path: nitind123/newTemplates
     gitProvider: s_gitHub
     branches:
-      include: master
+      include: JavaTemplate
 
   # [Required]
   integrations:
