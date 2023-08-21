@@ -93,7 +93,7 @@ valuesFilePath: values.yml
 # frogbot step
 {{ define "step.frogbot.onExecute" }}
   {{ $stepType := get . "stepType" }}
-  {{ if eq $stepType "linux" }}
+  {{ if eq $stepType "Bash" }}
             - echo "Executing Frogbot scan..."
   {{ else }}
             - Write-Output "Executing Frogbot scan..."
