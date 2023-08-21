@@ -23,6 +23,7 @@ public class AppTest
     /**
      * @return the suite of tests being tested
      */
+     @Test
     public static Test suite()
     {
         return new TestSuite( AppTest.class );
@@ -31,6 +32,7 @@ public class AppTest
     /**
      * Rigourous Test :-)
      */
+     @Test
     public void testApp()
     {
         assertTrue( true );
