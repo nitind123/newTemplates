@@ -134,6 +134,7 @@ valuesFilePath: values.yml
             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
 
+            - cd ${res_javaTemplate0_git_source_resourcePath}
             {{ if eq $.stepType "Bash" }}
             - cp -r * $shared_workspace
             {{ else }}
