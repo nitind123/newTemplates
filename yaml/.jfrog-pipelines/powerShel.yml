@@ -13,7 +13,7 @@ resources:
 pipelines:
   - name: pipeline_EXT_S_PS_AU_0006
     configuration:
-      nodePool: pipelines_w19
+      nodePool: win_2019
     steps:
       - name: EXT_S_PS_AU_0006_1
         type: PowerShell
