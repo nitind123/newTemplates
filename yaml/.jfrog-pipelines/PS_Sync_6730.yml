@@ -14,6 +14,7 @@ pipelines:
         type: Bash
         configuration:
           environmentVariables:
+            env3: avd
             env1: {{gitBranch}}
             env2: {{.jfrog-pipelines.sourceRepository}}
           inputResources: 
