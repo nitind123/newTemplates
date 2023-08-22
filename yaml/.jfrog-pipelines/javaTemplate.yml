@@ -136,7 +136,7 @@ valuesFilePath: values.yml
 
             - cd ${res_javaTemplate0_git_source_resourcePath}
             {{ if eq $.stepType "Bash" }}
-            # - cp -r * $shared_workspace
+            - cp -r * $shared_workspace
             {{ else }}
             - Copy-Item -Force -Recurse * -Destination $shared_workspace
             {{ end }}
