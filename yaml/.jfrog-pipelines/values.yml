@@ -88,6 +88,8 @@ configurations:
         # [Maven] Default to plugin: maven-surefire-plugin
         - 'mvn clean'
         - 'mvn test'
+        - ls target
+        - ls target/
 
         # [Gradle]
         #  - 'gradle test'
