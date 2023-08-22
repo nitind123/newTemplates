@@ -136,7 +136,7 @@ valuesFilePath: values.yml
 
             - cd ${res_javaTemplate0_git_source_resourcePath}
             {{ if eq $.stepType "Bash" }}
-            - cp -r * $shared_workspace
+            #- cp -r * $shared_workspace
             {{ else }}
             - Copy-Item -Force -Recurse * -Destination $shared_workspace
             {{ end }}
@@ -149,7 +149,7 @@ valuesFilePath: values.yml
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
   {{ $ := set $ "defaultMvn" "mvn -Dmaven.test.skip=true install" }}
   {{ $ := set $ "defaultGradle" "gradle clean build -x test" }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            #- cd $shared_workspace{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
