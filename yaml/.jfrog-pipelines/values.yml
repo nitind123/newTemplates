@@ -88,14 +88,13 @@ configurations:
         # [Maven] Default to plugin: maven-surefire-plugin
         - 'mvn clean'
         - 'mvn test'
-        - ls target
-        - ls target/
+        - ls .
 
         # [Gradle]
         #  - 'gradle test'
 
       # [Required] JUnit test report folder path
-      reportFolder: 'target'
+      reportFolder: '.'
 
     build:
 
