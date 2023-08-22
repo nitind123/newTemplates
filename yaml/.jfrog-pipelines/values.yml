@@ -8,7 +8,7 @@ metadata:
   java: "11"
 
   # [Optional] linux/windows
-  os: "windows"
+  os: "linux"
 
   # [Optional] Defaults to Ubuntu18 with Java 17
   # Allows to configure custom runtime, support all the configuration properties under runtime.image.custom
@@ -38,7 +38,7 @@ inputs:
   integrations:
     
     # [Required] Artifactory api key to configure Jfrog CLI
-    artifactory: entArt
+    artifactory: s_artifactory
 
 # [Required]
 configurations:
