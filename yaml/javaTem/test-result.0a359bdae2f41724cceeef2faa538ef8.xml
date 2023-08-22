@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="21.8440" tests="4" failures="1">
+  <testsuite name="Root Suite" timestamp="2023-03-14T14:51:29" tests="0" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="LocalTempates - Tempates Tests" timestamp="2023-03-14T14:51:29" tests="4" file="/Users/nitind/Documents/controlplane/automation/tests/core/templates/SCM/localTemplates.js" time="21.8390" failures="1">
+    <testcase name="LocalTempates - Tempates Tests T-SYC-LOCALTEMP-6219-0003. User should not able to sync pipeline source with empty valuesFilePath" time="21.5590" classname="T-SYC-LOCALTEMP-6219-0003. User should not able to sync pipeline source with empty valuesFilePath">
+      <failure message="Sync failed Error: 4002
+    at /Users/nitind/Documents/controlplane/automation/tests/globalWrapper/getPipelineSyncStatus.js:106:23
+    at /Users/nitind/Documents/controlplane/automation/tests/_common/pipelines/Adapter.js:2782:9
+    at /Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:2959:19
+    at wrapper (/Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:272:20)
+    at replenish (/Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:439:29)
+    at iterateeCallback (/Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:428:21)
+    at /Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:325:20
+    at /Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:2957:17
+    at Request._callback (/Users/nitind/Documents/controlplane/automation/tests/_common/utils.js:128:16)
+    at Request.self.callback (/Users/nitind/Documents/controlplane/automation/tests/node_modules/request/request.js:188:22)
+    at Request.emit (node:events:390:28)
+    at Request.&lt;anonymous&gt; (/Users/nitind/Documents/controlplane/automation/tests/node_modules/request/request.js:1171:10)
+    at Request.emit (node:events:390:28)
+    at IncomingMessage.&lt;anonymous&gt; (/Users/nitind/Documents/controlplane/automation/tests/node_modules/request/request.js:1091:12)
+    at Object.onceWrapper (node:events:509:28)
+    at IncomingMessage.emit (node:events:402:35)
+    at endReadableNT (node:internal/streams/readable:1343:12)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21)" type="Error"><![CDATA[Error: Sync failed Error: 4002
+    at /Users/nitind/Documents/controlplane/automation/tests/globalWrapper/getPipelineSyncStatus.js:106:23
+    at /Users/nitind/Documents/controlplane/automation/tests/_common/pipelines/Adapter.js:2782:9
+    at /Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:2959:19
+    at wrapper (node_modules/async/dist/async.js:272:20)
+    at replenish (node_modules/async/dist/async.js:439:29)
+    at iterateeCallback (node_modules/async/dist/async.js:428:21)
+    at /Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:325:20
+    at /Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:2957:17
+    at Request._callback (_common/utils.js:128:16)
+    at Request.self.callback (node_modules/request/request.js:188:22)
+    at Request.emit (node:events:390:28)
+    at Request.<anonymous> (node_modules/request/request.js:1171:10)
+    at Request.emit (node:events:390:28)
+    at IncomingMessage.<anonymous> (node_modules/request/request.js:1091:12)
+    at Object.onceWrapper (node:events:509:28)
+    at IncomingMessage.emit (node:events:402:35)
+    at endReadableNT (node:internal/streams/readable:1343:12)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21)
+    at /Users/nitind/Documents/controlplane/automation/tests/globalWrapper/postAndSyncPipelineSourceAsUser.js:151:29
+    at /Users/nitind/Documents/controlplane/automation/tests/globalWrapper/getPipelineSyncStatus.js:105:28
+    at /Users/nitind/Documents/controlplane/automation/tests/_common/pipelines/Adapter.js:2782:9
+    at /Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:2959:19
+    at wrapper (node_modules/async/dist/async.js:272:20)
+    at replenish (node_modules/async/dist/async.js:439:29)
+    at iterateeCallback (node_modules/async/dist/async.js:428:21)
+    at /Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:325:20
+    at /Users/nitind/Documents/controlplane/automation/tests/node_modules/async/dist/async.js:2957:17
+    at Request._callback (_common/utils.js:128:16)
+    at Request.self.callback (node_modules/request/request.js:188:22)
+    at Request.emit (node:events:390:28)
+    at Request.<anonymous> (node_modules/request/request.js:1171:10)
+    at Request.emit (node:events:390:28)
+    at IncomingMessage.<anonymous> (node_modules/request/request.js:1091:12)
+    at Object.onceWrapper (node:events:509:28)
+    at IncomingMessage.emit (node:events:402:35)
+    at endReadableNT (node:internal/streams/readable:1343:12)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
