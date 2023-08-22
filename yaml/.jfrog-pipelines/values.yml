@@ -38,7 +38,7 @@ inputs:
   integrations:
     
     # [Required] Artifactory api key to configure Jfrog CLI
-    artifactory: s_artifactory
+    artifactory: entArt
 
 # [Required]
 configurations:
