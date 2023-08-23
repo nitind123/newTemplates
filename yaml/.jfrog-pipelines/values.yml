@@ -115,7 +115,7 @@ configurations:
 
       commands:
         # [Maven] Default to plugin: maven-deploy-plugin
-        - 'mvn deploy'
+        - 'mvn clean package'
 
         # [Gradle]
         #  - 'gradle deploy'
