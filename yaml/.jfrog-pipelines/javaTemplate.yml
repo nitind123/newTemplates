@@ -228,6 +228,7 @@ resources:
 pipelines:
   - name: {{ $pipelineName }}
     configuration:
+      jfrogCliVersion: 2
       runtime:
         type: image
         image:
