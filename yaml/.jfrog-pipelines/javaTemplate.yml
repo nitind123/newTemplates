@@ -163,12 +163,14 @@ valuesFilePath: values.yml
   {{ $ := set $ "defaultGradle" "gradle deploy" }}
             - cd $shared_workspace{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
+            - jf rt bce ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
+            - jf bp ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
             # Updating result PropertyBag resource
-            - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
-            - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
+            - write_output {{ $.resultResource }} "buildName=${JFROG_CLI_BUILD_NAME}"
+            - write_output {{ $.resultResource }} "buildNumber=${JFROG_CLI_BUILD_NUMBER}"
             # Updating BuildInfo resource
-            - write_output {{ $.buildInfoResource }} "buildName=$JFROG_CLI_BUILD_NAME"
-            - write_output {{ $.buildInfoResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
+            - write_output {{ $.buildInfoResource }} "buildName=${JFROG_CLI_BUILD_NAME}"
+            - write_output {{ $.buildInfoResource }} "buildNumber=${JFROG_CLI_BUILD_NUMBER}"
 {{ end }}
 # -----------------------------------------------------------------
 
