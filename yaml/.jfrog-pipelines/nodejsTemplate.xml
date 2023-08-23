@@ -1,8 +1,4 @@
-template:
-  namespace: nodejs
-  name: Node
-  version: 1.0.0
-  development: true
+
 
 valuesFilePath: values.yml
 # Template Variables
