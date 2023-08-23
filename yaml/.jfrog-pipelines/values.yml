@@ -103,7 +103,8 @@ configurations:
 
       commands:
         # [Maven] Default to plugin: maven-compiler-plugin
-        - 'mvn -Dmaven.test.skip=true install'
+        #- 'mvn -Dmaven.test.skip=true install'
+        - 'mvn -DskipTests install'
 
         # [Gradle]
         #  - 'gradle clean build -x test'
