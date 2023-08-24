@@ -26,7 +26,7 @@ inputs:
   integrations:
 
     artifactory: s_artifactory
-    #sonar: s_sonar
+    sonar: s_sonar
 
 configurations:
 
