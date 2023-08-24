@@ -22,7 +22,7 @@ inputs:
       include: master
 
   integrations:
-    artifactory: s_gitHub
+    artifactory: s_artifactory
     sonar: s_sonar
 
 configurations:
