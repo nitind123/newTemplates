@@ -59,11 +59,41 @@ valuesFilePath: values.yml
             {{ end }}
 {{ end }}
 
-# Steps shared template
+# Steps shared onExecute template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
             {{ if $.conf }}
-            {{- range $cmd := $.conf.commands }}
+            {{- range $cmd := $.conf.onExecute }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onStart template
+{{ define "step.shared.onStart.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.onStart }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onSuccess template
+{{ define "step.shared.onSuccess.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.onSuccess }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onFailure template
+{{ define "step.shared.onFailure.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.onFailure }}
             - {{ $cmd }}
             {{- end }}
             {{ end }}
@@ -73,8 +103,29 @@ valuesFilePath: values.yml
 {{ define "step.build.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+{{ define "step.build.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.build.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.build.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
 # code quality step
@@ -83,6 +134,27 @@ valuesFilePath: values.yml
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+{{ define "step.codeQuality.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.codeQuality.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.codeQuality.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
 # sonar scan step
@@ -106,7 +178,7 @@ valuesFilePath: values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            # - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
             - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
             - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
@@ -158,8 +230,14 @@ pipelines:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
         execution:
+          onStart:
+            {{ template "step.build.onStart" $templateParams }}
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
+          onSuccess:
+            {{ template "step.build.onSuccess" $templateParams }}
+          onFailure:
+            {{ template "step.build.onFailure" $templateParams }}
       {{ if $isQualityAvailable }}
       - name: {{ .Values.metadata.serviceName }}_quality
         type: Bash
@@ -173,8 +251,14 @@ pipelines:
           inputSteps:
             - name: {{ .Values.metadata.serviceName }}_build
         execution:
+          onStart:
+            {{ template "step.codeQuality.onStart" $templateParams }}
           onExecute:
             {{ template "step.codeQuality.onExecute" $templateParams }}
+          onSuccess:
+            {{ template "step.codeQuality.onSuccess" $templateParams }}
+          onFailure:
+            {{ template "step.codeQuality.onFailure" $templateParams }}
 
       - name: {{ .Values.metadata.serviceName }}_sonar_scan
         type: Bash
