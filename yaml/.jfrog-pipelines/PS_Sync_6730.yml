@@ -8,7 +8,7 @@ resources:
         include: {{gitBranch}}
 
 pipelines:
-  - name: Ps_variable_resolved_67301
+  - name: Ps_variable_resolved_6730
     steps:
       - name: Ps_variable_resolved_6730
         type: Bash
