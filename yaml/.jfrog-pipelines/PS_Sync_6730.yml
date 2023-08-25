@@ -23,5 +23,5 @@ pipelines:
           onExecute:
             - echo {{gitBranch}}
             - echo {{.jfrog-pipelines.sourceRepository}}
-            - cd /tmp
+            - cd "test"
             
