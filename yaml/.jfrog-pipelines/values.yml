@@ -49,6 +49,16 @@ configurations:
   # [Optional] Defaults to repository root folder
   sourceFolder: 'yaml/javaTem'
 
+  # Artifactory repos to resolve & deploy artifacts
+  artifactory:
+
+    resolverSnapshotRepo: km-mvn-release-virtual
+
+    resolverReleaseRepo: km-mvn-release-virtual
+
+    deployerSnapshotRepo: km-mvn-release-local
+
+    deployerReleaseRepo: km-mvn-release-local
 
   # [Optional] When buildTool = Maven/Gradle
   # [Required] When buildTool = Other
