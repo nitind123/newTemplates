@@ -161,9 +161,13 @@ valuesFilePath: values.yml
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}  
   {{ $ := set $ "defaultMvn" "mvn deploy" }}
   {{ $ := set $ "defaultGradle" "gradle deploy" }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            # Configure JFrog CLI with Artifactory Maven repos
+            {{ if eq $buildTool "maven" }}
+            jf mvnc --server-id-resolve {{ .Values.inputs.integrations.artifactory }} --repo-resolve-snapshots {{ .Values.configurations.artifactory.resolverSnapshotRepo }} --repo-resolve-releases {{ .Values.configurations.artifactory.resolverReleaseRepo }} \
+              --server-id-deploy {{ .Values.inputs.integrations.artifactory }} --repo-deploy-snapshots {{ .Values.configurations.artifactory.deployerSnapshotRepo }} --repo-deploy-releases {{ .Values.configurations.artifactory.deployerReleaseRepo }}
+            {{ end }}
+            - cd $shared_workspace{{ $.rootDirectory }}            
             {{ template "step.shared.onExecute.command" $ }}
-            - jf rt bce ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
             - jf rt bp ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
             # Updating result PropertyBag resource
             - write_output {{ $.resultResource }} "buildName=${JFROG_CLI_BUILD_NAME}"
