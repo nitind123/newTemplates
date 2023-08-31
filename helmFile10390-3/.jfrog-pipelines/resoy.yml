@@ -3,3 +3,14 @@ resources:
     type: PropertyBag
     configuration:
       environment_url: "value"
+
+pipelines:
+ - name: A_Extension_0023
+   steps:
+      - name: A_Extension_0023_step
+        type: UploadArtifact
+        configuration:
+          targetPath: "test-automation-generic-local/A_Extension_0023"
+          outputResources:
+            - name: api_passthrough_automation_propertyBag
+      
