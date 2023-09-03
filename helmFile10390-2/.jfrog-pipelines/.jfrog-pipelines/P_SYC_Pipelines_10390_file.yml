@@ -29,7 +29,7 @@ pipelines:
         execution:
           onExecute:
             - echo test
-     - name: access_multidb_itest
+      - name: access_multidb_itest
         type: Matrix
         stepMode: Bash
         stepletMultipliers:
