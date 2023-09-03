@@ -1,13 +1,39 @@
 
+# pipelines:
+#   - name: P_files
+#     steps:
+#       - name: S_files
+#         type: Bash
+#         configuration:
+#           environmentVariables:
+#             env1: gitBranch
+#             env2: sourceRepository
+#         execution:
+#           onExecute:
+#             - echo test
+resources:
+  - name: myRepo_2
+    type: GITRepo
+    configuration:
+      path: nitind123/newTemplates
+      gitProvider: s_gitHub
 pipelines:
   - name: P_files
     steps:
       - name: S_files
-        type: Bash
-        configuration:
+        type: Matrix
+        stepMode: Bash
+        stepletMultipliers:
           environmentVariables:
-            env1: gitBranch
-            env2: sourceRepository
+            - DATABASE_TYPE: postgresql
+        configuration:
+          multiNode: true
+          timeoutSeconds: 2700 # 45 minutes
+          inputResources:
+            - name: sample_GitRepo
         execution:
+          # onStart:
+          #   - echo "test1234"
           onExecute:
-            - echo test
+            - echo "executing"      
+      
