@@ -21,19 +21,11 @@ pipelines:
   - name: P_files
     steps:
       - name: S_files
-        type: Matrix
-        stepMode: Bash
-        stepletMultipliers:
-          environmentVariables:
-            - DATABASE_TYPE: postgresql
+        type: Bash
         configuration:
-          multiNode: true
-          timeoutSeconds: 2700 # 45 minutes
-          inputResources:
-            - name: myRepo_2
+          environmentVariables:
+            env1: gitBranch
+            env2: sourceRepository
         execution:
-          # onStart:
-          #   - echo "test1234"
           onExecute:
-            - echo "executing"      
-      
+            - echo test
