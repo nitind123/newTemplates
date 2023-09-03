@@ -40,6 +40,8 @@ pipelines:
           timeoutSeconds: 2700 # 45 minutes
           inputResources:
             - name: myRepo_2
+          inputSteps:
+            - name: S_files
         execution:
           # onStart:
           #   - echo "test1234"
