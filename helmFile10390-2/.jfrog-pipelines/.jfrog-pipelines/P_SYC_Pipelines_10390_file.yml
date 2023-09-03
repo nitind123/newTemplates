@@ -8,7 +8,6 @@ pipelines:
           environmentVariables:
             env1: gitBranch
             env2: sourceRepository
-            helperName: {{ include "sanity.name" . }}
         execution:
           onExecute:
-            - echo {{ get (.Files.Get "config.yml" | fromYaml) "message" }}
+            - echo test
