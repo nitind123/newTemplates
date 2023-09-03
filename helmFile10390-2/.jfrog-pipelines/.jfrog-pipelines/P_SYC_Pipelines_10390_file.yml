@@ -29,3 +29,20 @@ pipelines:
         execution:
           onExecute:
             - echo test
+     - name: access_multidb_itest
+        type: Matrix
+        stepMode: Bash
+        stepletMultipliers:
+          environmentVariables:
+            - DATABASE_TYPE: postgresql
+        configuration:
+          multiNode: true
+          timeoutSeconds: 2700 # 45 minutes
+          inputResources:
+            - name: myRepo_2
+        execution:
+          # onStart:
+          #   - echo "test1234"
+          onExecute:
+            - echo "executing"
+ 
