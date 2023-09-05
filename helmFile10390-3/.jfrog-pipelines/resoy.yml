@@ -4,18 +4,29 @@ resources:
     configuration:
       environment_url: "value"
 
+# pipelines:
+#  - name: A_Extension_0023
+#    steps:
+#       - name: A_Extension_0023_step
+#         type: UploadArtifact
+#         configuration:
+#           integrations:
+#             - name: s_artifactory
+#           targetPath: "test-automation-generic-local/A_Extension_0023"
+#           outputResources:
+#             - name: api_passthrough_automation_propertyBag
+#         execution:
+#           onExecute:
+#             - echo $environment_url
 pipelines:
- - name: A_Extension_0023
-   steps:
-      - name: A_Extension_0023_step
-        type: UploadArtifact
+  - name: PS_SYNC_10509_001
+    steps:
+      - name: PS_SYNC_10509_001
+        type: Bash
         configuration:
-          integrations:
-            - name: s_artifactory
-          targetPath: "test-automation-generic-local/A_Extension_0023"
-          outputResources:
+          inputResources:
             - name: api_passthrough_automation_propertyBag
+              trigger: false
         execution:
           onExecute:
-            - echo $environment_url
-      
+            - echo $environment_url   
