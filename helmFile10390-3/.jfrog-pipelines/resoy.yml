@@ -10,7 +10,12 @@ pipelines:
       - name: A_Extension_0023_step
         type: UploadArtifact
         configuration:
+          integrations:
+            - name: s_artifactory
           targetPath: "test-automation-generic-local/A_Extension_0023"
           outputResources:
             - name: api_passthrough_automation_propertyBag
+        execution:
+          onExecute:
+            - echo $environment_url
       
