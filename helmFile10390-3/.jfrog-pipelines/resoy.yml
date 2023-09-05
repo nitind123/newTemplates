@@ -29,4 +29,4 @@ pipelines:
               trigger: false
         execution:
           onExecute:
-            - echo $environment_url   
+            - echo ${res_api_passthrough_automation_propertyBag_environment_url}
