@@ -130,10 +130,6 @@ pipelines:
               allowCustom: true
               default: "Password@1"
               description: API key of the test instance
-            GITHUB_TOKEN:
-              allowCustom: true
-              default:  "${int_s_gitHub_token}"
-              description: "Github access token"
             DEFAULT_NODE_POOL_NAME:
               allowCustom: true
               default: u18dynamic
