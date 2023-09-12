@@ -1,36 +1,50 @@
+# [Required]
 metadata:
-  serviceName:  nodejsTemplate
-  node: "18"
+  # [Required] All the underlying pipelines & resources names will be prefixed with appName for easy identifications & search
+  serviceName:  api
 
+# [Required]
 inputs:
+  # [Required]
   pipeline:
     configuration:
+      # [Required]
       integrations:
         - s_gitHub
         - s_slack
+      # [Optional] To set environment variables
       environmentVariables:
         foo: bar
         test: env
+      # [Required]
       retentionPolicy:
         maxAgeDays: 90
         minRuns: 10
 
+  # [Required] Configure Git repository where application code is present
   sourceRepository:
+    # Support all the Git Resource configuration properties
+    # Ref: https://jfrog.com/help/r/jfrog-pipelines-documentation/gitrepo
     path: nitind123/newTemplates
     gitProvider: s_gitHub
     branches:
-      include: master
+      include: nodejsTemplate
 
   integrations:
     artifactory: s_artifactory
     sonar: s_sonar
 
+# [Required]
 configurations:
 
+  # [Optional] Defaults to repository root folder
   sourceDirectory: 'yaml/javaTem'
 
   steps:
     build:
+      runtime:
+        versions:
+          - "16.10.0"
       onStart:
         - on_start
       onExecute:
@@ -41,6 +55,9 @@ configurations:
         - send_notification
 
     codeQuality:
+      runtime:
+        versions:
+          - "16.10.0"
       onStart:
         - npm run build
       onExecute:
@@ -52,6 +69,12 @@ configurations:
 
 
     sonarScan:
+      runtime:
+        custom:
+          registry: s_artifactory
+          sourceRepository: docker-staging-local
+          name: docker.jfrog.io/sonar-scanner
+          tag: latest
       onStart:
         - npm run build
       onExecute:
@@ -62,6 +85,9 @@ configurations:
         - send_notification
 
     publish:
+      runtime:
+        versions:
+          - "16.10.0"
       onExecute:
         - jfrog rt publish
       onFailure:
@@ -71,6 +97,12 @@ configurations:
 
 
     clamScan:
+      runtime:
+        custom:
+          registry: s_artifactory
+          sourceRepository: docker-staging-local
+          name: docker.jfrog.io/clam-scanner
+          tag: latest
       onStart:
         - npm run build
       onExecute:
@@ -82,8 +114,27 @@ configurations:
         
 controls:
 
-  enableQuality: true
-  enablePublish: true
+  # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
+
+  build:
+    runtime: auto
+
+  codeQuality:
+    # [Optional] Defaults to true
+    enabled: true
+    runtime: auto
+
+  sonarScan:
+    runtime: custom
+
+  clamScan:
+    runtime: custom
+
+  publish:
+    # [Optional] Defaults to false
+    enabled: true
+    runtime: auto
 
   triggerBy:
+    # [Optional] Defaults to false
     sourceRepository: true
