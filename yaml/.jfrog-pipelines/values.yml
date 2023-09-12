@@ -50,9 +50,9 @@ configurations:
       onExecute:
         - npm run build
       onFailure:
-        - send_notification
+        - echo 'failure'
       onSuccess:
-        - send_notification
+        - echo 'success'
 
     codeQuality:
       runtime:
@@ -63,9 +63,9 @@ configurations:
       onExecute:
         - npm run lint:api
       onFailure:
-        - send_notification
+        - echo 'failure'
       onSuccess:
-        - send_notification
+        - echo 'success'
 
 
     sonarScan:
@@ -78,11 +78,11 @@ configurations:
       onStart:
         - npm run build
       onExecute:
-        - on_execute
+        - echo 'func'
       onFailure:
-        - send_notification
+        - echo 'failure'
       onSuccess:
-        - send_notification
+        - echo 'success'
 
     publish:
       runtime:
@@ -91,9 +91,9 @@ configurations:
       onExecute:
         - jfrog rt publish
       onFailure:
-        - send_notification
+        - echo 'failure'
       onSuccess:
-        - send_notification
+        - echo 'success'
 
 
     clamScan:
@@ -105,12 +105,10 @@ configurations:
           tag: latest
       onStart:
         - npm run build
-      onExecute:
-        - on_execute
       onFailure:
-        - send_notification
+        - echo 'failure'
       onSuccess:
-        - send_notification
+        - echo 'success'
         
 controls:
 
