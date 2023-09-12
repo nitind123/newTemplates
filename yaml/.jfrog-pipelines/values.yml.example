@@ -48,6 +48,7 @@ configurations:
       onStart:
         - npm i
       onExecute:
+        - ls
         - npm -v
       onFailure:
         - echo 'failure'
