@@ -1,14 +1,393 @@
 pipelines:
-  - name: A_pipeline_6495_12
+  - name: custom_trigger_automation
+    configuration:
+      integrations:
+        - name: automation_ssh
+      inputResources:
+        - name: ubuntu_18_static_vm
+          trigger: false
+        - name: ubuntu_20_static_vm
+          trigger: false
+        - name: redhat_7_static_vm
+          trigger: false
+        - name: centos_7_static_vm
+          trigger: false
+      environmentVariables:
+        readOnly:
+          DEFAULT_UBUNTU_NODEPOOL_OS:
+            allowCustom: true
+            default: "Ubuntu_18.04"
+            description: "Default operating system for node pool tests"
+          DEFAULT_NODEPOOL_NUMBEROFNODES:
+            allowCustom: true
+            default: 1
+            description: "Default number of nodes for node pool tests"
+          DEFAULT_NODEPOOL_REGION:
+            allowCustom: true
+            default: "ap-south-1"
+            description: "Default region for node pool tests"
+          DEFAULT_AZURE_NODEPOOL_REGION:
+            allowCustom: true
+            default: "westus"
+            description: "Default region for azure node pool tests"
+          DEFAULT_GCP_NODEPOOL_REGION:
+            allowCustom: true
+            default: "us-west1"
+            description: "Default region for gcp node pool tests"
+          DEFAULT_NODEPOOL_ARCHITECTURE:
+            allowCustom: true
+            default: "x86_64"
+            description: "Default architecture for node pool tests"
+          DEFAULT_NODEPOOL_NODEIDLEINTERVAL:
+            allowCustom: true
+            default: 1
+            description: "Default node interval(in min) for node pool tests"
+          DEFAULT_NODEPOOL_DISKSIZE:
+            allowCustom: true
+            default: 90
+            description: "Default disk size for node pool tests"
+          DEFAULT_NODEPOOL_TIMEOUT:
+            allowCustom: true
+            default: 30000
+            description: "Default timeout(in sec) for node pool tests"
+          DEFAULT_WINDOWS_NODEPOOL_OS:
+            allowCustom: true
+            default: "WindowsServer_2019"
+          AWS_NODEPOOL_KEYPAIRNAME:
+            description: "AWS key-pair"
+            default: "dev2cloud-pp-aps1-nodepool"
+            allowCustom: true
+          AWS_NODEPOOL_SECOND_KEYPAIRNAME:
+            description: "AWS second key-pair"
+            default: "pipetesting003-eu-central-1"
+            allowCustom: true
+          AWS_NODEPOOL_SUBNETID:
+            description: "Default AWS subnet-id"
+            default: "subnet-0cdfebd1890e2967a"
+            allowCustom: true
+          AWS_NODEPOOL_SECOND_SUBNETID:
+            description: "second AWS subnet-id"
+            default: "subnet-050a07ea2f5cbee1c"
+            allowCustom: true
+          AWS_NODEPOOL_INSTANCESIZE:
+            description: "Default AWS instance-size"
+            default: "t3a.medium"
+            allowCustom: true
+          AWS_NODEPOOL_WIN_19_INSTANCESIZE:
+            description: "Default AWS instance-size"
+            default: "t3a.medium"
+            allowCustom: true
+          AWS_NODEPOOL_SECURITYGROUPID:
+            description: " Default AWS security group-id"
+            default: "sg-04d78bcf2e81c95a0"
+            allowCustom: true
+          AWS_NODEPOOL_SECOND_SECURITYGROUPID:
+            description: " second AWS security group-id"
+            default: "sg-0ea095851df05843e"
+            allowCustom: true
+          AWS_PROJECT_INTEGRATION_ACCESSKEYID:
+            description: "Default AWS access key-id"
+            default: "${int_test_automation_token_AWS_DEV2CLOUD_ACCESSKEYID}"
+            values:
+              - "${int_test_automation_token_AWS_DEV2CLOUD_ACCESSKEYID}"
+              - "${int_test_automation_token_AWS_PROJECT_INTEGRATION_ACCESSKEYID}"
+            allowCustom: true
+          AWS_PROJECT_INTEGRATION_SECRETACCESSKEY:
+            description: "Default AWS ecret access-key"
+            default: "${int_test_automation_token_AWS_DEV2CLOUD_SECRETACCESSKEY}"
+            values:
+              - "${int_test_automation_token_AWS_DEV2CLOUD_SECRETACCESSKEY}"
+              - "${int_test_automation_token_AWS_PROJECT_INTEGRATION_SECRETACCESSKEY}"
+            allowCustom: true
+          D_AZUREKEYS_PROJECT_INTEGRATION_APPID:
+            description: "Default Azure app-id"
+            default: "192757c5-73a6-4257-84ec-1fe4c30f98fb"
+            allowCustom: true
+          D_AZUREKEYS_PROJECT_INTEGRATION_PASSWORD:
+            description: "Default Azure password"
+            default: "${int_az_jfrog_password}"
+            allowCustom: true
+          D_AZUREKEYS_PROJECT_INTEGRATION_TENANT:
+            description: "Default Azure tenant key"
+            default: "ad8b5a8c-9862-4c41-a341-aa838fc564df"
+            allowCustom: true
+          AZURE_NODEPOOL_SUBSCRIPTIONID:
+            allowCustom: true
+            default: "f27d81be-eea4-479e-a745-11088b8cc1b0"
+            description: "Default Azure subscription-id"
+          AZURE_NODEPOOL_RESOURCEGROUPNAME:
+            allowCustom: true
+            default: "pipelines-bp-westus"
+            description: "Default Azure resource group name"
+          AZURE_NODEPOOL_VNETNAME:
+            allowCustom: true
+            default: "pipelines-bp-westus"
+            description: "Default Azure vnetname"
+          AZURE_NODEPOOL_SUBNETNAME:
+            allowCustom: true
+            default: "pipelines-bp-westus"
+            description: "Default Azure subnet name"
+          AZURE_NODEPOOL_PUBLICSSHKEY:
+            allowCustom: true
+            default: "\"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCA0GPIdWfyEn21jkMhS8/JvoJ4viuPmnBhuazjwUbilM3zO38hQc8nr8eW0zJS/zpf2V9QewpJ1t9x5tw4bdTRMN99aaIbqr6ZSz/1ofFL1PkpC9Y7HWi+dmpxlIqRkX6JGPaUNb2ql71vVPY0tLg2G4MgcX/ZFQCVO3z/o20HURgrcxYEu5A3+dOkyiE3JQBi+s66cgDm7p3IIND2eEHcZiIsaW6vg2T85oF8WkXcpHFLLXt5gzND6f/8TwW657QXe2P5mijWwTtCOaopfSK0vXC1dFzPPpwKGPTv7KrsTSPL3c/QP6YqEYratKpNTenmvGPGqYNFgj8oMIbVN2SP\""
+            description: "Default Azure public ssh-key"
+          AZURE_NODEPOOL_INSTANCESIZE:
+            allowCustom: true
+            default: "Standard_F2s"
+            description: "Default Azure instance size"
+          GCP_NODEPOOL_INSTANCESIZE:
+            allowCustom: true
+            default: "n1-standard-2"
+            description: "This variable is used to set default instance size for azure node pool"
+          GCP_NODEPOOL_SUBNET:
+            allowCustom: true
+            default: "jfrog-usw1-dynamicnodes"
+            description: "This variable is used to set default instance size for azure node pool"
+          GCP_NODEPOOL_NETWORK_TAGS:
+            allowCustom: true
+            default: "behind-nat,jenkins,pipelines,xray-app,xray-apps"
+            description: "This variable is used to set default instance size for azure node pool"
+          GCP_NODEPOOL_ZONE:
+            allowCustom: true
+            default: "us-west1-b"
+            description: "This variable is used to set default instance size for azure node pool"
+          D_GOOGLECLOUD_PROJECT_INTEGRATION_JSONKEY:
+            allowCustom: true
+            default: "${int_test_automation_gcp_jsonKey}"
+            description: "This variable is used to set default instance size for azure node pool"
+          KUBERNETES_NODEPOOL_STORAGECLASS:
+            allowCustom: true
+            default: "standard"
+            description: "This variable is used to set default storage class for kubernetes node pool"
+          KUBERNETES_NODEPOOL_NAMESPACE:
+            allowCustom: true
+            default: "pipe-master-pool"
+            description: "This variable is used to set default namespace for kubernetes node pool"
+          KUBERNETES_PROJECT_INTEGRATION_KUBECONFIG:
+            allowCustom: true
+            default: "${int_KubeFile_automation_kubeconfig}"
+            description: "This variable is used to set default kubeconfig for kubernetes node pool"
+          KUBERNETES_PROJECT_INTEGRATION_KUBECONFIG_PATH:
+            allowCustom: true
+            default: "${step_workspace_dir}/KubeFile_automation/config"
+            description: "This variable is used to set default kubeconfig for kubernetes node pool"
+          DONT_DELETE_PS:
+            description: "When run status reaches error status, pipeline source doesn't get deleted "
+            default: "false"
+            allowCustom: true
+          GREP:
+            description: "Only run tests matching this string"
+            default: ""
+            allowCustom: true
+          INVERT:
+            description: "Skip all the tests matching the grep string. Accepts only true or false"
+            default: "false"
+            allowCustom: true
+          PREP_FOR_HELM_TESTS:
+            description: "Upload helm test files to artifactory for running helm test cases"
+            default: "false"
+            allowCustom: true
+          U18_STATIC_IP_ADDRESS:
+            allowCustom: false
+            default:  "${res_ubuntu_18_static_vm_ip_address}"
+            description: "Ubuntu 18 static vm ip address"
+          U20_STATIC_IP_ADDRESS:
+            allowCustom: false
+            default:  "${res_ubuntu_20_static_vm_ip_address}"
+            description: "Ubuntu 20 static vm ip address"
+          RHEL7_STATIC_IP_ADDRESS:
+            allowCustom: false
+            default:  "${res_redhat_7_static_vm_ip_address}"
+            description: "Redhat 7 static vm ip address"
+          CENT7_STATIC_IP_ADDRESS:
+            allowCustom: false
+            default:  "${res_centos_7_static_vm_ip_address}"
+            description: "CentOS 7 static vm ip address"
+          SSH_USER:
+            allowCustom: false
+            default:  "automation"
+            description: "SSH user name in automation"
+          SSH_PRIVATE_KEY:
+            allowCustom: false
+            default:  "${int_automation_ssh_privateKey}"
+            description: "SSH private key value in automation"
+          GITHUB_WEBHOOKS_REPOSITORY_FULL_NAME:
+            allowCustom: false
+            default:  "PIPA/Org_test_Automation_Webhooks"
+            description: "GitHub webhook test repository"
+          BITBUCKET_WEBHOOKS_REPOSITORY_FULL_NAME:
+            allowCustom: false
+            default:  "jfbeta/org_test_automation_webhooks"
+            description: "Bitbucket webhook test repository"
+          BITBUCKETSERVERBASIC_WEBHOOKS_REPOSITORY_FULL_NAME:
+            allowCustom: false
+            default:  "PIP/tests"
+            description: "BitbucketServerBasic webhook test repository"
+          GITLAB_WEBHOOKS_REPOSITORY_FULL_NAME:
+            allowCustom: false
+            default:  "jfbeta/webhooks"
+            description: "GitLab webhook test repository"
+          PIPELINES_SERVICE_USER_TOKEN:
+            allowCustom: true
+            default: "Testing1234"
+            description: Service User Token
+          DEPLOY_KEYS_REPOSITORY_FULL_NAME:
+            allowCustom: true
+            default: "PIPA/org_test_automation_deploy_keys"
+            description: 'deploy keys automation github repository'
+          BITBUCKET_SERVER_PASSWORD:
+            description: "BBS password"
+            default: "${int_test_automation_bbs_new_password}"
+            allowCustom: true
+          BITBUCKET_SERVER_URL:
+            description: "BBS url"
+            default: "${int_test_automation_bbs_new_url}"
+            allowCustom: true
+          BITBUCKET_SERVER_TOKEN:
+            description: "BBS token"
+            default: "${int_automation_bbs_aps_BITBUCKET_SERVER_TOKEN}"
+            allowCustom: true
+          BITBUCKET_SERVER_USERNAME:
+            description: "BBS username"
+            default: "${int_test_automation_bbs_new_username}"
+            allowCustom: true
+          GITHUB_REPOSITORY_BRANCH: "master"
+          GITHUB_REPOSITORY_FULLPATH_BASH: "jfrog/Org_test_Automation_bash"
+          GITHUB_REPOSITORY_FULLPATH_POWERSHELL: "jfrog/Org_test_Automation_PowerShell"
+          MULTIBRANCH_REPOSITORY_FULL_NAME: "PIPA/org_test_automation_MultiBranch"
+          GITHUB_REPOSITORY_FULLPATH_BASH_BRANCH: "master"
+          EMPTY_REPOSITORY_FULL_NAME : "PIPA/Org_test_Automation_empty"
+          EXTENSIONS_REPOSITORY_FULL_NAME : "PIPA/extensions"
+          TEMPLATES_REPOSITORY_FULL_NAME : "PIPA/templates"
+          GITHUB_REPOSITORY_FULLPATH: "jfrog/Org_test_Automation"
+          GITHUB_MULTIBRANCH_REPOSITORY_FULL_NAME: "jfrog/org_test_automation_MultiBranch"
     steps:
-      - name: S_A_pipeline_64952
+      - name: custom_trigger_automation
         type: Bash
         configuration:
+          timeoutSeconds: 10800
+          chronological: true
+          inputResources:
+            - name: triggerLightWeightAutomation
+              trigger: false
+            - name: auto_gitRepo
+              trigger: false
+            - name: Org_test_Automation_BBS
+              trigger: false
+            - name: Org_test_Automation_bash_BBS
+              trigger: false
+            - name: Org_test_Automation_PowerShell_BBS
+              trigger: false
+            - name: Org_test_Automation_Private_BBS
+              trigger: false
+            - name: org_test_automation_MultiBranch_BBS
+              trigger: false
+            - name: automation_templateFS_master
+              trigger: false
+          environmentVariables:
+            SKIP_NPM_INSTALL:
+              allowCustom: true
+              default: "true"
+              description: "Flag to skip npm install"
+            jpd_url:
+              allowCustom: true
+              default: ""
+              description: Test instance's server name. If no server name is specified, the value will be fetched from triggerLightWeightAutomation pipeline's resource
+            removeConfFile: "false"
+            confFileName: conf.json
+            LOG_LEVEL: "info"
+            JFROG_ARTIFACTORY_USER:
+              allowCustom: true
+              default:  admin
+              description: "Admin username of the test instance"
+            JFROG_ADMIN_ARTIFACTORY_PASSWORD:
+              allowCustom: true
+              default: "Password@1"
+              description: Password of the test instance
+            JFROG_ARTIFACTORY_APIKEY:
+              allowCustom: true
+              default: "Password@1"
+              description: API key of the test instance
+            GITHUB_TOKEN:
+              allowCustom: true
+              default:  "${int_s_gitHub_token}"
+              description: "Github access token"
+            DEFAULT_NODE_POOL_NAME:
+              allowCustom: true
+              default: u18dynamic
+              description: "Default nodePool"
+            listOfTests:
+              allowCustom: true
+              default: "core/api/systemCodes.js"
+              description: Comma seperated test suits for execution
+            repositoryFullName:
+              allowCustom: true
+              default: "PIPA/Org_test_Automation"
+              description: "Github repository"
+            repositoryBranch:
+              allowCustom: true
+              default: "master"
+              description: "Github repository branch"
+            JOIN_KEY:
+              allowCustom: true
+              default: ""
+              description: Join key of the test instance
           integrations:
-            - name: s_gitHub
+            - name: s_bitbucket
+          nodePool: u18dynamic
+
         execution:
-          onExecute:
-            - echo "hi"
+          onStart:
+            - testPath=$res_auto_gitRepo_resourcePath/automation/tests
+            - pushd $testPath
+            - mkdir -p /tmp/npm_cache
+            - restore_pipeline_files npm_cache /tmp/npm_cache/
+            - jfrog rt npmc --server-id-resolve entplus_deployer --repo-resolve npm-virtual
+            - jfrog rt npmci
+            - add_pipeline_files /tmp/npm_cache npm_cache
+            - restore_pipeline_files jsonfile $confFileName
+            - if [[ -f "$confFileName" ]]; then cat $confFileName; fi
+            - |
+              if [ -z "$jpd_url" ]; then
+                if [ -z "${res_triggerLightWeightAutomation_jpdUrl}" ]; then
+                  echo "server name is missing please custom  trigger this step by providing servername"
+                  exit 1
+                else
+                  export JPD_URL=${res_triggerLightWeightAutomation_jpdUrl}
+                fi
+              else
+                export JPD_URL=${jpd_url}
+              fi
+            - export testCases=${listOfTests}
+            - echo "Test files considered for this run -> "$testCases
+            - export JFROG_JOIN_KEY=${res_triggerLightWeightAutomation_joinKey}
+            - |
+              if [ -z "${JOIN_KEY}" ]; then
+                if [ -z "${res_triggerLightWeightAutomation_joinKey}" ]; then
+                  echo "join key is missing please custom trigger this step by providing join key"
+                  exit 1
+                else
+                  export JFROG_JOIN_KEY=${res_triggerLightWeightAutomation_joinKey}
+                fi
+              else
+                export JFROG_JOIN_KEY="${JOIN_KEY}"
+              fi
+            - export REPOSITORY_FULL_NAME=${repositoryFullName}
+            - export REPOSITORY_BRANCH=${repositoryBranch}
+            - export ORG_TEST_AUTOMATION_DIRECTORY="${res_Org_test_Automation_BBS_resourcePath}"
+            - export ORG_TEST_AUTOMATION_BASH_DIRECTORY="${res_Org_test_Automation_bash_BBS_resourcePath}"
+            - export ORG_TEST_AUTOMATION_POWERSHELL_DIRECTORY="${res_Org_test_Automation_PowerShell_BBS_resourcePath}"
+            - export ORG_TEST_AUTOMATION_PRIVATE_DIRECTORY="${res_Org_test_Automation_Private_BBS_resourcePath}"
+            - export ORG_TEST_AUTOMATION_MULTIBRANCH_DIRECTORY="${res_org_test_automation_MultiBranch_BBS_resourcePath}"
+            - templateFileName="$(ls ${res_automation_templateFS_master_resourcePath} | grep pipelines-template)"
+            - chmod +x ${res_automation_templateFS_master_resourcePath}/${templateFileName}
+            - export TEMPLATE_BINARY_PATH="${res_automation_templateFS_master_resourcePath}/${templateFileName}"
+            - chmod +x $TEMPLATE_BINARY_PATH
+            - export testCases=$listOfTests
+            - ./test.sh
           onComplete:
-            - echo "state=pipeline2" > pipeline_state.txt
-            - add_pipeline_files pipeline_state.txt pipeline_state_file
+            - add_pipeline_files $confFileName jsonfile
+            - cat $confFileName
+            - save_tests testResults/mocha-junit-reporter
+            - mv mochawesome-report/mochawesome.html mochawesome-${steplet_id}.html
+{{ if not (hasPrefix "preRelease" "{{gitBranch}}") }}
