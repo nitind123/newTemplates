@@ -5,30 +5,6 @@ pipelines:
         - name: automation_ssh
       environmentVariables:
         readOnly:
-          D_AZUREKEYS_PROJECT_INTEGRATION_APPID:
-            description: "Default Azure app-id"
-            default: "192757c5-73a6-4257-84ec-1fe4c30f98fb"
-            allowCustom: true
-          D_AZUREKEYS_PROJECT_INTEGRATION_PASSWORD:
-            description: "Default Azure password"
-            default: "${int_az_jfrog_password}"
-            allowCustom: true
-          D_AZUREKEYS_PROJECT_INTEGRATION_TENANT:
-            description: "Default Azure tenant key"
-            default: "ad8b5a8c-9862-4c41-a341-aa838fc564df"
-            allowCustom: true
-          AZURE_NODEPOOL_SUBSCRIPTIONID:
-            allowCustom: true
-            default: "f27d81be-eea4-479e-a745-11088b8cc1b0"
-            description: "Default Azure subscription-id"
-          AZURE_NODEPOOL_RESOURCEGROUPNAME:
-            allowCustom: true
-            default: "pipelines-bp-westus"
-            description: "Default Azure resource group name"
-          AZURE_NODEPOOL_VNETNAME:
-            allowCustom: true
-            default: "pipelines-bp-westus"
-            description: "Default Azure vnetname"
           AZURE_NODEPOOL_SUBNETNAME:
             allowCustom: true
             default: "pipelines-bp-westus"
