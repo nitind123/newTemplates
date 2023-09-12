@@ -2,7 +2,7 @@ pipelines:
   - name: custom_trigger_automation
     configuration:
       integrations:
-        - name: automation_ssh
+        - name: s_gitHub
       environmentVariables:
         readOnly:
           AZURE_NODEPOOL_SUBNETNAME:
