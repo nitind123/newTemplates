@@ -1,7 +1,7 @@
 # [Required]
 metadata:
   # [Required] All the underlying pipelines & resources names will be prefixed with appName for easy identifications & search
-  serviceName:  api
+  serviceName:  nodeJs
 
 # [Required]
 inputs:
