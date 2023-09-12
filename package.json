@@ -6,6 +6,9 @@
     "type": "git",
     "url": "https://git.jfrog.info/scm/pip/controlplane.git"
   },
+  "scripts": {
+    "prepare": "husky install"
+  },
   "dependencies": {
     "async": "2.6.4",
     "email-addresses": "^5.0.0",
