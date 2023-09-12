@@ -46,7 +46,7 @@ configurations:
         versions:
           - "16.10.0"
       onStart:
-        - on_start
+        - npm i
       onExecute:
         - npm run build
       onFailure:
