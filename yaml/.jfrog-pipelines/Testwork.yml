@@ -3,102 +3,8 @@ pipelines:
     configuration:
       integrations:
         - name: automation_ssh
-      inputResources:
-        - name: ubuntu_18_static_vm
-          trigger: false
-        - name: ubuntu_20_static_vm
-          trigger: false
-        - name: redhat_7_static_vm
-          trigger: false
-        - name: centos_7_static_vm
-          trigger: false
       environmentVariables:
         readOnly:
-          DEFAULT_UBUNTU_NODEPOOL_OS:
-            allowCustom: true
-            default: "Ubuntu_18.04"
-            description: "Default operating system for node pool tests"
-          DEFAULT_NODEPOOL_NUMBEROFNODES:
-            allowCustom: true
-            default: 1
-            description: "Default number of nodes for node pool tests"
-          DEFAULT_NODEPOOL_REGION:
-            allowCustom: true
-            default: "ap-south-1"
-            description: "Default region for node pool tests"
-          DEFAULT_AZURE_NODEPOOL_REGION:
-            allowCustom: true
-            default: "westus"
-            description: "Default region for azure node pool tests"
-          DEFAULT_GCP_NODEPOOL_REGION:
-            allowCustom: true
-            default: "us-west1"
-            description: "Default region for gcp node pool tests"
-          DEFAULT_NODEPOOL_ARCHITECTURE:
-            allowCustom: true
-            default: "x86_64"
-            description: "Default architecture for node pool tests"
-          DEFAULT_NODEPOOL_NODEIDLEINTERVAL:
-            allowCustom: true
-            default: 1
-            description: "Default node interval(in min) for node pool tests"
-          DEFAULT_NODEPOOL_DISKSIZE:
-            allowCustom: true
-            default: 90
-            description: "Default disk size for node pool tests"
-          DEFAULT_NODEPOOL_TIMEOUT:
-            allowCustom: true
-            default: 30000
-            description: "Default timeout(in sec) for node pool tests"
-          DEFAULT_WINDOWS_NODEPOOL_OS:
-            allowCustom: true
-            default: "WindowsServer_2019"
-          AWS_NODEPOOL_KEYPAIRNAME:
-            description: "AWS key-pair"
-            default: "dev2cloud-pp-aps1-nodepool"
-            allowCustom: true
-          AWS_NODEPOOL_SECOND_KEYPAIRNAME:
-            description: "AWS second key-pair"
-            default: "pipetesting003-eu-central-1"
-            allowCustom: true
-          AWS_NODEPOOL_SUBNETID:
-            description: "Default AWS subnet-id"
-            default: "subnet-0cdfebd1890e2967a"
-            allowCustom: true
-          AWS_NODEPOOL_SECOND_SUBNETID:
-            description: "second AWS subnet-id"
-            default: "subnet-050a07ea2f5cbee1c"
-            allowCustom: true
-          AWS_NODEPOOL_INSTANCESIZE:
-            description: "Default AWS instance-size"
-            default: "t3a.medium"
-            allowCustom: true
-          AWS_NODEPOOL_WIN_19_INSTANCESIZE:
-            description: "Default AWS instance-size"
-            default: "t3a.medium"
-            allowCustom: true
-          AWS_NODEPOOL_SECURITYGROUPID:
-            description: " Default AWS security group-id"
-            default: "sg-04d78bcf2e81c95a0"
-            allowCustom: true
-          AWS_NODEPOOL_SECOND_SECURITYGROUPID:
-            description: " second AWS security group-id"
-            default: "sg-0ea095851df05843e"
-            allowCustom: true
-          AWS_PROJECT_INTEGRATION_ACCESSKEYID:
-            description: "Default AWS access key-id"
-            default: "${int_test_automation_token_AWS_DEV2CLOUD_ACCESSKEYID}"
-            values:
-              - "${int_test_automation_token_AWS_DEV2CLOUD_ACCESSKEYID}"
-              - "${int_test_automation_token_AWS_PROJECT_INTEGRATION_ACCESSKEYID}"
-            allowCustom: true
-          AWS_PROJECT_INTEGRATION_SECRETACCESSKEY:
-            description: "Default AWS ecret access-key"
-            default: "${int_test_automation_token_AWS_DEV2CLOUD_SECRETACCESSKEY}"
-            values:
-              - "${int_test_automation_token_AWS_DEV2CLOUD_SECRETACCESSKEY}"
-              - "${int_test_automation_token_AWS_PROJECT_INTEGRATION_SECRETACCESSKEY}"
-            allowCustom: true
           D_AZUREKEYS_PROJECT_INTEGRATION_APPID:
             description: "Default Azure app-id"
             default: "192757c5-73a6-4257-84ec-1fe4c30f98fb"
@@ -155,22 +61,6 @@ pipelines:
             allowCustom: true
             default: "${int_test_automation_gcp_jsonKey}"
             description: "This variable is used to set default instance size for azure node pool"
-          KUBERNETES_NODEPOOL_STORAGECLASS:
-            allowCustom: true
-            default: "standard"
-            description: "This variable is used to set default storage class for kubernetes node pool"
-          KUBERNETES_NODEPOOL_NAMESPACE:
-            allowCustom: true
-            default: "pipe-master-pool"
-            description: "This variable is used to set default namespace for kubernetes node pool"
-          KUBERNETES_PROJECT_INTEGRATION_KUBECONFIG:
-            allowCustom: true
-            default: "${int_KubeFile_automation_kubeconfig}"
-            description: "This variable is used to set default kubeconfig for kubernetes node pool"
-          KUBERNETES_PROJECT_INTEGRATION_KUBECONFIG_PATH:
-            allowCustom: true
-            default: "${step_workspace_dir}/KubeFile_automation/config"
-            description: "This variable is used to set default kubeconfig for kubernetes node pool"
           DONT_DELETE_PS:
             description: "When run status reaches error status, pipeline source doesn't get deleted "
             default: "false"
@@ -187,30 +77,6 @@ pipelines:
             description: "Upload helm test files to artifactory for running helm test cases"
             default: "false"
             allowCustom: true
-          U18_STATIC_IP_ADDRESS:
-            allowCustom: false
-            default:  "${res_ubuntu_18_static_vm_ip_address}"
-            description: "Ubuntu 18 static vm ip address"
-          U20_STATIC_IP_ADDRESS:
-            allowCustom: false
-            default:  "${res_ubuntu_20_static_vm_ip_address}"
-            description: "Ubuntu 20 static vm ip address"
-          RHEL7_STATIC_IP_ADDRESS:
-            allowCustom: false
-            default:  "${res_redhat_7_static_vm_ip_address}"
-            description: "Redhat 7 static vm ip address"
-          CENT7_STATIC_IP_ADDRESS:
-            allowCustom: false
-            default:  "${res_centos_7_static_vm_ip_address}"
-            description: "CentOS 7 static vm ip address"
-          SSH_USER:
-            allowCustom: false
-            default:  "automation"
-            description: "SSH user name in automation"
-          SSH_PRIVATE_KEY:
-            allowCustom: false
-            default:  "${int_automation_ssh_privateKey}"
-            description: "SSH private key value in automation"
           GITHUB_WEBHOOKS_REPOSITORY_FULL_NAME:
             allowCustom: false
             default:  "PIPA/Org_test_Automation_Webhooks"
@@ -235,22 +101,6 @@ pipelines:
             allowCustom: true
             default: "PIPA/org_test_automation_deploy_keys"
             description: 'deploy keys automation github repository'
-          BITBUCKET_SERVER_PASSWORD:
-            description: "BBS password"
-            default: "${int_test_automation_bbs_new_password}"
-            allowCustom: true
-          BITBUCKET_SERVER_URL:
-            description: "BBS url"
-            default: "${int_test_automation_bbs_new_url}"
-            allowCustom: true
-          BITBUCKET_SERVER_TOKEN:
-            description: "BBS token"
-            default: "${int_automation_bbs_aps_BITBUCKET_SERVER_TOKEN}"
-            allowCustom: true
-          BITBUCKET_SERVER_USERNAME:
-            description: "BBS username"
-            default: "${int_test_automation_bbs_new_username}"
-            allowCustom: true
           GITHUB_REPOSITORY_BRANCH: "master"
           GITHUB_REPOSITORY_FULLPATH_BASH: "jfrog/Org_test_Automation_bash"
           GITHUB_REPOSITORY_FULLPATH_POWERSHELL: "jfrog/Org_test_Automation_PowerShell"
