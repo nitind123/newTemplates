@@ -48,7 +48,7 @@ configurations:
       onStart:
         - npm i
       onExecute:
-        - npm run build
+        - npm -v
       onFailure:
         - echo 'failure'
       onSuccess:
@@ -59,9 +59,9 @@ configurations:
         versions:
           - "16.10.0"
       onStart:
-        - npm run build
+        - npm -v
       onExecute:
-        - npm run lint:api
+        - npm run lint
       onFailure:
         - echo 'failure'
       onSuccess:
@@ -76,7 +76,7 @@ configurations:
           name: docker.jfrog.io/sonar-scanner
           tag: latest
       onStart:
-        - npm run build
+        - npm i
       onExecute:
         - echo 'func'
       onFailure:
@@ -104,7 +104,7 @@ configurations:
           name: docker.jfrog.io/clam-scanner
           tag: latest
       onStart:
-        - npm run build
+        - npm i
       onFailure:
         - echo 'failure'
       onSuccess:
