@@ -89,23 +89,6 @@ pipelines:
         configuration:
           timeoutSeconds: 10800
           chronological: true
-          inputResources:
-            - name: triggerLightWeightAutomation
-              trigger: false
-            - name: auto_gitRepo
-              trigger: false
-            - name: Org_test_Automation_BBS
-              trigger: false
-            - name: Org_test_Automation_bash_BBS
-              trigger: false
-            - name: Org_test_Automation_PowerShell_BBS
-              trigger: false
-            - name: Org_test_Automation_Private_BBS
-              trigger: false
-            - name: org_test_automation_MultiBranch_BBS
-              trigger: false
-            - name: automation_templateFS_master
-              trigger: false
           environmentVariables:
             SKIP_NPM_INSTALL:
               allowCustom: true
