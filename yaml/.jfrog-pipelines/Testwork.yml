@@ -208,4 +208,4 @@ pipelines:
             - cat $confFileName
             - save_tests testResults/mocha-junit-reporter
             - mv mochawesome-report/mochawesome.html mochawesome-${steplet_id}.html
-{{ if not (hasPrefix "preRelease" "{{gitBranch}}") }}
+
