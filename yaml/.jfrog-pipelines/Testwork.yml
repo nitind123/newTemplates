@@ -33,10 +33,6 @@ pipelines:
             allowCustom: true
             default: "us-west1-b"
             description: "This variable is used to set default instance size for azure node pool"
-          D_GOOGLECLOUD_PROJECT_INTEGRATION_JSONKEY:
-            allowCustom: true
-            default: "${int_test_automation_gcp_jsonKey}"
-            description: "This variable is used to set default instance size for azure node pool"
           DONT_DELETE_PS:
             description: "When run status reaches error status, pipeline source doesn't get deleted "
             default: "false"
