@@ -1,26 +1,25 @@
 # [Required]
 metadata:
-
   # [Required] All the underlying pipelines & resources names will be prefixed with appName for easy identifications & search
-  serviceName:  nodejsTemplate
-
-  # [Optional]
-  node: "16"
-
-  # [Optional] Defaults to Ubuntu18 with node 18
-  # Allows to configure custom runtime, support all the configuration properties under runtime.image.custom
-  # Ref: https://jfrog.com/help/r/jfrog-pipelines-documentation/choosing-your-runtime-image
-  #  runtime:
-  #    registry: docker
-  #    sourceRepository: apps-docker-local
-  #    name: test.mycompany.io/apps-docker-local/ci/builder-node14
-  #    tag: 1.0.0
-
-  # [Optional] If not provided then default nodePool configured in platform will be used
-  #  nodePool: some_nodepool
+  serviceName:  api
 
 # [Required]
 inputs:
+  # [Required]
+  pipeline:
+    configuration:
+      # [Required]
+      integrations:
+        - s_gitHub
+        - s_slack
+      # [Optional] To set environment variables
+      environmentVariables:
+        foo: bar
+        test: env
+      # [Required]
+      retentionPolicy:
+        maxAgeDays: 90
+        minRuns: 10
 
   # [Required] Configure Git repository where application code is present
   sourceRepository:
@@ -31,53 +30,111 @@ inputs:
     branches:
       include: nodejsTemplate
 
-  # [Required]
   integrations:
-
-    # [Required] Artifactory api key to configure Jfrog CLI
     artifactory: s_artifactory
+    sonar: s_sonar
 
 # [Required]
 configurations:
 
   # [Optional] Defaults to repository root folder
-  sourceDirectory: ''
+  sourceDirectory: 'yaml/javaTem'
 
+  steps:
+    build:
+      runtime:
+        versions:
+          - "16.10.0"
+      onStart:
+        - on_start
+      onExecute:
+        - npm run build
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
+
+    codeQuality:
+      runtime:
+        versions:
+          - "16.10.0"
+      onStart:
+        - npm run build
+      onExecute:
+        - npm run lint:api
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
+
+
+    sonarScan:
+      runtime:
+        custom:
+          registry: s_artifactory
+          sourceRepository: docker-staging-local
+          name: docker.jfrog.io/sonar-scanner
+          tag: latest
+      onStart:
+        - npm run build
+      onExecute:
+        - on_execute
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
+
+    publish:
+      runtime:
+        versions:
+          - "16.10.0"
+      onExecute:
+        - jfrog rt publish
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
+
+
+    clamScan:
+      runtime:
+        custom:
+          registry: s_artifactory
+          sourceRepository: docker-staging-local
+          name: docker.jfrog.io/clam-scanner
+          tag: latest
+      onStart:
+        - npm run build
+      onExecute:
+        - on_execute
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
+        
 controls:
 
   # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
-  triggerBy:
 
-    # Connected source Git repository change [Defaults to true]
-    # sourceRepository: true
+  build:
+    runtime: auto
 
-    # Other resource change from other pipelines
-    # externalResources:
-    #   - resourceName: dream_app_commons_build_result
+  codeQuality:
+    # [Optional] Defaults to true
+    enabled: true
+    runtime: auto
 
-    # Incoming webhook
-    # incomingWebhooks:
-    #   - webhookName: 'testWebhook' # IncommingWebhook integration name
+  sonarScan:
+    runtime: custom
 
+  clamScan:
+    runtime: custom
 
-  # [Optional]
-  logging:
-
-    # [Optional] Defaults to false
-    enableDebug: true
-
-  # [Optional] Exporting important files during run as RUN FILES
-  exporting:
-
+  publish:
     # [Optional] Defaults to false
     enabled: true
+    runtime: auto
 
-  # [Optional] Enable notifications
-  notifications:
-    email:
-      integrationName: 'mySMTP' # SMTP
-      content: ''
-
-    slack:
-      integrationName: 'mySlack'
-      content: ''
+  triggerBy:
+    # [Optional] Defaults to false
+    sourceRepository: true
