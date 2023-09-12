@@ -1,0 +1,67 @@
+{
+  "name": "pipelines.reqKick",
+  "license": "Unlicensed",
+  "description": "JFrog Pipelines build request kick-starter",
+  "repository": {
+    "type": "git",
+    "url": "https://git.jfrog.info/scm/pip/controlplane.git"
+  },
+  "dependencies": {
+    "async": "2.6.4",
+    "email-addresses": "^5.0.0",
+    "fs-extra": "0.30.0",
+    "node-uuid": "1.4.8",
+    "parse-links": "^0.1.0",
+    "password-generator": "^2.3.2",
+    "@jfrog-pipelines/core": "0.0.0",
+    "request": "2.88.0",
+    "underscore": "1.13.6",
+    "uuid": "8.3.2",
+    "win-ca": "3.5.0",
+    "winston": "^3.8.0",
+    "winston-transport": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/jest": "28.1.6",
+    "jest": "28.1.3",
+    "jshint": "2.9.5",
+    "ts-jest": "28.0.7"
+  },
+  "jshintConfig": {
+    "node": true,
+    "undef": true,
+    "noarg": true,
+    "white": true,
+    "esnext": true,
+    "strict": true,
+    "newcap": true,
+    "nonbsp": true,
+    "eqeqeq": true,
+    "unused": true,
+    "maxlen": 80,
+    "indent": 2,
+    "bitwise": true,
+    "noempty": true,
+    "latedef": "nofunc",
+    "maxdepth": 5,
+    "quotmark": "single",
+    "trailing": true,
+    "maxparams": 20,
+    "globalstrict": true,
+    "maxcomplexity": 20,
+    "maxstatements": 50,
+    "predef": [
+      "logger",
+      "jest",
+      "process",
+      "config",
+      "AMQP",
+      "server",
+      "util",
+      "async",
+      "ActErr",
+      "name",
+      "_"
+    ]
+  }
+}
