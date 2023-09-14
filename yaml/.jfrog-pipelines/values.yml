@@ -20,7 +20,7 @@ metadata:
   #    tag: 1.0.0
 
   # [Optional] If not provided then default nodePool configured in platform will be used
- nodePool: win_2019
+  nodePool: win_2019
 
 # [Required]
 inputs:
