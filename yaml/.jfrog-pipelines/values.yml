@@ -70,7 +70,7 @@ configurations:
       # enabled: true
 
       commands:
-        - java -v
+        - java -version
         # [Maven] Default to plugin: maven-checkstyle-plugin
         - 'mvn clean checkstyle:checkstyle'
 
