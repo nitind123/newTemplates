@@ -52,13 +52,13 @@ configurations:
   # Artifactory repos to resolve & deploy artifacts
   artifactory:
 
-    resolverSnapshotRepo: km-mvn-release-virtual
+    resolverSnapshotRepo: test-automation-maven-virtual
 
-    resolverReleaseRepo: km-mvn-release-virtual
+    resolverReleaseRepo: test-automation-maven-virtual
 
-    deployerSnapshotRepo: km-mvn-release-local
+    deployerSnapshotRepo: test-automation-maven-local
 
-    deployerReleaseRepo: km-mvn-release-local
+    deployerReleaseRepo: test-automation-maven-local
 
   # [Optional] When buildTool = Maven/Gradle
   # [Required] When buildTool = Other
