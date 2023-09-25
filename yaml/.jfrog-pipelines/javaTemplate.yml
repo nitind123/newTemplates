@@ -238,8 +238,7 @@ valuesFilePath: values.yml
         {{- else }}
           onExecute:
             {{- if eq $.buildTool "maven" }}
-            - jf mvnc --server-id-resolve {{ $.values.inputs.integrations.artifactory }} --repo-resolve-snapshots {{ $.values.configurations.artifactory.resolverSnapshotRepo }} --repo-resolve-releases {{ $.values.configurations.artifactory.resolverReleaseRepo }} \
-              --server-id-deploy {{ $.values.inputs.integrations.artifactory }} --repo-deploy-snapshots {{ $.values.configurations.artifactory.deployerSnapshotRepo }} --repo-deploy-releases {{ $.values.configurations.artifactory.deployerReleaseRepo }}
+            - jf mvnc --server-id-resolve {{ $.values.inputs.integrations.artifactory }} --repo-resolve-snapshots {{ $.values.configurations.artifactory.resolverSnapshotRepo }} --repo-resolve-releases {{ $.values.configurations.artifactory.resolverReleaseRepo }} --server-id-deploy {{ $.values.inputs.integrations.artifactory }} --repo-deploy-snapshots {{ $.values.configurations.artifactory.deployerSnapshotRepo }} --repo-deploy-releases {{ $.values.configurations.artifactory.deployerReleaseRepo }}
             {{- end }}
             - cd $shared_workspace{{ $.rootDirectory }}
             {{ template "step.shared.default.onExecute" $ }}
