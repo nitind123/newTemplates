@@ -59,7 +59,6 @@ configurations:
     deployerSnapshotRepo: test-automation-maven-local
 
     deployerReleaseRepo: test-automation-maven-local
-
   # [Optional] When buildTool = Maven/Gradle
   # [Required] When buildTool = Other
   steps:
