@@ -1,3 +1,131 @@
-include:
-  template: jfrog/DockerBuildAndPush/1.1.0
+template: true
 valuesFilePath: ./values.yml
+
+resources:
+  - name: upload_artifact_gitrepo_1
+    type: GitRepo
+    configuration:
+      path: {{ .Values.repoPath }}
+      gitProvider: {{ .Values.gitIntegration }}
+      branches:
+        include: ^{{ .Values.mainBranch }}$
+      cloneProtocol: https
+
+pipelines:
+  - name: upload_artifact_publish
+    configuration:
+      jfrogCliVersion: 2
+      runtime:
+        type: image
+        image:
+          auto:
+            language: go
+            versions:
+              - "1.19"
+      environmentVariables:
+        readOnly:
+          TASK_NAME: upload_artifact
+          TASK_VERSION: 0.0.${run_number}
+          TASK_REPOSITORY: pipelines-tasks-local/jfrog
+          RESOLVE_REPO: npm-virtual
+          JFROG_TASK_DEBUG: "true"
+          JFROG_CLI_LOG_LEVEL: debug
+    steps:
+      - name: build_and_publish_task
+        type: Bash
+        configuration:
+          inputResources:
+            - name: upload_artifact_gitrepo_1
+              trigger: false
+          integrations:
+            - name: {{ .Values.artIntegration }}
+            - name: {{ .Values.gitIntegration }}
+            - name: deepikaArtEnt
+        execution:
+          onExecute:
+            - pushd $res_upload_artifact_gitrepo_1_resourcePath
+            - echo "${int_deepikaArtEnt_user}"
+            - export GOPROXY="https://${int_deepikaArtEnt_user}:${int_deepikaArtEnt_apikey}@entplus.jfrog.io/artifactory/api/go/pipe-go-tasks-virtual"
+            - export GONOSUMDB="github.com/jfrog/*"
+            - go get .
+            - make test
+            # Make sure version was provided
+            - test -n "$TASK_VERSION" -a "$TASK_VERSION" != "0.0.0"
+            - make build-all
+            - ls -latr bin
+            - popd
+            # Run publish task
+            - jf c show
+            # Run publish task
+            - task: jfrog/publish-task@v0.1.0
+              id: publish_docker_build
+              rtIntegration: {{ .Values.artIntegration }}
+              input:
+                path: $res_upload_artifact_gitrepo_1_resourcePath
+                targetRepository: $TASK_REPOSITORY
+                taskName: $TASK_NAME
+                taskVersion: $TASK_VERSION
+                includePattern: ^README.md$|^bin
+      - name: test_published_upload_artifact_task
+        type: Bash
+        configuration:
+          inputResources:
+            - name: upload_artifact_gitrepo_1
+              trigger: false
+          inputSteps:
+            - name: build_and_publish_task
+          integrations:
+            - name: {{ .Values.artIntegration }}
+            - name: {{ .Values.gitIntegration }}
+        execution:
+          onExecute:
+            - curl -fL https://install-cli.jfrog.io | sh
+            - jf --version
+            # - pushd $res_upload_artifact_gitrepo_1_resourcePath
+            # - jf rt upload ".*" "jfrog-pipelines" --insecure-tls=false --fail-no-op=true --detailed-summary=true
+            # Run task
+            - task: jfrog/$TASK_NAME@v$TASK_VERSION
+              rtIntegration: {{ .Values.artIntegration }}
+              input:
+                inputResource: "upload_artifact_gitrepo_1"
+                sourcePath: "*.mod"
+                targetPath: jfrog-pipelines/package_deepika
+  - name: test_upload_task_pipeline
+    configuration:
+      jfrogCliVersion: 2
+      runtime:
+        type: image
+        image:
+          auto:
+            language: go
+            versions:
+              - "1.19"
+      environmentVariables:
+        readOnly:
+          TASK_NAME: upload_artifact
+          JFROG_TASK_DEBUG: "true"
+          JFROG_CLI_LOG_LEVEL: debug
+    steps:
+      - name: upload_artifact_task
+        type: Bash
+        configuration:
+          inputResources:
+            - name: upload_artifact_gitrepo_1
+              trigger: false
+          integrations:
+            - name: {{ .Values.artIntegration }}
+            - name: {{ .Values.gitIntegration }}
+        execution:
+          onExecute:
+            - curl -fL https://install-cli.jfrog.io | sh
+            - jf --version
+            # - pushd $res_upload_artifact_gitrepo_1_resourcePath
+            # - jf rt upload ".*" "jfrog-pipelines" --insecure-tls=false --fail-no-op=true --detailed-summary=true
+            # Run task
+            - task: jfrog/$TASK_NAME@v0.0.44
+              rtIntegration: {{ .Values.artIntegration }}
+              input:
+                inputResource: "upload_artifact_gitrepo_1"
+                sourcePath: "*.mod"
+                targetPath: jfrog-pipelines/package_deepika_${run_number}.mod
+                flat: true
