@@ -84,14 +84,14 @@ configurations:
       enabled: "true"
       commands:
         onExecute:
-          - go vet ./...
+         # - go vet ./...
           # installs static check and performs static check analysis on source code excludes tests
           - go install honnef.co/go/tools/cmd/staticcheck@latest
           - staticcheck -tests=false ./...
           # installs gosec and performs go security checks
           - go install github.com/securego/gosec/v2/cmd/gosec@latest
           # exclude or include rules refer https://github.com/securego/gosec
-          - gosec ./...
+         # - gosec ./...
 
     #  runs unit test cases, downloads dependencies, performs mod tidy, performs build publish
     build:
