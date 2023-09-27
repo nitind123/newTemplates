@@ -1,30 +1,43 @@
 # [Required]
 metadata:
-  
-  # [Required] All the underlying pipelines & resources names will be prefixed with appName for easy identifications & search
-  packageName:  javaTemplate01
+  # [Required] An unique ID used across template to identify resources and pipelines uniquely
+  serviceName: goTemplate
+
+  # [Optional] If not provided latest go version will be picked
+  goVersion: 1.19.8
 
   # [Optional]
-  java: "11"
+  os: linux
 
-  # [Optional] linux/windows
-  os: "windows"
-
-  # [Optional] Defaults to Ubuntu18 with Java 17
+  # [Optional] Defaults to Ubuntu18 with go
   # Allows to configure custom runtime, support all the configuration properties under runtime.image.custom
   # Ref: https://jfrog.com/help/r/jfrog-pipelines-documentation/choosing-your-runtime-image
   #  runtime:
   #    registry: docker
   #    sourceRepository: apps-docker-local
-  #    name: test.mycompany.io/apps-docker-local/ci/builder-node14
+  #    name: test.jfrog.io/apps-docker-local/ci/builder-node14
   #    tag: 1.0.0
 
   # [Optional] If not provided then default nodePool configured in platform will be used
-  nodePool: win_2019
+  #  nodePool: some_nodepool
+
+# [Required]
+step:
+  lint:
+    enabled: true
+  codeQuality:
+    enabled: true
+  automation:
+    enabled: true
+  build:
+    enabled: true
+  publish:
+    enabled: true
+  xrayScan:
+    enabled: true
 
 # [Required]
 inputs:
-
   # [Required] Configure Git repository where application code is present
   sourceRepository:
     # Support all the Git Resource configuration properties
@@ -32,135 +45,121 @@ inputs:
     path: nitind123/newTemplates
     gitProvider: s_gitHub
     branches:
-      include: JavaTemplate
+      include: goTemplate
+    buildOn:
+      commit: true
 
   # [Required]
   integrations:
-    
     # [Required] Artifactory api key to configure Jfrog CLI
     artifactory: s_artifactory
 
 # [Required]
 configurations:
+  sourceDirectory: ""
+  # [Optional] Artifactory target repository to upload binary
+  targetRepository: "go-local"
+  jfrogCliVersion: "2"
 
-  # [Optional] Defaults to Maven (maven/gradle/other)
-  buildTool: 'maven'
-
-  # [Optional] Defaults to repository root folder
-  sourceFolder: 'yaml/javaTem'
-
-  # Artifactory repos to resolve & deploy artifacts
-  artifactory:
-
-    resolverSnapshotRepo: test-automation-maven-virtual
-
-    resolverReleaseRepo: test-automation-maven-virtual
-
-    deployerSnapshotRepo: test-automation-maven-local
-
-    deployerReleaseRepo: test-automation-maven-local
-  # [Optional] When buildTool = Maven/Gradle
-  # [Required] When buildTool = Other
   steps:
-
+    # performs go lint
     lint:
-
-      # [Optional] Allows skipping step. Defaults to true
-      # enabled: true
-
+      enabled: "true"
       commands:
-        # [Maven] Default to plugin: maven-checkstyle-plugin
-        - 'mvn clean checkstyle:checkstyle'
+        onStart:
+          - echo "${step_name} started"
+        onExecute:
+          - go install golang.org/x/lint/golint@latest
+          - golint ./...
+          # use any other linter suitable like revive
+        onFailure:
+          - echo "${step_name} failed"
+        onSuccess:
+          - echo "${step_name} success"
+        onComplete:
+          - echo "${step_name} completed"
 
-        # [Gradle]
-        # - 'gradle lint'
-
+    # code Quality step
     codeQuality:
-
-      # [Optional] Allows skipping step. Defaults to true
-      # enabled: true
-
+      enabled: "true"
       commands:
-        # [Maven] Default to plugin: maven-checkstyle-plugin
-       # - 'mvn clean sonar:sonar'
-        - 'mvn clean install'
+        onExecute:
+          - go vet ./...
+          # installs static check and performs static check analysis on source code excludes tests
+          - go install honnef.co/go/tools/cmd/staticcheck@latest
+          - staticcheck -tests=false ./...
+          # installs gosec and performs go security checks
+          - go install github.com/securego/gosec/v2/cmd/gosec@latest
+          # exclude or include rules refer https://github.com/securego/gosec
+          - gosec ./...
 
-        # [Gradle]
-        #   - 'gradle sonar'
-
-    test:
-
-      # [Optional] Allows skipping step. Defaults to true
-      # enabled: true
-
-      commands:
-        # [Maven] Default to plugin: maven-surefire-plugin
-        - 'mvn clean'
-        - 'mvn test'
-        - ls .
-
-        # [Gradle]
-        #  - 'gradle test'
-
-      # [Required] JUnit test report folder path
-      reportFolder: 'test-result.0a359bdae2f41724cceeef2faa538ef8.xml'
-
+    #  runs unit test cases, downloads dependencies, performs mod tidy, performs build publish
     build:
-
-      # [Optional] Allows skipping step. Defaults to true
-      # enabled: true
-
+      enabled: "true"
       commands:
-        # [Maven] Default to plugin: maven-compiler-plugin
-        #- 'mvn -Dmaven.test.skip=true install'
-        - 'mvn -DskipTests install'
+        onExecute:
+          - go test ./...
+          - go mod download
+          - go mod tidy
+          - go build -o $appName
+          - add_run_files $appName appBinary
+          - curl -fL https://install-cli.jfrog.io | sh
+          - jf rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
 
-        # [Gradle]
-        #  - 'gradle clean build -x test'
+    # does xray scan by checking if xray is available
+    scan:
+      enabled: "false"
+      commands:
+        onExecute:
+          - check_xray_available
+          - jf --version
+          - curl -fL https://install-cli.jfrog.io | sh
+          - jf bs --fail=true $BuildName $BuzildNumber
 
+    # placeholder for running automation suite
+    automation:
+      enabled: "true"
+      commands:
+        onExecute:
+          - end_step success
+
+    # publish the build to artifactory
     publish:
-
-      # [Optional] Allows skipping step. Defaults to true
-      # enabled: true
-
+      enabled: "true"
       commands:
-        # [Maven] Default to plugin: maven-deploy-plugin
-        - 'mvn clean package'
-
-        # [Gradle]
-        #  - 'gradle deploy'
+        onExecute:
+          - jf --version
+          - curl -fL https://install-cli.jfrog.io | sh
+          - ls
+          - restore_run_files appBinary $appName
+          - ls
+          - jf rt upload $appName $targetRepository --build-name=$buildName --build-number=$buildNumber --flat=true --fail-no-op=true --detailed-summary
 
 controls:
-  
   # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
   # Whole pipeline from frogbot-scan will be triggered
-  triggerBy:
-    
-    # Connected source Git repository change [Defaults to true]
-    # sourceRepository: true
-    
-    # Other resource change from other pipelines
-    # externalResources:
-    #   - resourceName: dream_app_commons_build_result
-    
-    # Automated periodic triggers (Typical use case: Nightly builds)
-    # cron:
-    #   enabled: true # Defaults to false
-    #   expression: "*/3 * * * *" # No defaults, mandatory to provide when cron.enabled is set to true
+  triggerBy: 
 
-    # Incoming webhook
-    # incomingWebhooks:
-    #   - webhookName: 'testWebhook' # IncommingWebhook integration name
+  # Connected source Git repository change [Defaults to true]
+  # sourceRepository: true
 
+  # Other resource change from other pipelines
+  # externalResources:
+  #   - resourceName: dream_app_commons_build_result
 
-  # [Optional]
-  logging:
+  # Automated periodic triggers (Typical use case: Nightly builds)
+  # cron:
+  #   enabled: true # Defaults to false
+  #   expression: "*/3 * * * *" # No defaults, mandatory to provide when cron.enabled is set to true
 
-    # [Optional] Defaults to false
-    enableDebug: true
+  # Incoming webhook
+  # incomingWebhooks:
+  #   - webhookName: 'testWebhook' # IncommingWebhook integration name
 
-  # [Optional] Exporting important files during run as RUN FILES
-  exporting:
+# [Optional] Send updates of your pipeline status via below methods
+notifications:
+  email:
+    integrationName: "s_smtp"
 
-    # [Optional] Defaults to false
-    enabled: true
+  slack:
+    integrationName: "s_slack"
