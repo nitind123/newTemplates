@@ -47,7 +47,7 @@ pipelines:
             - id: 2
         configuration:
           inputSteps:
-            - name: create_with_buildinfo          
+            - name: create_buildinfo          
           inputResources:
             - name: signed_git
           integrations:
