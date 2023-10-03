@@ -52,7 +52,8 @@ pipelines:
             - name: signed_git
           integrations:
             - name: s_artifactory
-          
+          outputResources:
+            - name: signed_buildinfo
         execution:
           onExecute:
             # - cd $res_signed_git_resourcePath
