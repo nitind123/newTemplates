@@ -51,9 +51,8 @@ pipelines:
           inputResources:
             - name: signed_git
           integrations:
-            - name: int_default_artifactory
-          outputResources:
-            - name: signed_buildinfo_1
+            - name: s_artifactory
+          
         execution:
           onExecute:
             - cd $res_signed_git_resourcePath
