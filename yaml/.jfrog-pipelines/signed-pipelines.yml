@@ -123,7 +123,7 @@ resources:
   - name: signed_git
     type: GitRepo
     configuration:
-      gitProvider: s_pipeAutoSCM
+      gitProvider: s_gitHub
       path: {{.jfrog-pipelines.sourceRepository}}
       branches:
         include: {{ gitBranch }}
