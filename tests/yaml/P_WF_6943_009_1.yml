@@ -6,7 +6,7 @@ resources:
   - name: push_image_artifactory_gitRepo
     type: GitRepo
     configuration:
-      gitProvider: s_pipeAutoSCM
+      gitProvider: s_gitHub
       path: ^[^`$ ]*$
       branches:  
         include: master
