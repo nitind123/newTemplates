@@ -3,13 +3,20 @@ resources:
     type: PropertyBag
     configuration:
       test: test
-
+   - name: push_image_artifactory_gitRepo
+    type: GitRepo
+    configuration:
+      gitProvider: s_pipeAutoSCM
+      path: ^[^`$ ]*$
+      branches:  
+        include: master
 pipelines:
   - name: pipeline_P_WF_6943_009
     configuration:
       inputResources:
         - name: P_WF_6943_009_resource
           trigger: false
+        - name: push_image_artifactory_gitRepo  
     steps:
       - name: P_WF_6943_009_1
         type: Bash
