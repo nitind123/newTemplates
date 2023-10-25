@@ -3,7 +3,7 @@ resources:
     type: PropertyBag
     configuration:
       test: test
-   - name: push_image_artifactory_gitRepo
+  - name: push_image_artifactory_gitRepo
     type: GitRepo
     configuration:
       gitProvider: s_pipeAutoSCM
