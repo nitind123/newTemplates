@@ -1,3 +1,3 @@
 include:
   template: jfrogPipelines/templateDefinition/0.0.2
-valuesFilePath: tests/yaml/values/values_10039.yml
+valuesFilePath: ./values_10039.yml
