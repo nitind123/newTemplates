@@ -7,7 +7,7 @@ templateRepository:
 publishTemplate:
   namespace: jfrogPipelines
   name: templateDefinition
-  version: 0.0.1
+  version: 0.0.3
   pipelineName: Publish_Template_10390_1
   artifactoryIntegration: s_artifactory
   jfrogAccessTokenIntegration: jfrogAccessToken_10390
