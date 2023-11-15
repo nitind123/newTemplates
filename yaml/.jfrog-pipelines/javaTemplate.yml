@@ -1,24 +1,24 @@
 resources:
-  - name: testResource
-    type: test/TestResource
+  - name: EXT_S_SYC_AU_0006_fileSpec
+    type: FileSpec
     configuration:
-      foo: bar
       sourceArtifactory: s_artifactory
-      gitProvider: s_pipeAutoSCM
-
+      pattern: "test-automation-generic-local/test.txt"
+  - name: EXT_S_SYC_AU_0006_buildInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: s_artifactory
 pipelines:
- - name: PipelineExtension_automation
-   steps:
-      - name: step1
-        type: Bash
+  - name: EXT_S_SYC_AU_0006
+    steps:
+      - name: EXT_S_SYC_AU_0006
+        type: UploadArtifact
         configuration:
-           inputResources:
-            - name: testResource
-        execution:
-          onExecute:
-            - echo "$res_testResource_sourceArtifactory_url"
-            - echo "$res_testResource_gitProvider_url"
-            - |
-              if [ "$res_testResource_gitProvider_url" != "https://bitbucketapsnew.jfrogdev.org" ]; then
-               exit 1
-              fi
+          targetPath: "test-automation-generic-local/EXT_S_SYC_AU_0006"
+          autoPublishBuildInfo: true
+          integrations:
+            - name: s_artifactory
+          inputResources:
+            - name: EXT_S_SYC_AU_0006_fileSpec
+          outputResources:
+            - name: EXT_S_SYC_AU_0006_buildInfo
