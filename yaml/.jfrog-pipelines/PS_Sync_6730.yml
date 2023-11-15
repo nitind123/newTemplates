@@ -1,26 +1,30 @@
 resources:
-  - name: myFirstRepo
-    type: GitRepo
+  - name: P_WF_5933_001_resource
+    type: PropertyBag
     configuration:
-      gitProvider: s_gitHub
-      path: {{.jfrog-pipelines.sourceRepository}}
-      branches:
-        include: {{gitBranch}}
+      test: test
 
 pipelines:
-  - name: Ps_variable_resolved_67301
+  - name: pipeline_P_WF_5933_001
+    configuration:
+      integrations:
+        - name: s_artifactory
     steps:
-      - name: Ps_variable_resolved_67301
+      - name: P_WF_5933_001_1
         type: Bash
         configuration:
-          environmentVariables:
-            env1: {{gitBranch}}
-            env2: {{.jfrog-pipelines.sourceRepository}}
           inputResources:
-            - name: myFirstRepo
+            - name: P_WF_5933_001_resource
         execution:
           onExecute:
-            - echo {{gitBranch}}
-            - echo {{.jfrog-pipelines.sourceRepository}}
-            
-            
+            - echo "executing step..."
+      - name: P_WF_5933_001_2
+        type: Bash
+        configuration:
+          inputResources:
+            - name: P_WF_5933_001_resource
+          inputSteps:
+            - name: P_WF_5933_001_1
+        execution:
+          onExecute:
+            - echo "executing step..."
