@@ -76,8 +76,8 @@ configurations:
           - echo "${step_name} failed"
         onSuccess:
           - echo "${step_name} success"
-        # onComplete:
-        #   - echo "${step_name} completed"
+        onComplete:
+          - echo "${step_name} completed"
 
     # code Quality step
     codeQuality:
