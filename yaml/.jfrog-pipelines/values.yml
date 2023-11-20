@@ -159,7 +159,7 @@ controls:
 # [Optional] Send updates of your pipeline status via below methods
 notifications:
   # email:
-  #   integrationName: "s_smtp"
+     integrationName: "s_smtp"
 
   # slack:
   #   integrationName: "s_slack"
