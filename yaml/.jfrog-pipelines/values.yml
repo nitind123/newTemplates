@@ -11,7 +11,7 @@ inputs:
       # [Required]
       integrations:
         - s_gitHub
-        - s_slack
+        #- s_slack
       # [Optional] To set environment variables
       environmentVariables:
         foo: bar
