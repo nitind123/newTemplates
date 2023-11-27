@@ -1,0 +1,116 @@
+serviceName: distribution
+metadata:
+  releaseBundleType: v2
+
+inputs:
+  pipeline:
+    configuration:
+      integrations:
+        - deepikaArt
+      retentionPolicy:
+        maxAgeDays: 90
+        minRuns: 10
+
+  integrations:
+    artifactory: deepikaArt
+    distribution: deepikaDist
+
+  resources:
+    build_info:
+      buildName: go_app
+      buildNumber: 14
+
+    release_bundle:
+      name: deepika_demo_rb
+      version: v1.0.0
+
+    signed_bundle:
+      name: deepika_demo_rb
+      version: v1.0.0
+
+    promoted_bundle:
+      name: deepika_demo_rb
+      version: v1.0.0
+
+    distribution_rules:
+      serviceName: "*"
+      siteName: "*"
+      cityName: "*"
+      countryCodes:
+        - "CN"
+        - "GB"
+
+configurations:
+  steps:
+    create_release_bundle:
+      onStart:
+        - echo "create_release_bundle"
+        - fileSpecFileName="createReleaseBundlePayload.json"
+        - fileSpec='{"files":[]}'
+        - aqlTemplate='{"items.find":{}}'
+        - aqlTemplate="{\"items.find\":{\"@build.name\":\"$res_build_info_buildName\",\"@build.number\":\"$res_build_info_buildNumber\"}}"
+        - buildInfoQuery=$(echo {} | jq --argjson json "$aqlTemplate" '.aql = $json')
+        - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.files += [ $json ]')
+        - echo "$fileSpec"
+        - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
+      onExecute:
+        - jf rbc --builds=$step_tmp_dir/$fileSpecFileName --signing-key=deepika-pipelines-rb deepika_demo_rb 1.0.0
+      onFailure:
+        - echo "onFailure"
+      onSuccess:
+        - echo "onSuccess"
+
+    sign_release_bundle:
+      onStart:
+        - echo "onStart"
+      onExecute:
+        - echo "onExecute"
+      onFailure:
+        - echo "onFailure"
+      onSuccess:
+        - echo "onSuccess"
+
+    promote_release_bundle:
+      onStart:
+        - echo "create_release_bundle"
+        - fileSpecFileName="promoteReleaseBundlePayload.json"
+        - fileSpec='{"files":[]}'
+        - aqlTemplate='{"items.find":{}}'
+        - aqlTemplate="{\"items.find\":{\"@build.name\":\"$res_build_info_buildName\",\"@build.number\":\"$res_build_info_buildNumber\"}}"
+        - buildInfoQuery=$(echo {} | jq --argjson json "$aqlTemplate" '.aql = $json')
+        - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.files += [ $json ]')
+        - echo "$fileSpec"
+        - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
+      onExecute:
+        - echo "onExecute"
+      onFailure:
+        - echo "onFailure"
+      onSuccess:
+        - echo "onSuccess"
+
+    distribute_to_edge:
+      onStart:
+        - echo "create_release_bundle"
+        - fileSpecFileName="distributeReleaseBundlePayload.json"
+        - fileSpec='{"files":[]}'
+        - aqlTemplate='{"items.find":{}}'
+        - aqlTemplate="{\"items.find\":{\"@build.name\":\"$res_build_info_buildName\",\"@build.number\":\"$res_build_info_buildNumber\"}}"
+        - buildInfoQuery=$(echo {} | jq --argjson json "$aqlTemplate" '.aql = $json')
+        - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.files += [ $json ]')
+        - echo "$fileSpec"
+        - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
+      onExecute:
+        - jf ds rbd --dist-rules=$step_tmp_dir/$fileSpecFileName deepika_demo_rb 1.0.0
+      onFailure:
+        - echo "onFailure"
+      onSuccess:
+        - echo "onSuccess"
+        
+controls:
+  create_release_bundle:
+    runtime: auto
+    enabled: true
+
+  sign_release_bundle:
+    runtime: auto
+    enabled: true
