@@ -6,14 +6,14 @@ inputs:
   pipeline:
     configuration:
       integrations:
-        - deepikaArt
+        - s_artifactory
       retentionPolicy:
         maxAgeDays: 90
         minRuns: 10
 
   integrations:
-    artifactory: deepikaArt
-    distribution: deepikaDist
+    artifactory: s_artifactory
+    distribution: s_distribution
 
   resources:
     build_info:
