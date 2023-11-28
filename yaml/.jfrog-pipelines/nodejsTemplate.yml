@@ -13,7 +13,7 @@ valuesFilePath: values.yml
 {{ $isTriggerByAvailable := default false (and $isControlsAvailable .Values.controls.triggerBy) }}
 {{ $isQualityAvailable := default false (and $isControlsAvailable (eq .Values.controls.codeQuality.enabled true)) }}
 {{ $isPublishAvailable := default false (and $isControlsAvailable (eq .Values.controls.publish.enabled true)) }}
-{{ $isLintAvailable := default false (and $isControlsAvailable (eq .Values.controls.lint.enabled true)) }}
+# {{ $isLintAvailable := default false (and $isControlsAvailable (eq .Values.controls.lint.enabled true)) }}
 {{ $isClamScanAvailable := default false (and $isControlsAvailable (eq .Values.controls.clamScan.enabled true)) }}
 {{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
 
