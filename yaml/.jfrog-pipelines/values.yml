@@ -137,3 +137,5 @@ controls:
   triggerBy:
     # [Optional] Defaults to false
     sourceRepository: true
+  lint:
+    enabled: false
