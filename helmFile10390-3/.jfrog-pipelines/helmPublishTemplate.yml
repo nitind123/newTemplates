@@ -10,6 +10,6 @@ publishTemplate:
   version: 0.0.1
   pipelineName: Publish_Template_10390_1
   artifactoryIntegration: s_artifactory
-  jfrogAccessTokenIntegration: jfrogAccessToken_10390
+  jfrogAccessTokenIntegration: s_artifactory
   templateRepositoryResourceName: Publish_Template_10390_01
   templateUploadStatusResourceName: Publish_Template_10390_1
