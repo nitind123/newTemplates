@@ -5,7 +5,7 @@ resources:
   - name: N_D_Tasks_10148_05_repo
     type: GitRepo
     configuration:
-      gitProvider: s_pipeAutoSCM
+      gitProvider: s_gitHub
       path: {{ .Values.GitHub.Org_test_Automation.path }}
       branches:
         include: {{ gitBranch }}
@@ -18,7 +18,7 @@ pipelines:
       - name: N_DyNodeAWS_Tasks_10148_05_step
         type: PowerShell
         configuration:
-          nodePool: AWS_dynamic_node_win19
+          nodePool: win_2019
           integrations:
             - name: s_artifactory
           inputResources:
