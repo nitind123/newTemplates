@@ -16,6 +16,7 @@ pipelines:
             - name: PS_Sync_9494_002_001
         execution:
           onExecute:
+            - cd /tmp
             - mkdir -p "target/node_modules"
             - cd target
             - restore_pipeline_files jfrog_pipelines_packages_cache node_modules/
