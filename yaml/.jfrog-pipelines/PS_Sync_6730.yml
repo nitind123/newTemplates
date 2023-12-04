@@ -1,24 +1,8 @@
-resources:
-  - name: intro_bag
-    type: GitRepo
-    configuration:
-      gitProvider: s_gitHub
-      path: {{.jfrog-pipelines.sourceRepository}}
-      branches:
-        include: {{gitBranch}}
-
 pipelines:
-  - name: Ps_variable_resolved_6730
+  - name: pipeline_api_PipelineSources
     steps:
-      - name: Ps_variable_resolved_6730
+      - name: P_pipelineSources
         type: Bash
-        configuration:
-          environmentVariables:
-            env1: {{gitBranch}}
-            env2: {{.jfrog-pipelines.sourceRepository}}
         execution:
           onExecute:
-            - echo {{gitBranch}}
-            - echo {{.jfrog-pipelines.sourceRepository}}
-            - cd /tmp
-            
+            - echo "executing step..."
