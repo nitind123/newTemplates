@@ -4,6 +4,6 @@ gitRepoPath: "nitind123/newTemplates"
 buildPipelineFirstStep: "trigger_all"
 serviceReleaseMinor: "false"
 slackReleaseIntegrationChannel: "platform-release-pipeline"
-serviceMilestoneCronInterval: "0 1 * * *"
+serviceMilestoneCronInterval: "0 2 * * *"
 servicePipelineSourceDir: ".jfrog-pipelines/client/go"
 jfdevCiCommonsDefaultVersion: 1.*
