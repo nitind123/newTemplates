@@ -1,0 +1,12 @@
+valuesFilePath: ./values.yml
+pipelines:
+- name: test_pipeline
+  configuration:
+    jfrogCliVersion: 2
+  steps:
+    - name: test_step
+      type: Bash
+      execution:
+        onStart:
+          - echo {{ .Values.isTestPipeline }}
+        

@@ -1,0 +1,6 @@
+resources:
+- name: test_property_bag
+  type: PropertyBag
+  configuration:
+    TEST: true
+        
