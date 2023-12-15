@@ -1,3 +1,3 @@
 include:
-  template: jfrog/PublishTemplate/1.2.0
+  template: jfrog/PublishTemplate/1.3.0
 valuesFilePath: ./helmPublishTemplate.yml
