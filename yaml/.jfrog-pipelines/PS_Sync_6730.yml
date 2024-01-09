@@ -9,5 +9,5 @@ resources:
 
 pipelines:
   - name: Ps_variable_resolved_6730
-    steps:
+    
       
