@@ -101,7 +101,7 @@ pipelines:
               - "1.19"
       environmentVariables:
         readOnly:
-          TASK_NAME: upload_artifact
+          TASK_NAME: upload-artifact
           JFROG_TASK_DEBUG: "true"
           JFROG_CLI_LOG_LEVEL: debug
     steps:
