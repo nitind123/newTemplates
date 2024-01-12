@@ -38,7 +38,6 @@ pipelines:
             - name: upload_artifact_gitrepo_1
               trigger: false
           integrations:
-            - name: {{ .Values.artIntegration }}
             - name: {{ .Values.gitIntegration }}
             - name: s_artifactory
         execution:
