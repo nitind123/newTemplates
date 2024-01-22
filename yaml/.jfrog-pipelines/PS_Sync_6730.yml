@@ -28,7 +28,8 @@ pipelines:
             - name: S_CreateReleaseBundle_0006_BuildInfo
         execution:
           onExecute:
-            - [System.Text.Encoding]::UTF8.GetString
+            - |
+              [System.Text.Encoding]::UTF8.GetString
             - echo "${run_id}" > S_CreateReleaseBundle_0006.txt
             - jfrog rt upload S_CreateReleaseBundle_0006.txt test-automation-generic-local
             - jfrog rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
