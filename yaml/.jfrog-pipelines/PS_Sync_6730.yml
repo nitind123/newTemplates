@@ -13,6 +13,8 @@ pipelines:
       - name: Ps_variable_resolved_67301
         type: Bash
         configuration:
+          integrations:
+            - name: genericExportKey
           environmentVariables:
             env1: {{gitBranch}}
             env2: {{.jfrog-pipelines.sourceRepository}}
@@ -20,7 +22,8 @@ pipelines:
             - name: myFirstRepo
         execution:
           onExecute:
-            - echo {{gitBranch}}
+            - echo ${nonSecure}
+            - echo ${secure}
             - echo {{.jfrog-pipelines.sourceRepository}}
             
             
