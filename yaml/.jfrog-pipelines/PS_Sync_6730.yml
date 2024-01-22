@@ -5,7 +5,7 @@ resources:
       gitProvider: s_gitHub
       path: {{.jfrog-pipelines.sourceRepository}}
       branches:
-        include: {{gitBranch}}
+        include: test.*
 
 pipelines:
   - name: Ps_variable_resolved_67301
