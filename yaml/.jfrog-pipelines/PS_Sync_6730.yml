@@ -6,6 +6,8 @@ resources:
       path: {{.jfrog-pipelines.sourceRepository}}
       branches:
         include: test.*
+      buildOn:
+        commit: true  
 
 pipelines:
   - name: Ps_variable_resolved_67301
