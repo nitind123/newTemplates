@@ -22,7 +22,7 @@ pipelines:
             - name: myFirstRepo
         execution:
           onExecute:
-            - echo {{gitBranch}} + 'tests'
+            - echo {{gitBranch}} + 'testss'
             - echo {{.jfrog-pipelines.sourceRepository}}
             
             
