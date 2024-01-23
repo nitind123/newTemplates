@@ -14,7 +14,7 @@ pipelines:
           
         execution:
           onExecute:
-            - echo ${int_genericExportKey_nonSecure}
+            - echo ${int_genericExportKey_secure}
             - echo ${secure}
             - echo {{.jfrog-pipelines.sourceRepository}}
             
