@@ -27,7 +27,7 @@ pipelines:
           inputSteps:
             - name: S_WF_027_001
           affinityGroup: some_ag
-          nodePool: c7dynamic
+          nodePool: window
         execution:
           onStart:
             - add_run_variables step_3_var="bar"
