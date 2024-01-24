@@ -8,6 +8,7 @@ pipelines:
         configuration:
           integrations:
             - name: genericExportKey
+            - name: s_artifactory
           environmentVariables:
             env1: {{gitBranch}}
             env2: {{.jfrog-pipelines.sourceRepository}}
@@ -15,6 +16,7 @@ pipelines:
         execution:
           onExecute:
             - echo ${int_genericExportKey_secure}
+            - echo ${int_s_artifactory_user}
             - echo ${secure}
             - echo {{.jfrog-pipelines.sourceRepository}}
             
