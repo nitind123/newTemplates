@@ -15,9 +15,9 @@ pipelines:
           
         execution:
           onExecute:
-            - echo ${int_genericExportKey_secure}
+            #- echo ${int_genericExportKey_secure}
             - echo ${int_s_artifactory_user}
-            - echo ${secure}
+            #- echo ${secure}
             - echo {{.jfrog-pipelines.sourceRepository}}
             
             
