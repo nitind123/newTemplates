@@ -15,9 +15,9 @@ pipelines:
           
         execution:
           onExecute:
-            - echo ${int_genericNew1_data}
+            - echo ${int_genericNew1_test}
             - echo ${int_s_artifactory_user}
-            - echo ${data}
+            - echo ${test}
             - echo {{.jfrog-pipelines.sourceRepository}}
             
             
