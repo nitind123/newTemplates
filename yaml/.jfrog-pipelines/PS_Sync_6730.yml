@@ -7,7 +7,7 @@ pipelines:
         type: Bash
         configuration:
           integrations:
-            - name: genericExportKey
+            - name: genericNew1
             - name: s_artifactory
           environmentVariables:
             env1: {{gitBranch}}
@@ -15,9 +15,9 @@ pipelines:
           
         execution:
           onExecute:
-            - echo ${int_genericExportKey_secure}
+            - echo ${int_genericNew1_data}
             - echo ${int_s_artifactory_user}
-            - echo ${secure}
+            - echo ${data}
             - echo {{.jfrog-pipelines.sourceRepository}}
             
             
