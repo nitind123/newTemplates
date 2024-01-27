@@ -7,7 +7,8 @@ pipelines:
         type: Bash
         configuration:
           integrations:
-            - name: genericNew1
+            - name: genericExport
+            - name: genericExportFalse
             - name: s_artifactory
           environmentVariables:
             env1: {{gitBranch}}
@@ -15,9 +16,11 @@ pipelines:
           
         execution:
           onExecute:
-            - echo ${int_genericNew1_test}
+            - echo ${int_genericExport_genericExport}
+            - echo ${int_genericExportFalse_genericExportFalse}
             - echo ${int_s_artifactory_user}
-            - echo ${test}
+            - echo ${genericExport}
+            - echo ${genericExportFalse}
             - echo {{.jfrog-pipelines.sourceRepository}}
             
             
