@@ -20,3 +20,4 @@ pipelines:
             - mkdir -p "target/node_modules"
             - cd target
             - restore_pipeline_files jfrog_pipelines_packages_cache node_modules/
+            - echo 'test1'
