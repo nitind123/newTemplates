@@ -10,7 +10,7 @@ pipelines:
             - name: genericExport
             - name: s_artifactory
           environmentVariables:
-            env1: {{gitBranch}}
+            genericExport: {{gitBranch}}
             env2: {{.jfrog-pipelines.sourceRepository}}
           
         execution:
