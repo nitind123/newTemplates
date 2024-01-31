@@ -23,8 +23,6 @@ pipelines:
           integrations:
             - name: s_artifactory1
         execution:
-          onStart:
-            - replace_envs ${res_S_NpmPublish_5933_007_GitRepo_resourcePath}/tests/npm/package.json
           onExecute:
             - jfrog npm-config --repo-resolve 'test-automation-npm-remote' --server-id-resolve s_artifactory1
             - jfrog npm install --quiet
