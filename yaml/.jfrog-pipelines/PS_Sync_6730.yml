@@ -4,7 +4,7 @@ template: true
 
 
 resources:
-  - name: S_NpmPublish_5933_007_GitRepo
+  - name: S_NpmPublish
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
@@ -13,13 +13,13 @@ resources:
         include: {{gitBranch}}
 
 pipelines:
-  - name: pipeline_S_NpmPublish_5933_007
+  - name: pipeline_S_NpmPublish
     steps:
       - name: S_NpmPublish_5933_007_1
         type: Bash
         configuration:
           inputResources:
-            - name: S_NpmPublish_5933_007_GitRepo
+            - name: S_NpmPublish
           integrations:
             - name: s_artifactory1
         execution:
