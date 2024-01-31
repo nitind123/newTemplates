@@ -15,7 +15,7 @@ resources:
 pipelines:
   - name: pipeline_S_NpmPublish
     steps:
-      - name: S_NpmPublish_5933_007_1
+      - name: S_NpmPublish
         type: Bash
         configuration:
           inputResources:
