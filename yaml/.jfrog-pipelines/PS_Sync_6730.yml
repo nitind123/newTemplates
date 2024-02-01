@@ -23,5 +23,5 @@ pipelines:
             - echo {{gitBranch}}
             - echo {{.jfrog-pipelines.sourceRepository}}
             - echo 'test1222'
-            - echo 'test1222'
+            - echo 'test1222x'
       
