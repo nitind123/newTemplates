@@ -1,5 +1,5 @@
 resources:
-  - name: myFirstRepo
+  - name: myFirstRepo1
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
@@ -8,22 +8,8 @@ resources:
         include: {{gitBranch}}
 
 pipelines:
-  - name: Ps_variable_resolved_67301
+  - name: Ps_variable_resolved_673011
     steps:
-      - name: Ps_variable_resolved_67301
-        type: Bash
-        configuration:
-          environmentVariables:
-            env1: {{gitBranch}}
-            env2: {{.jfrog-pipelines.sourceRepository}}
-          inputResources:
-            - name: myFirstRepo
-        execution:
-          onExecute:
-            - echo {{gitBranch}}
-            - echo {{.jfrog-pipelines.sourceRepository}}
-            - echo 'test1222'
-            - echo 'test122'
       - name: Ps_variable_resolved_673011
         type: Bash
         configuration:
@@ -31,24 +17,11 @@ pipelines:
             env1: {{gitBranch}}
             env2: {{.jfrog-pipelines.sourceRepository}}
           inputResources:
-            - name: myFirstRepo
+            - name: myFirstRepo1
         execution:
           onExecute:
             - echo {{gitBranch}}
             - echo {{.jfrog-pipelines.sourceRepository}}
+            - echo 'test1222'
             - echo 'test122'
-      - name: Ps_variable_resolved_6730111
-        type: Bash
-        configuration:
-          environmentVariables:
-            env1: {{gitBranch}}
-            env2: {{.jfrog-pipelines.sourceRepository}}
-          inputResources:
-            - name: myFirstRepo
-        execution:
-          onExecute:
-            - echo {{gitBranch}}
-            - echo {{.jfrog-pipelines.sourceRepository}}
-            - echo 'test12a2sssssdgd'
-
-            
+      
