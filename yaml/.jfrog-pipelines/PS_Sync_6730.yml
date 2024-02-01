@@ -1,5 +1,5 @@
 resources:
-  - name: myFirstRepo1
+  - name: myFirstRepo11
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
@@ -17,7 +17,7 @@ pipelines:
             env1: {{gitBranch}}
             env2: {{.jfrog-pipelines.sourceRepository}}
           inputResources:
-            - name: myFirstRepo1
+            - name: myFirstRepo11
         execution:
           onExecute:
             - echo {{gitBranch}}
