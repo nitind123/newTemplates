@@ -19,6 +19,7 @@ pipelines:
         type: Bash
         configuration:
           affinityGroup: some_ag
+          nodePool: oneboxMacOS135
           
         execution:
           onStart:
