@@ -20,6 +20,8 @@ pipelines:
         configuration:
           affinityGroup: some_ag
           nodePool: oneboxMacOS135
+          inputSteps:
+            - name: S_WF_024_001
           
         execution:
           onStart:
