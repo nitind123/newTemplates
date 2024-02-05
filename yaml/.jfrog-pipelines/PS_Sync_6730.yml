@@ -7,6 +7,8 @@ pipelines:
   
       - name: S_WF_024_001
         type: Bash
+        configuration:
+          nodePool: oneboxMacOS134
         execution:
           onExecute:
             - echo "Step 1 is running"
