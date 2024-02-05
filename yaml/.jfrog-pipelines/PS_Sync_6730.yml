@@ -19,8 +19,7 @@ pipelines:
         type: Bash
         configuration:
           affinityGroup: some_ag
-          inputSteps:
-            - name: S_WF_024_001
+          
         execution:
           onStart:
             - add_run_variables step_2_var="step2"
