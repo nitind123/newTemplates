@@ -1,7 +1,8 @@
 pipelines:
-  configuration:
-      nodePool: oneboxMacOS135
+  
   - name: S_WF_024
+    configuration:
+      nodePool: oneboxMacOS135
     steps:
   
       - name: S_WF_024_001
