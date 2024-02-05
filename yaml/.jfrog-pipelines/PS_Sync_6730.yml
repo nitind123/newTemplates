@@ -22,7 +22,7 @@ pipelines:
         configuration:
           affinityGroup: some_ag
           #nodePool: oneboxMacOS135
-          nodePool: u18dynamic
+          nodePool: node20
           inputSteps:
             - name: S_WF_024_001
           
