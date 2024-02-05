@@ -11,7 +11,7 @@ pipelines:
         type: Bash
         configuration:
           #nodePool: oneboxMacOS134
-          nodePool: u18dynamic
+          nodePool: node20
           affinityGroup: some_ag
         execution:
           onExecute:
