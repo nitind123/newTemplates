@@ -12,7 +12,7 @@ pipelines:
         configuration:
           nodePool: oneboxMacOS134
           #nodePool: node20
-          affinityGroup: some_ag
+          affinityGroup: some_ag1
         execution:
           onExecute:
             - echo "Step 1 is running"
