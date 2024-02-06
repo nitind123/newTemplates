@@ -1,7 +1,7 @@
 pipelines:
   
   - name: S_WF_024
-    configuration:
+    #configuration:
       #nodePool: oneboxMacOS135
       #nodePool: u18dynamic
       #affinityGroup: some_ag
