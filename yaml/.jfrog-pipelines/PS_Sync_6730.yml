@@ -31,4 +31,24 @@ pipelines:
             - add_run_variables step_2_var="step2"
           onExecute:
             - echo "Step 2 is running"
+        - name: S_WF_024_003
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_WF_024_001
+        execution:
+          onExecute:
+            - echo "Step 3 is running"
+  
+      - name: S_WF_024_004
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_WF_024_001
+          affinityGroup: some_ag
+        execution:
+          onStart:
+            - add_run_variables step_4_var="step4"
+          onExecute:
+            - echo "Step 4 is running"     
   
