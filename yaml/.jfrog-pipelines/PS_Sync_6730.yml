@@ -1,12 +1,12 @@
 pipelines:
-  
+
   - name: S_WF_024
-    #configuration:
+      #configuration:
       #nodePool: oneboxMacOS135
       #nodePool: u18dynamic
-      #affinityGroup: some_ag
+    #affinityGroup: some_ag
     steps:
-  
+
       - name: S_WF_024_001
         type: Bash
         configuration:
@@ -16,7 +16,7 @@ pipelines:
         execution:
           onExecute:
             - echo "Step 1 is running"
-  
+
       - name: S_WF_024_002
         type: Bash
         configuration:
@@ -25,13 +25,13 @@ pipelines:
           #nodePool: node20
           inputSteps:
             - name: S_WF_024_001
-          
+        
         execution:
           onStart:
             - add_run_variables step_2_var="step2"
           onExecute:
             - echo "Step 2 is running"
-        - name: S_WF_024_003
+      - name: S_WF_024_003
         type: Bash
         configuration:
           inputSteps:
@@ -39,7 +39,7 @@ pipelines:
         execution:
           onExecute:
             - echo "Step 3 is running"
-  
+
       - name: S_WF_024_004
         type: Bash
         configuration:
