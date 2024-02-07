@@ -1,23 +1,14 @@
-
-
 pipelines:
-  - name: Ps_variable_resolved_67301
+  - name: Ps_variable_resolved_14856
     steps:
-      - name: Ps_variable_resolved_67301
+      - name: Ps_variable_resolved_14856
         type: Bash
         configuration:
           integrations:
-            - name: genericExport
-            - name: s_artifactory
-          environmentVariables:
-            genericExport: {{gitBranch}}
-            env2: {{.jfrog-pipelines.sourceRepository}}
-          
+            - name: exportWithKey14856
+            - name: exportWithFormat14856
         execution:
           onExecute:
-            - echo ${int_genericExport_genericExport}
-            - echo ${int_s_artifactory_user}
-            - echo ${genericExport}
-            - echo {{.jfrog-pipelines.sourceRepository}}
-            
-            
+            - echo ${exportWithKey}
+            - echo ${int_exportWithFormat14856_exportWithFormat}
+
