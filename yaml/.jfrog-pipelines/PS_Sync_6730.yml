@@ -119,7 +119,7 @@ pipelines:
           onStart:
             - generic_repo_name="e2e-0001-002-generic-local"
             - docker_repo_name="e2e-0001-002-docker-local"
-#skipping until upload of gpg key happens on deploy step
+
       - name: e2e_0002_createReleaseBundle
         type: CreateReleaseBundle
         configuration:
