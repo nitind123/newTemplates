@@ -10,4 +10,3 @@ resources:
       cityName: "*"
       countryCodes:
         - US
-      pinVersion: "1"
