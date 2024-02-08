@@ -140,7 +140,7 @@ pipelines:
             - name: e2e_0002_releaseBundle
           outputResources:
             - name: e2e_0002_signedReleaseBundle
-      skipping this until self distribution works
+      
       - name: e2e_0002_distributeReleaseBundle
         type: DistributeReleaseBundle
         configuration:
