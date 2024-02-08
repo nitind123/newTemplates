@@ -10,26 +10,26 @@ resources:
   - name: e2e_0002_releaseBundle
     type: ReleaseBundle
     configuration:
-      sourceDistribution: e2e_0002_distribution
+      sourceDistribution: s_distribution
       name: e2e_0002_${run_number}
       version: ${run_number}
 
   - name: e2e_0002_signedReleaseBundle
     type: ReleaseBundle
     configuration:
-      sourceDistribution: e2e_0002_distribution
+      sourceDistribution: s_distribution
       name: e2e_0002_${run_number}
       version: ${run_number}
 
   - name: e2e_0002_promotedInfo
     type: BuildInfo
     configuration:
-      sourceArtifactory: e2e_0002_artifactory
+      sourceArtifactory: s_artifactory
 
   - name: e2e_0002_buildInfo
     type: BuildInfo
     configuration:
-      sourceArtifactory: e2e_0002_artifactory
+      sourceArtifactory: s_artifactory
 
   - name: e2e_0002_outPut_image      
     type: Image
@@ -42,7 +42,7 @@ resources:
   - name: e2e_0002_distributionRule
     type: DistributionRule
     configuration:
-      sourceDistribution: e2e_0002_distribution
+      sourceDistribution: s_distribution
       serviceName: "*"
       siteName: "*"
       cityName: "*"
@@ -63,9 +63,9 @@ pipelines:
           dockerImageName:  ${artifactory_registry_url}/${docker_repo_name}/node
           dockerImageTag: ${run_number}
           integrations:
-            - name: e2e_0002_artifactory
+            - name: s_artifactory
           inputResources:
-            - name: e2e_0002_gitRepo
+            - name: s_gitHub
         execution:
           onStart:
             - generic_repo_name="e2e-0001-002-generic-local"
@@ -92,7 +92,7 @@ pipelines:
           failOnScan: false
           targetRepository: ${docker_repo_name} #required
           integrations:
-            - name: e2e_0002_artifactory
+            - name: s_artifactory
           inputSteps:
             - name: e2e_0002_dockerBuild
           outputResources:
@@ -108,7 +108,7 @@ pipelines:
         configuration:
           targetRepository: ${generic_repo_name}
           integrations:
-            - name: e2e_0002_artifactory
+            - name: s_artifactory
           inputResources:
             - name: e2e_0002_buildInfo
           inputSteps:
