@@ -67,16 +67,7 @@ pipelines:
             - jfrog rt upload S_CreateReleaseBundle_0006.txt test-automation-generic-local
             - jfrog rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
             - write_output S_CreateReleaseBundle_0006_BuildInfo buildName=${JFROG_CLI_BUILD_NAME} buildNumber=${JFROG_CLI_BUILD_NUMBER}
-      - name: S_CreateReleaseBundle_0006_2
-        type: CreateReleaseBundle
-        configuration:
-          releaseBundleName: ${JFROG_CLI_BUILD_NAME}
-          releaseBundleVersion: ${run_id}
-          dryRun: false
-          inputResources:
-            - name: S_CreateReleaseBundle_0006_BuildInfo
-          outputResources:
-            - name: S_CreateReleaseBundle_0006_ReleaseBundle
+     
 
       - name: e2e_0002_createReleaseBundle
         type: CreateReleaseBundle
@@ -84,6 +75,8 @@ pipelines:
           #inherits from bash
           releaseBundleName: e2e_0002_${run_number}
           releaseBundleVersion: ${run_number}
+          inputSteps:
+            - name: S_CreateReleaseBundle_0006_1
           inputResources:
             - name: e2e_0002_promotedInfo
           outputResources:
@@ -94,6 +87,8 @@ pipelines:
       - name: e2e_0002_signReleaseBundle
         type: SignReleaseBundle
         configuration:
+          inputSteps:
+            - name: e2e_0002_createReleaseBundle
           inputResources:
             - name: e2e_0002_releaseBundle
           outputResources:
@@ -103,6 +98,8 @@ pipelines:
         type: DistributeReleaseBundle
         configuration:
           dryRun: false
+          inputSteps:
+            - name: e2e_0002_signReleaseBundle
           inputResources:
             - name: e2e_0002_signedReleaseBundle
             - name: e2e_0002_distributionRule
