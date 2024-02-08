@@ -4,7 +4,7 @@ resources:
     configuration:
       path: nitind123/newTemplates
       gitProvider: s_gitHub
-      branches: 
+      branches:
         include: {{gitBranch}}
 
   - name: e2e_0002_releaseBundle
@@ -31,11 +31,11 @@ resources:
     configuration:
       sourceArtifactory: s_artifactory
 
-  - name: e2e_0002_outPut_image      
+  - name: e2e_0002_outPut_image
     type: Image
     configuration:
       registry: s_artifactory
-      sourceRepository: e2e_0002_docker_local 
+      sourceRepository: e2e_0002_docker_local
       imageName: ${artifactory_registry_url}/docker-local/node
       imageTag:  ${run_number}# required if registry is Artifactory
 
@@ -54,71 +54,29 @@ pipelines:
   - name: e2e_0002
 
     steps:
-      - name: e2e_0002_dockerBuild
-        type: DockerBuild
+      - name: S_CreateReleaseBundle_0006_1
+        type: Bash
         configuration:
-          affinityGroup: "e2e_0002"
-          dockerFileLocation: .
-          dockerFileName: Dockerfile
-          dockerImageName:  ${artifactory_registry_url}/${docker_repo_name}/node
-          dockerImageTag: ${run_number}
           integrations:
             - name: s_artifactory
-          inputResources:
-            - name: e2e_0002_gitRepo
-        execution:
-          onStart:
-            - generic_repo_name="e2e-0001-002-generic-local"
-            - docker_repo_name="e2e-0001-002-docker-local"
-            - jfrog rt repo-delete ${generic_repo_name} || true
-            - jfrog rt repo-delete ${docker_repo_name} || true
-            - request='{"key":"e2e-0001-002-generic-local", "rclass":"local", "packageType":"generic", "description":"This repo is a test repo used by e2e pipelines", "repoLayoutRef":"simple-default"}'
-            - echo $request > request.json
-            - jfrog rt repo-create request.json
-            - request1='{"key":"e2e-0001-002-docker-local", "rclass":"local", "packageType":"docker", "description":"This repo is a test repo used by e2e pipelines", "repoLayoutRef":"simple-default"}'
-            - echo $request1 > request.json
-            - jfrog rt repo-create request.json
-            - artifactory_registry_url=$(echo "$int_e2e_0002_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
-            - echo $artifactory_registry_url
-            - cd $res_e2e_0002_gitRepo_resourcePath
-            - echo "FROM hello-world" > Dockerfile
-
-      - name: e2e_0002_dockerPush
-        type: DockerPush
-        configuration:
-          affinityGroup: "e2e_0002"
-          autoPublishBuildInfo: true 
-          forceXrayScan: true
-          failOnScan: false
-          targetRepository: ${docker_repo_name} #required
-          integrations:
-            - name: s_artifactory
-          inputSteps:
-            - name: e2e_0002_dockerBuild
           outputResources:
-            - name: e2e_0002_buildInfo
-            - name: e2e_0002_outPut_image
+            - name: S_CreateReleaseBundle_0006_BuildInfo
         execution:
-          onStart:
-            - generic_repo_name="e2e-0001-002-generic-local"
-            - docker_repo_name="e2e-0001-002-docker-local"
-
-      - name: e2e_0002_promoteBuild
-        type: PromoteBuild
+          onExecute:
+            - echo "${run_id}" > S_CreateReleaseBundle_0006.txt
+            - jfrog rt upload S_CreateReleaseBundle_0006.txt test-automation-generic-local
+            - jfrog rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
+            - write_output S_CreateReleaseBundle_0006_BuildInfo buildName=${JFROG_CLI_BUILD_NAME} buildNumber=${JFROG_CLI_BUILD_NUMBER}
+      - name: S_CreateReleaseBundle_0006_2
+        type: CreateReleaseBundle
         configuration:
-          targetRepository: ${generic_repo_name}
-          integrations:
-            - name: s_artifactory
+          releaseBundleName: ${JFROG_CLI_BUILD_NAME}
+          releaseBundleVersion: ${run_id}
+          dryRun: false
           inputResources:
-            - name: e2e_0002_buildInfo
-          inputSteps:
-            - name: e2e_0002_dockerPush
+            - name: S_CreateReleaseBundle_0006_BuildInfo
           outputResources:
-            - name: e2e_0002_promotedInfo
-        execution:
-          onStart:
-            - generic_repo_name="e2e-0001-002-generic-local"
-            - docker_repo_name="e2e-0001-002-docker-local"
+            - name: S_CreateReleaseBundle_0006_ReleaseBundle
 
       - name: e2e_0002_createReleaseBundle
         type: CreateReleaseBundle
@@ -140,11 +98,11 @@ pipelines:
             - name: e2e_0002_releaseBundle
           outputResources:
             - name: e2e_0002_signedReleaseBundle
-      
+
       - name: e2e_0002_distributeReleaseBundle
         type: DistributeReleaseBundle
         configuration:
-          dryRun: false                
+          dryRun: false
           inputResources:
-            - name: e2e_0002_signedReleaseBundle    
+            - name: e2e_0002_signedReleaseBundle
             - name: e2e_0002_distributionRule
