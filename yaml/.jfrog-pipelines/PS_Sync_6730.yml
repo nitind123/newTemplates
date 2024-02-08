@@ -19,7 +19,7 @@ resources:
   - name: release_bundle
     type: ReleaseBundle
     configuration:
-      sourceDistribution: s_dtribution
+      sourceDistribution: s_distribution
       name: demo_rb
       version: v1.0.0
 
@@ -27,7 +27,7 @@ resources:
   - name: signed_bundle
     type: ReleaseBundle
     configuration:
-      sourceDistribution: s_dtribution
+      sourceDistribution: s_distribution
       name: demo_rb
       version: v1.0.0
 
@@ -35,7 +35,7 @@ resources:
   - name: distribution_rules
     type: DistributionRule
     configuration:
-      sourceDistribution: s_dtribution
+      sourceDistribution: s_distribution
       serviceName: "*"
       siteName: "*"
       cityName: "*"
