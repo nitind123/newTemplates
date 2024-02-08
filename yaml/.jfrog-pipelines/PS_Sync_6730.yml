@@ -1,63 +1,150 @@
 resources:
-  - name: S_CreateReleaseBundle_0006_BuildInfo
-    type: BuildInfo
+  - name: e2e_0002_gitRepo
+    type: GitRepo
     configuration:
-      sourceArtifactory: s_artifactory
-      buildName: 'name'
-      buildNumber: '1'
-  - name: S_CreateReleaseBundle_0006_ReleaseBundle
+      path: PIPA/Org_test_Automation
+      gitProvider: e2e_0002_github
+      branches: 
+        include: {{gitBranch}}
+
+  - name: e2e_0002_releaseBundle
     type: ReleaseBundle
     configuration:
-      sourceDistribution: s_distribution
-      name: name
-      version: '1'
+      sourceDistribution: e2e_0002_distribution
+      name: e2e_0002_${run_number}
+      version: ${run_number}
+
+  - name: e2e_0002_signedReleaseBundle
+    type: ReleaseBundle
+    configuration:
+      sourceDistribution: e2e_0002_distribution
+      name: e2e_0002_${run_number}
+      version: ${run_number}
+
+  - name: e2e_0002_promotedInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: e2e_0002_artifactory
+
+  - name: e2e_0002_buildInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: e2e_0002_artifactory
+
+  - name: e2e_0002_outPut_image      
+    type: Image
+    configuration:
+      registry: e2e_0002_artifactory
+      sourceRepository: e2e_0002_docker_local 
+      imageName: ${artifactory_registry_url}/docker-local/node
+      imageTag:  ${run_number}# required if registry is Artifactory
+
+  - name: e2e_0002_distributionRule
+    type: DistributionRule
+    configuration:
+      sourceDistribution: e2e_0002_distribution
+      serviceName: "*"
+      siteName: "*"
+      cityName: "*"
+      countryCodes:
+        - "*"
+
 
 pipelines:
-  - name: pipeline_S_CreateReleaseBundle_0006
-    configuration:
-      environmentVariables:
-        readOnly:
-          JFROG_CLI_BUILD_NUMBER: "${run_id}"
+  - name: e2e_0002
+
     steps:
-      - name: S_CreateReleaseBundle_0006_1
-        type: Bash
+      - name: e2e_0002_dockerBuild
+        type: DockerBuild
         configuration:
+          affinityGroup: "e2e_0002"
+          dockerFileLocation: .
+          dockerFileName: Dockerfile
+          dockerImageName:  ${artifactory_registry_url}/${docker_repo_name}/node
+          dockerImageTag: ${run_number}
           integrations:
-            - name: s_artifactory
-          outputResources:
-            - name: S_CreateReleaseBundle_0006_BuildInfo
+            - name: e2e_0002_artifactory
+          inputResources:
+            - name: e2e_0002_gitRepo
         execution:
-          onExecute:
-            - echo "${run_id}" > S_CreateReleaseBundle_0006.txt
-            - jfrog rt upload S_CreateReleaseBundle_0006.txt test-automation-generic-local
-            - jfrog rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
-            - write_output S_CreateReleaseBundle_0006_BuildInfo buildName=${JFROG_CLI_BUILD_NAME} buildNumber=${JFROG_CLI_BUILD_NUMBER}
-      - name: S_CreateReleaseBundle_0006_2
+          onStart:
+            - generic_repo_name="e2e-0001-002-generic-local"
+            - docker_repo_name="e2e-0001-002-docker-local"
+            - jfrog rt repo-delete ${generic_repo_name} || true
+            - jfrog rt repo-delete ${docker_repo_name} || true
+            - request='{"key":"e2e-0001-002-generic-local", "rclass":"local", "packageType":"generic", "description":"This repo is a test repo used by e2e pipelines", "repoLayoutRef":"simple-default"}'
+            - echo $request > request.json
+            - jfrog rt repo-create request.json
+            - request1='{"key":"e2e-0001-002-docker-local", "rclass":"local", "packageType":"docker", "description":"This repo is a test repo used by e2e pipelines", "repoLayoutRef":"simple-default"}'
+            - echo $request1 > request.json
+            - jfrog rt repo-create request.json
+            - artifactory_registry_url=$(echo "$int_e2e_0002_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
+            - echo $artifactory_registry_url
+            - cd $res_e2e_0002_gitRepo_resourcePath
+            - echo "FROM hello-world" > Dockerfile
+
+      - name: e2e_0002_dockerPush
+        type: DockerPush
+        configuration:
+          affinityGroup: "e2e_0002"
+          autoPublishBuildInfo: true 
+          forceXrayScan: true
+          failOnScan: false
+          targetRepository: ${docker_repo_name} #required
+          integrations:
+            - name: e2e_0002_artifactory
+          inputSteps:
+            - name: e2e_0002_dockerBuild
+          outputResources:
+            - name: e2e_0002_buildInfo
+            - name: e2e_0002_outPut_image
+        execution:
+          onStart:
+            - generic_repo_name="e2e-0001-002-generic-local"
+            - docker_repo_name="e2e-0001-002-docker-local"
+
+      - name: e2e_0002_promoteBuild
+        type: PromoteBuild
+        configuration:
+          targetRepository: ${generic_repo_name}
+          integrations:
+            - name: e2e_0002_artifactory
+          inputResources:
+            - name: e2e_0002_buildInfo
+          inputSteps:
+            - name: e2e_0002_dockerPush
+          outputResources:
+            - name: e2e_0002_promotedInfo
+        execution:
+          onStart:
+            - generic_repo_name="e2e-0001-002-generic-local"
+            - docker_repo_name="e2e-0001-002-docker-local"
+#skipping until upload of gpg key happens on deploy step
+      - name: e2e_0002_createReleaseBundle
         type: CreateReleaseBundle
         configuration:
-          releaseBundleName: ${JFROG_CLI_BUILD_NAME}
-          releaseBundleVersion: ${run_id}
-          dryRun: false
+          #inherits from bash
+          releaseBundleName: e2e_0002_${run_number}
+          releaseBundleVersion: ${run_number}
           inputResources:
-            - name: S_CreateReleaseBundle_0006_BuildInfo
+            - name: e2e_0002_promotedInfo
           outputResources:
-            - name: S_CreateReleaseBundle_0006_ReleaseBundle
-      - name: S_CreateReleaseBundle_0006_3
-        type: Bash
+            - name: e2e_0002_releaseBundle
+          dryRun: false
+
+
+      - name: e2e_0002_signReleaseBundle
+        type: SignReleaseBundle
         configuration:
           inputResources:
-            - name: S_CreateReleaseBundle_0006_ReleaseBundle
-        execution:
-          onExecute:
-            - echo "Deleting distribution..."
-            - distributionUrl="$res_S_CreateReleaseBundle_0006_ReleaseBundle_sourceDistribution_url"
-            - releaseBundleName=$(find_resource_variable S_CreateReleaseBundle_0006_ReleaseBundle name)
-            - releaseBundleVersion=$(find_resource_variable S_CreateReleaseBundle_0006_ReleaseBundle version)
-            - jfrog config add distribution --overwrite --insecure-tls=$no_verify_ssl --dist-url $distributionUrl --user $res_S_CreateReleaseBundle_0006_ReleaseBundle_sourceDistribution_user --apikey $res_S_CreateReleaseBundle_0006_ReleaseBundle_sourceDistribution_apikey --interactive=false
-            - jfrog config use distribution
-            - jfrog rt release-bundle-delete --delete-from-dist=true --insecure-tls=$no_verify_ssl $releaseBundleName $releaseBundleVersion
-            - jfrog config remove distribution
-            - echo "Checking resource..."
-            - if [ "$res_S_CreateReleaseBundle_0006_ReleaseBundle_name" != "${JFROG_CLI_BUILD_NAME}" ]; then return 1; fi
-            - if [ "$res_S_CreateReleaseBundle_0006_ReleaseBundle_version" != "${run_id}" ]; then return 1; fi
-            - if [ "$res_S_CreateReleaseBundle_0006_ReleaseBundle_isSigned" == "true" ]; then return 1; fi
+            - name: e2e_0002_releaseBundle
+          outputResources:
+            - name: e2e_0002_signedReleaseBundle
+      skipping this until self distribution works
+      - name: e2e_0002_distributeReleaseBundle
+        type: DistributeReleaseBundle
+        configuration:
+          dryRun: false                
+          inputResources:
+            - name: e2e_0002_signedReleaseBundle    
+            - name: e2e_0002_distributionRule
