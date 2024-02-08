@@ -2,8 +2,8 @@ resources:
   - name: e2e_0002_gitRepo
     type: GitRepo
     configuration:
-      path: PIPA/Org_test_Automation
-      gitProvider: e2e_0002_github
+      path: nitind123/newTemplates
+      gitProvider: s_gitHub
       branches: 
         include: {{gitBranch}}
 
