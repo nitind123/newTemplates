@@ -34,7 +34,7 @@ resources:
   - name: e2e_0002_outPut_image      
     type: Image
     configuration:
-      registry: e2e_0002_artifactory
+      registry: s_artifactory
       sourceRepository: e2e_0002_docker_local 
       imageName: ${artifactory_registry_url}/docker-local/node
       imageTag:  ${run_number}# required if registry is Artifactory
