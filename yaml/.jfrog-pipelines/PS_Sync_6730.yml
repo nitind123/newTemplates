@@ -65,7 +65,7 @@ pipelines:
           integrations:
             - name: s_artifactory
           inputResources:
-            - name: s_gitHub
+            - name: e2e_0002_gitRepo
         execution:
           onStart:
             - generic_repo_name="e2e-0001-002-generic-local"
