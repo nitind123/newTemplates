@@ -43,7 +43,7 @@ pipelines:
       - name: S_WF_024_004
         type: Bash
         configuration:
-          nodePool: oneboxMacOS134
+          nodePool: oneboxMacOS135
           inputSteps:
             - name: S_WF_024_001
           affinityGroup: some_ag
