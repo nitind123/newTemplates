@@ -102,7 +102,7 @@ pipelines:
         configuration:
           dryRun: false
           inputSteps:
-            - name: e2e_0002_signReleaseBundle
+            - name: e2e_0002_createReleaseBundle
           inputResources:
             - name: e2e_0002_signedReleaseBundle
             - name: e2e_0002_distributionRule
