@@ -21,7 +21,7 @@ pipelines:
         type: Bash
         configuration:
           affinityGroup: some_ag
-          nodePool: oneboxMacOS135
+          nodePool: oneboxMacOS134
           #nodePool: node20
           inputSteps:
             - name: S_WF_024_001
