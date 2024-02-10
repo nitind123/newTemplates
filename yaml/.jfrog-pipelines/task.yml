@@ -1,5 +1,5 @@
 resources:
-  - name: go_app_gitrepo
+  - name: go_app_gitrepo1
     type: GitRepo
     configuration:
       path: nitind123/newTemplates
@@ -8,12 +8,12 @@ resources:
         include: master
       cloneProtocol: https
 
-  - name: docker_build_info
+  - name: docker_build_info1
     type: BuildInfo
     configuration:
       sourceArtifactory: s_artifactory
 
-  - name: go_build_gitrepo
+  - name: go_build_gitrepo1
     type: GitRepo
     configuration:
       path: nitind123/newTemplates
@@ -41,10 +41,10 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: go_app_gitrepo
-            - name: go_build_gitrepo
+            - name: go_app_gitrepo1
+            - name: go_build_gitrepo1
           outputResources:
-            - name: docker_build_info
+            - name: docker_build_info1
           integrations:
             - name: s_artifactory
         execution:
