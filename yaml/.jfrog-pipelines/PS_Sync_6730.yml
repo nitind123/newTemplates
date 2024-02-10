@@ -9,8 +9,8 @@ pipelines:
             - name: exportWithFormat14856
         execution:
           onExecute:
-            - echo ${exportWithKey}
-            - echo ${int_exportWithKey14856_exportWithKey}
-            - echo ${int_exportWithFormat14856_exportWithFormat}
-            - echo ${exportWithFormat}
-
+            - if[ "${exportWithKey}" == exportWithKey ]; then return 1; fi 
+            - if[ "${int_exportWithKey14856_exportWithKey}" == exportWithKey ]; then return 1; fi 
+            - if[ "${int_exportWithFormat14856_exportWithFormat}" == exportWithFormat ]; then return 1; fi 
+            - if[ "${exportWithFormat}" == "" ]; then return 1; fi 
+            
