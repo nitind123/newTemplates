@@ -11,7 +11,7 @@ pipelines:
           onExecute:
             - withkey=${exportWithKey}
             - echo $withkey
-            - if [ "$withkey" != "exportWithKeyq" ]; then return 1; fi 
+            - if [ "$withkey" != "exportWithKey" ]; then return 1; fi 
             - if [ "${int_exportWithKey14856_exportWithKey}" != exportWithKey ]; then return 1; fi 
             - if [ "${int_exportWithFormat14856_exportWithFormat}" != exportWithFormat ]; then return 1; fi 
             - if [ "${exportWithFormat}" != "" ]; then return 1; fi 
