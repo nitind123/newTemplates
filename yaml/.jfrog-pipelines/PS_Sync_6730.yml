@@ -1,30 +1,38 @@
 resources:
-  - name: P_WF_5933_012_resource
-    type: PropertyBag
+  - name: r_Aql
+    type: Aql
     configuration:
-      test: test
+      sourceArtifactory: s_artifactory
+      query: items.find({"@build.name":{"$eq":"artifactory"}})
+      addedProperties:
+        key1: value1
+        key2: value2
+      mappings:
+        - name: mapping1
+          input: IN
+          output: test1
+        - name: mapping2
+          input: IN
+          output: test2
 
 pipelines:
-  - name: PropertyBag
-    configuration:
-      integrations:
-        - name: s_artifactory
+  - name: pipelines_r_Aql
     steps:
-      - name: P_WF_5933_012_1
+      - name: Bash_Aql_Output
         type: Bash
         configuration:
-          inputResources:
-            - name: P_WF_5933_012_resource
+          outputResources:
+            - name: r_Aql
         execution:
           onExecute:
             - echo "executing step..."
-      - name: P_WF_5933_012_2
+           # - write_output r_Aql "query=items.find({"repo": "mvn_test_repo"})"
+
+      - name: Bash_Aql_Input
         type: Bash
         configuration:
           inputResources:
-            - name: P_WF_5933_012_resource
-          inputSteps:
-            - name: P_WF_5933_012_1
+            - name: r_Aql
         execution:
           onExecute:
             - echo "executing step..."
