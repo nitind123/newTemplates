@@ -10,5 +10,6 @@ pipelines:
         execution:
           onExecute:
             - echo ${exportWithKey}
+            - echo ${int_exportWithKey14856_exportWithKey}
             - echo ${int_exportWithFormat14856_exportWithFormat}
 
