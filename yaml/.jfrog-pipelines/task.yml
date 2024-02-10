@@ -26,7 +26,7 @@ resources:
 
 
 pipelines:
-  - name: go_app
+  - name: taskGo
     configuration:
       jfrogCliVersion: 2
       environmentVariables:
@@ -37,7 +37,7 @@ pipelines:
           JFROG_TASK_DEBUG: "true"
           JFROG_CLI_LOG_LEVEL: debug
     steps:
-      - name: test_docker_build
+      - name: taskGo
         type: Bash
         configuration:
           inputResources:
