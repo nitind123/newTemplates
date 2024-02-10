@@ -51,7 +51,7 @@ resources:
 
 
 pipelines:
-  - name: e2e_0002
+  - name: distribution
     configuration:
       environmentVariables:
         readOnly:
