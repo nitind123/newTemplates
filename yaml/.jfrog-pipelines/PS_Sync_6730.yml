@@ -1,110 +1,30 @@
 resources:
-  - name: e2e_0002_gitRepo
-    type: GitRepo
+  - name: P_WF_5933_012_resource
+    type: PropertyBag
     configuration:
-      path: nitind123/newTemplates
-      gitProvider: s_gitHub
-      branches:
-        include: {{gitBranch}}
-
-  - name: e2e_0002_releaseBundle
-    type: ReleaseBundle
-    configuration:
-      sourceDistribution: s_distribution
-      name: e2e_0002_${run_number}
-      version: ${run_number}
-
-  - name: e2e_0002_signedReleaseBundle
-    type: ReleaseBundle
-    configuration:
-      sourceDistribution: s_distribution
-      name: e2e_0002_${run_number}
-      version: ${run_number}
-
-  - name: e2e_0002_promotedInfo
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: s_artifactory
-
-  - name: e2e_0002_buildInfo
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: s_artifactory
-
-  - name: e2e_0002_outPut_image
-    type: Image
-    configuration:
-      registry: s_artifactory
-      sourceRepository: e2e_0002_docker_local
-      imageName: ${artifactory_registry_url}/docker-local/node
-      imageTag:  ${run_number}# required if registry is Artifactory
-
-  - name: e2e_0002_distributionRule
-    type: DistributionRule
-    configuration:
-      sourceDistribution: s_distribution
-      serviceName: "*"
-      siteName: "*"
-      cityName: "*"
-      countryCodes:
-        - "*"
-
+      test: test
 
 pipelines:
-  - name: distribution
+  - name: PropertyBag
     configuration:
-      environmentVariables:
-        readOnly:
-          JFROG_CLI_BUILD_NUMBER: "${run_id}"
+      integrations:
+        - name: s_artifactory
     steps:
-      - name: S_CreateReleaseBundle_0006_1
+      - name: P_WF_5933_012_1
         type: Bash
         configuration:
-          integrations:
-            - name: s_artifactory
-          outputResources:
-            - name: e2e_0002_promotedInfo
+          inputResources:
+            - name: P_WF_5933_012_resource
         execution:
           onExecute:
-            - echo "${run_id}" > S_CreateReleaseBundle_0006.txt
-            - jfrog rt upload S_CreateReleaseBundle_0006.txt test-automation-generic-local
-            - jfrog rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
-            - write_output e2e_0002_promotedInfo buildName=${JFROG_CLI_BUILD_NAME} buildNumber=${JFROG_CLI_BUILD_NUMBER}
-     
-
-      - name: e2e_0002_createReleaseBundle
-        type: CreateReleaseBundle
+            - echo "executing step..."
+      - name: P_WF_5933_012_2
+        type: Bash
         configuration:
-          #inherits from bash
-          releaseBundleName: e2e_0002_${run_number}
-          releaseBundleVersion: ${run_number}
-          inputSteps:
-            - name: S_CreateReleaseBundle_0006_1
           inputResources:
-            - name: e2e_0002_promotedInfo
-          outputResources:
-            - name: e2e_0002_releaseBundle
-          dryRun: false
-
-
-      - name: e2e_0002_signReleaseBundle
-        type: SignReleaseBundle
-        configuration:
+            - name: P_WF_5933_012_resource
           inputSteps:
-            - name: e2e_0002_createReleaseBundle
-          inputResources:
-            - name: e2e_0002_releaseBundle
-          outputResources:
-            - name: e2e_0002_signedReleaseBundle
-
-      - name: e2e_0002_distributeReleaseBundle
-        type: DistributeReleaseBundle
-        configuration:
-          dryRun: false
-          inputSteps:
-            #- name: e2e_0002_signReleaseBundle
-            - name: e2e_0002_createReleaseBundle
-          inputResources:
-            #- name: e2e_0002_signedReleaseBundle
-            - name: e2e_0002_distributionRule
-            - name: e2e_0002_releaseBundle
+            - name: P_WF_5933_012_1
+        execution:
+          onExecute:
+            - echo "executing step..."
