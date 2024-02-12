@@ -1,21 +1,24 @@
 template: true
+valuesFilePath: ../values/gitRepoValues.yml
 
 resources:
-  - name: S_GoBuild_0001_GitRepo
+  - name: S_GoBuild_0019_GitRepo
     type: GitRepo
     configuration:
-      gitProvider: s_gitHub
+      gitProvider: s_pipeAutoSCM
       path: nitind123/newTemplates
       branches:
-        include: master
+        include: {{gitBranch}}
 
 pipelines:
   - name: goBuild
     steps:
-      - name: S_GoBuild_0001
+      - name: S_GoBuild_0019
         type: GoBuild
         configuration:
           inputResources:
-            - name: S_GoBuild_0001_GitRepo
+            - name: S_GoBuild_0019_GitRepo
           integrations:
             - name: s_artifactory
+          sourceLocation: "tests/Go/HelloWorld"
+          resolverRepo: test-automation-go-virtual
