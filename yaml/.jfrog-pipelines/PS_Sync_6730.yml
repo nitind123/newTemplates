@@ -1,40 +1,23 @@
+
 resources:
-  - name: S_HelmDeploy_FileSpec_0014_helmrepo_resource
-    type: FileSpec
+  - name: S_HelmDeploy_HelmChart_0008_resource
+    type: HelmChart
     configuration:
       sourceArtifactory: s_artifactory
-      pattern: >-
-        simplecharts/
-      recursive: true
+      repository: simplecharts
+      chart: simplehelm
+      version: 0.0.0
 
 pipelines:
   - name: HelmDeploy
-    configuration:
-      environmentVariables:
-        readOnly:
-          release_name_from_helm_repo: "simplehelm-from-repo-${run_id}"
-          k8s_namespace: "pipe-master-pool"
     steps:
-      - name: S_HelmDeploy_0014
+      - name: S_HelmDeploy_0008
         type: HelmDeploy
         configuration:
+          helmVersion: 3
+          releaseName: release
           integrations:
             - name: s_artifactory
             - name: s_kubernetes
           inputResources:
-            - name: S_HelmDeploy_FileSpec_0014_helmrepo_resource
-          chartPath: ./
-          chartName: simplehelm
-          chartVersion: 0.3.0
-          helmVersion: 3
-          releaseName: ${release_name_from_helm_repo}
-          flags: "--wait --timeout 900s -n ${k8s_namespace} --set image.repository=trriplejay/simplehelm --set image.tag=latest"
-          valueFilePaths:
-            - values.yaml
-          lint: true
-          lintFlags: "--strict"
-          test: true
-        execution:
-          onComplete:
-            - helm3 delete ${release_name_from_helm_repo} --namespace ${k8s_namespace}
-            - kubectl delete pod --namespace ${k8s_namespace} ${release_name_from_helm_repo}-test-connection
+            - name: S_HelmDeploy_HelmChart_0008_resource
