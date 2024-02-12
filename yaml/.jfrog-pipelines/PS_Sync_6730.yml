@@ -28,16 +28,7 @@ pipelines:
             - jfrog rt upload S_PromoteBuild_0009.txt test-automation-generic-local
             - jfrog rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
             - write_output S_PromoteBuild_0009_input buildName=${JFROG_CLI_BUILD_NAME} buildNumber=${JFROG_CLI_BUILD_NUMBER}
-      - name: PromoteBuild
-        type: PromoteBuild
-        configuration:
-          targetRepository: test-automation-generic-promoted-local
-          status: TEST
-          comment: "My test comment"
-          inputResources:
-            - name: S_PromoteBuild_0009_input
-          outputResources:
-            - name: S_PromoteBuild_0009_output
+      
       - name: S_PromoteBuild_0009_3
         type: Bash
         configuration:
