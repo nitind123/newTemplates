@@ -108,7 +108,7 @@ pipelines:
         configuration:
           targetRepository: ${generic_repo_name}
           integrations:
-            - name:s_artifactory
+            - name: s_artifactory
           inputResources:
             - name: e2e_0002_buildInfo2
           inputSteps:
