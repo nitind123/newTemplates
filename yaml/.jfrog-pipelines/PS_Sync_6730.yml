@@ -21,7 +21,7 @@ pipelines:
             - name: S_MvnBuild_5680_0034_GitRepo
           integrations:
             - name: s_artifactory
-          sourceLocation: "tests/mvn"
+          sourceLocation: "yaml/.jfrog-pipelines"
           mvnCommand: "${my_command}"
           resolverSnapshotRepo: test-automation-mvn-remote
           resolverReleaseRepo: test-automation-mvn-remote
