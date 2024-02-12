@@ -29,7 +29,7 @@ pipelines:
           version: "v0.26.${run_number}"
           targetRepository: test-automation-go-local
           autoPublishBuildInfo: true
-          sourceLocation: "tests/Go"
+          sourceLocation: "."
       - name: S_GoPublishModule_0026_2
         type: Bash
         configuration:
