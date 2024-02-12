@@ -3,7 +3,7 @@ resources:
     type: GitRepo
     configuration:
       path: nitind123/newTemplates
-      gitProvider: s_github
+      gitProvider: s_gitHub
       branches: 
         include: {{gitBranch}}
 
