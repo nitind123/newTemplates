@@ -1,46 +1,40 @@
-template: true
-
 resources:
-  - name: S_GradleBuild_5680_0027_GitRepo
-    type: GitRepo
-    configuration:
-      gitProvider: s_gitHub
-      path: nitind123/newTemplates
-      branches:
-        include: {{gitBranch}}
-  - name: S_GradleBuild_5680_0027_FileSpec
+  - name: S_HelmDeploy_FileSpec_0014_helmrepo_resource
     type: FileSpec
     configuration:
       sourceArtifactory: s_artifactory
-      pattern: test-automation-generic-local/S_GradleBuild_5680_0027_Config
-
+      pattern: >-
+        simplecharts/
+      recursive: true
 
 pipelines:
-  - name: GradleBuild
+  - name: HelmDeploy
+    configuration:
+      environmentVariables:
+        readOnly:
+          release_name_from_helm_repo: "simplehelm-from-repo-${run_id}"
+          k8s_namespace: "pipe-master-pool"
     steps:
-      - name: S_GradleBuild_5680_0027_1
-        type: Bash
+      - name: S_HelmDeploy_0014
+        type: HelmDeploy
         configuration:
           integrations:
             - name: s_artifactory
+            - name: s_kubernetes
           inputResources:
-            - name: S_GradleBuild_5680_0027_GitRepo
-          outputResources:
-            -  name: S_GradleBuild_5680_0027_FileSpec
+            - name: S_HelmDeploy_FileSpec_0014_helmrepo_resource
+          chartPath: ./
+          chartName: simplehelm
+          chartVersion: 0.3.0
+          helmVersion: 3
+          releaseName: ${release_name_from_helm_repo}
+          flags: "--wait --timeout 900s -n ${k8s_namespace} --set image.repository=trriplejay/simplehelm --set image.tag=latest"
+          valueFilePaths:
+            - values.yaml
+          lint: true
+          lintFlags: "--strict"
+          test: true
         execution:
-          onExecute:
-            - cd $(find_resource_variable S_GradleBuild_5680_0027_GitRepo resourcePath)/tests/gradle
-            - jfrog rt upload config test-automation-generic-local/S_GradleBuild_5680_0027_Config
-
-      - name: S_GradleBuild_5680_0027_2
-        type: GradleBuild
-        configuration:
-          inputResources:
-            - name: S_GradleBuild_5680_0027_GitRepo
-            - name: S_GradleBuild_5680_0027_FileSpec
-          integrations:
-            - name: s_artifactory
-          sourceLocation: yaml/.jfrog-pipelines
-          configFileName: S_GradleBuild_5680_0027_Config
-          configFileLocation: .
-          gradleCommand: hello
+          onComplete:
+            - helm3 delete ${release_name_from_helm_repo} --namespace ${k8s_namespace}
+            - kubectl delete pod --namespace ${k8s_namespace} ${release_name_from_helm_repo}-test-connection
