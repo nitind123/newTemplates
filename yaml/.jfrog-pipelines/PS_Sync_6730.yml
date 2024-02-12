@@ -1,5 +1,5 @@
 resources:
-  - name: e2e_0002_gitRepo
+  - name: e2e_0002_gitRepo2
     type: GitRepo
     configuration:
       path: nitind123/newTemplates
@@ -7,31 +7,31 @@ resources:
       branches: 
         include: {{gitBranch}}
 
-  - name: e2e_0002_releaseBundle
+  - name: e2e_0002_releaseBundle2
     type: ReleaseBundle
     configuration:
       sourceDistribution: s_distribution
       name: e2e_0002_${run_number}
       version: ${run_number}
 
-  - name: e2e_0002_signedReleaseBundle
+  - name: e2e_0002_signedReleaseBundle2
     type: ReleaseBundle
     configuration:
       sourceDistribution: s_distribution
       name: e2e_0002_${run_number}
       version: ${run_number}
 
-  - name: e2e_0002_promotedInfo
+  - name: e2e_0002_promotedInfo2
     type: BuildInfo
     configuration:
       sourceArtifactory: s_artifactory
 
-  - name: e2e_0002_buildInfo
+  - name: e2e_0002_buildInfo2
     type: BuildInfo
     configuration:
       sourceArtifactory: s_artifactory
 
-  - name: e2e_0002_outPut_image      
+  - name: e2e_0002_outPut_image2  
     type: Image
     configuration:
       registry: s_artifactory
@@ -39,7 +39,7 @@ resources:
       imageName: ${artifactory_registry_url}/docker-local/node
       imageTag:  ${run_number}# required if registry is Artifactory
 
-  - name: e2e_0002_distributionRule
+  - name: e2e_0002_distributionRule2
     type: DistributionRule
     configuration:
       sourceDistribution: s_distribution
@@ -54,7 +54,7 @@ pipelines:
   - name: image
 
     steps:
-      - name: e2e_0002_dockerBuild
+      - name: e2e_0002_dockerBuild2
         type: DockerBuild
         configuration:
           affinityGroup: "e2e_0002"
@@ -65,7 +65,7 @@ pipelines:
           integrations:
             - name: s_artifactory
           inputResources:
-            - name: e2e_0002_gitRepo
+            - name: e2e_0002_gitRepo2
         execution:
           onStart:
             - generic_repo_name="e2e-0001-002-generic-local"
@@ -80,10 +80,10 @@ pipelines:
             - jfrog rt repo-create request.json
             - artifactory_registry_url=$(echo "$int_e2e_0002_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
             - echo $artifactory_registry_url
-            - cd $res_e2e_0002_gitRepo_resourcePath
+            - cd $res_e2e_0002_gitRepo2_resourcePath
             - echo "FROM hello-world" > Dockerfile
 
-      - name: e2e_0002_dockerPush
+      - name: e2e_0002_dockerPush2
         type: DockerPush
         configuration:
           affinityGroup: "e2e_0002"
@@ -94,27 +94,27 @@ pipelines:
           integrations:
             - name: s_artifactory
           inputSteps:
-            - name: e2e_0002_dockerBuild
+            - name: e2e_0002_dockerBuild2
           outputResources:
-            - name: e2e_0002_buildInfo
-            - name: e2e_0002_outPut_image
+            - name: e2e_0002_buildInfo2
+            - name: e2e_0002_outPut_image2
         execution:
           onStart:
             - generic_repo_name="e2e-0001-002-generic-local"
             - docker_repo_name="e2e-0001-002-docker-local"
 
-      - name: e2e_0002_promoteBuild
+      - name: e2e_0002_promoteBuild2
         type: PromoteBuild
         configuration:
           targetRepository: ${generic_repo_name}
           integrations:
             - name:s_artifactory
           inputResources:
-            - name: e2e_0002_buildInfo
+            - name: e2e_0002_buildInfo2
           inputSteps:
-            - name: e2e_0002_dockerPush
+            - name: e2e_0002_dockerPush2
           outputResources:
-            - name: e2e_0002_promotedInfo
+            - name: e2e_0002_promotedInfo2
         execution:
           onStart:
             - generic_repo_name="e2e-0001-002-generic-local"
