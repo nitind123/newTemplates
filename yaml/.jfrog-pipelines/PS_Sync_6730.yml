@@ -29,7 +29,7 @@ pipelines:
           version: "v0.26.${run_number}"
           targetRepository: test-automation-go-local
           autoPublishBuildInfo: true
-          sourceLocation: "."
+          sourceLocation: "yaml/.jfrog-pipelines/"
       - name: S_GoPublishModule_0026_2
         type: Bash
         configuration:
