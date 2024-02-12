@@ -32,7 +32,7 @@ pipelines:
       - name: S_PromoteBuild_0009_3
         type: Bash
         configuration:
-          inputeSteps:
+          inputSteps:
             - name: S_PromoteBuild_0009_1
           integrations:
             - name: s_artifactory
