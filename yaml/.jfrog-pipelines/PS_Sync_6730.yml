@@ -107,4 +107,4 @@ pipelines:
           inputResources:
             - name: e2e_0002_signedReleaseBundle
             - name: e2e_0002_distributionRule
-            - name: e2e_0002_releaseBundle
+            #- name: e2e_0002_releaseBundle
