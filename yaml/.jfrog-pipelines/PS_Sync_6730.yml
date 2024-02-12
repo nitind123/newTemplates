@@ -4,8 +4,8 @@ resources:
   - name: S_MvnBuild_5680_0034_GitRepo
     type: GitRepo
     configuration:
-      gitProvider: s_pipeAutoSCM
-      path: {{ .Values.GitHub.Org_test_Automation_bash.path }}
+      gitProvider: s_gitHub
+      path: nitind123/newTemplates
       branches:
         include: {{gitBranch}}
 
