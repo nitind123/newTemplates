@@ -13,7 +13,7 @@ resources:
       buildNumber: '1'
 
 pipelines:
-  - name: pipeline_S_PromoteBuild_0009
+  - name: PromoteBuild
     steps:
       - name: S_PromoteBuild_0009_1
         type: Bash
