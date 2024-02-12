@@ -1,5 +1,4 @@
 template: true
-valuesFilePath: ../values/gitRepoValues.yml
 
 resources:
   - name: S_NpmBuild_8304_001_GitRepo
