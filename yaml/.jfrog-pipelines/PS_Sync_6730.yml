@@ -40,7 +40,7 @@ pipelines:
             - name: S_GradleBuild_5680_0027_FileSpec
           integrations:
             - name: s_artifactory
-          sourceLocation: tests/gradle
+          sourceLocation: yaml/.jfrog-pipelines
           configFileName: S_GradleBuild_5680_0027_Config
           configFileLocation: .
           gradleCommand: hello
