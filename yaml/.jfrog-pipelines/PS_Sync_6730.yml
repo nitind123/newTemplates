@@ -1,44 +1,69 @@
+template: true
+
 resources:
-  - name: EXT_S_LX_AU_0002_remoteFile
-    type: RemoteFile
+  - name: S_PS_HelmDeploy_BuildInfo_0008
+    type: BuildInfo
     configuration:
-      source: s_artifactory
-      fileLocation: test-automation-generic-local
-      fileName: EXT_S_LX_AU_0002_remoteFile.txt
+      sourceArtifactory: s_artifactory
+      buildName: helmbuild
+      buildNumber: 1
+
+  - name: S_PS_HelmDeploy_GitRepo_0008
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: nitind123/newTemplates
+      branches:
+        include: master
 
 pipelines:
-  - name: RemoteFile
+  - name: HelmDelpoyPowerShell
+    configuration:
+      environmentVariables:
+        readOnly:
+          release_name_generic: "simplehelm-generic-${run_id}"
+          k8s_namespace: "pipe-master-pool"
+      nodePool: win_2019
     steps:
-      - name: EXT_S_LX_AU_0002_1
-        type: Bash
+      - name: S_PS_HelmDeploy_0008_create_build
+        type: PowerShell
         configuration:
-          integrations:
-            - name: s_artifactory
-          outputResources:
-            - name: EXT_S_LX_AU_0002_remoteFile
-        execution:
-          onExecute:
-            - echo "${run_id}" > EXT_S_LX_AU_0002_remoteFile.txt
-            - jfrog rt upload EXT_S_LX_AU_0002_remoteFile.txt test-automation-generic-local
-
-      - name: EXT_S_LX_AU_0002_2
-        type: UploadArtifact
-        configuration:
-          targetPath: test-automation-generic-local/EXT_S_LX_AU_0002.txt
           integrations:
             - name: s_artifactory
           inputResources:
-            - name: EXT_S_LX_AU_0002_remoteFile
-
-      - name: EXT_S_LX_AU_0002_3
-        type: Bash
-        configuration:
-          integrations:
-            - name: s_artifactory
-          inputSteps:
-            - name: EXT_S_LX_AU_0002_2
+            - name: S_PS_HelmDeploy_GitRepo_0008
+          outputResources:
+            - name: S_PS_HelmDeploy_BuildInfo_0008
         execution:
           onExecute:
-            - jfrog rt download test-automation-generic-local/EXT_S_LX_AU_0002.txt EXT_S_LX_AU_0002.txt
-            - contents=$(cat EXT_S_LX_AU_0002.txt)
-            - if [ "$contents" != "$run_id" ]; then return 1; fi
+            - add_run_variables JFROG_CLI_BUILD_NUMBER=${run_id}
+            - jfrog --version
+            - Push-Location ${res_S_PS_HelmDeploy_GitRepo_0008_resourcePath}/tests/core/helmdeploy
+            - jfrog rt u simplehelm/ "simplecharts/S_HelmDeploy_0008/" --flat=false --build-name=${JFROG_CLI_BUILD_NAME} --build-number=${JFROG_CLI_BUILD_NUMBER}
+            - jfrog rt bce ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
+            - jfrog rt bp ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
+            - write_output S_PS_HelmDeploy_BuildInfo_0008 buildName=${JFROG_CLI_BUILD_NAME} buildNumber=${JFROG_CLI_BUILD_NUMBER}
+
+      - name: deploy_helm_chart_from_helm_repo
+        type: HelmDeploy
+        configuration:
+          inputSteps:
+            - name: S_PS_HelmDeploy_0008_create_build
+          integrations:
+            - name: s_artifactory
+            - name: s_kubernetes
+          inputResources:
+            - name: S_PS_HelmDeploy_BuildInfo_0008
+          helmVersion: 3
+          releaseName: ${release_name_from_repo}
+          chartPath: ./pathDoesntExist/
+          flags: "--force --wait --timeout 900s --set image.repository=trriplejay/simplehelm --set image.tag=latest"
+          valueFilePaths:
+            - values.yaml
+          lint: true
+          lintFlags: "--strict"
+          test: true
+        execution:
+          onComplete:
+            - helm3 delete simplehelm-from-repo-$run_id --namespace $k8s_namespace
+            - kubectl delete pod --namespace ${k8s_namespace} simplehelm-from-repo-$run_id-test-connection
