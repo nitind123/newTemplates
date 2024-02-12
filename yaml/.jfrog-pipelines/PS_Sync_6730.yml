@@ -1,29 +1,44 @@
 resources:
-  - name: s_bash_0404
+  - name: EXT_S_LX_AU_0002_remoteFile
     type: RemoteFile
     configuration:
       source: s_artifactory
-      #fileLocation: example-repo-local/setup/test.sh
-     # fileName: test.sh # optional
-      fileDateTime: r
+      fileLocation: test-automation-generic-local
+      fileName: EXT_S_LX_AU_0002_remoteFile.txt
 
 pipelines:
-
   - name: RemoteFile
     steps:
-      - name: S_Bash_0404
+      - name: EXT_S_LX_AU_0002_1
         type: Bash
         configuration:
-          environmentVariables:
-            env1: value1
-            env2: value2
+          integrations:
+            - name: s_artifactory
+          outputResources:
+            - name: EXT_S_LX_AU_0002_remoteFile
+        execution:
+          onExecute:
+            - echo "${run_id}" > EXT_S_LX_AU_0002_remoteFile.txt
+            - jfrog rt upload EXT_S_LX_AU_0002_remoteFile.txt test-automation-generic-local
+
+      - name: EXT_S_LX_AU_0002_2
+        type: UploadArtifact
+        configuration:
+          targetPath: test-automation-generic-local/EXT_S_LX_AU_0002.txt
           integrations:
             - name: s_artifactory
           inputResources:
-            - name: s_bash_0404
+            - name: EXT_S_LX_AU_0002_remoteFile
+
+      - name: EXT_S_LX_AU_0002_3
+        type: Bash
+        configuration:
+          integrations:
+            - name: s_artifactory
+          inputSteps:
+            - name: EXT_S_LX_AU_0002_2
         execution:
-          onStart:
-             - echo "Preparing for work..."
           onExecute:
-            - echo "executing step..."
-            - jfrog rt dl example-repo-local/setup/test.sh
+            - jfrog rt download test-automation-generic-local/EXT_S_LX_AU_0002.txt EXT_S_LX_AU_0002.txt
+            - contents=$(cat EXT_S_LX_AU_0002.txt)
+            - if [ "$contents" != "$run_id" ]; then return 1; fi
