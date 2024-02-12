@@ -1,53 +1,71 @@
 template: true
+valuesFilePath: ../values/gitRepoValues.yml
 
 resources:
-  - name: S_NpmBuild_8304_001_GitRepo
+  - name: S_NpmPublish_5849_018_GitRepo
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
       path: nitind123/newTemplates
       branches:
         include: {{gitBranch}}
-  - name: S_NpmBuild_8304_001_FileSpec
-    type: FileSpec
+  - name: S_NpmPublish_5849_018_BuildInfo
+    type: BuildInfo
     configuration:
       sourceArtifactory: s_artifactory
-      pattern: test-automation-generic-local/myFile
 
 pipelines:
-  - name: pipeline_S_NpmBuild_8304_001_1
+  - name: NpmPublish
     configuration:
-      jfrogCliVersion: 2
+      runtime:
+        type: image
+        image:
+          auto:
+            language: node
+            versions:
+              - 16
+      environmentVariables:
+        readOnly:
+          JFROG_CLI_BUILD_NUMBER: ${run_id}
     steps:
-      - name: S_NpmBuild_8304_001_1
-        type: Bash
-        configuration:
-          integrations:
-            - name: s_artifactory
-          inputResources:
-            - name: S_NpmBuild_8304_001_GitRepo
-          outputResources:
-            -  name: S_NpmBuild_8304_001_FileSpec
-        execution:
-          onExecute:
-            - cd $(find_resource_variable S_NpmBuild_8304_001_GitRepo resourcePath)/yaml/.jfrog-pipelines/npm
-            - replace_envs package.json
-            - jfrog rt upload package.json test-automation-generic-local/package.json
-            - write_output S_NpmBuild_8304_001_FileSpec pattern="test-automation-generic-local/package.json"
-
-      - name: S_NpmBuild_8304_001_2
+      - name: S_NpmPublish_5849_018_1
         type: NpmBuild
         configuration:
+          sourceLocation: "yaml/.jfrog-pipelines/npm"
+          resolverRepo: "test-automation-npm-remote"
           inputResources:
-            - name: S_NpmBuild_8304_001_GitRepo
-            - name: S_NpmBuild_8304_001_FileSpec
+            - name: S_NpmPublish_5849_018_GitRepo
           integrations:
             - name: s_artifactory
-          sourceLocation: "yaml/.jfrog-pipelines/npm"
-          resolverRepo: test-automation-npm-remote
         execution:
           onStart:
-            - pushd $(find_resource_variable $inputGitRepoResourceName resourcePath)/$(find_step_configuration_value sourceLocation)
-            - rm package.json # removing the file to be replaced using the FileSpec
-            - ls
-            - popd
+            - replace_envs ${res_S_NpmPublish_5849_018_GitRepo_resourcePath}/yaml/.jfrog-pipelines/npm/package.json
+      - name: S_NpmPublish_5849_018_2
+        type: NpmPublish
+        configuration:
+          autoPublishBuildInfo: true
+          deployerRepo: "test-automation-npm-local"
+          inputSteps:
+            - name: S_NpmPublish_5849_018_1
+          outputResources:
+            - name: S_NpmPublish_5849_018_BuildInfo
+          integrations:
+            - name: s_artifactory
+      - name: S_NpmPublish_5849_018_3
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: S_NpmPublish_5849_018_2
+          integrations:
+            - name: s_artifactory
+        execution:
+          onExecute:
+            - buildInfoFilePath=$(jfrog rt search "*/${JFROG_CLI_BUILD_NAME}/${run_id}*.json" | jq -r '.[0].path')
+            - buildInfoFileData=$(jfrog rt curl -XGET /api/storage/${buildInfoFilePath})
+            - artifactSha=$(echo $buildInfoFileData | jq -r '.checksums.sha256')
+            - if [ -z "${project_key}" ]; then project="default"; else project="${project_key}"; fi
+            - artifactPath="${project}/${JFROG_CLI_BUILD_NAME}/${run_id}"
+            - "stepArtifact=$(curl -sS -H \"Authorization: Bearer $builder_api_token\" -H 'Content-Type: application/json' \"${pipelines_api_url}/stepArtifacts?artifactPath=${artifactPath}&artifactSha=${artifactSha}&artifactType=buildInfo\")"
+            - jfrog rt curl -XDELETE "/api/build/${JFROG_CLI_BUILD_NAME}?buildNumbers=${run_id}&artifacts=1"
+            - stepArtifactSha=$(echo $stepArtifact | jq -r '.artifactSha')
+            - if [ "$stepArtifactSha" != "$artifactSha" ]; then return 1; fi
