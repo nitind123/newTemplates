@@ -1,44 +1,25 @@
 resources:
-  - name: EXT_S_LX_AU_0007_fileSpec
+  - name: S_Bash_0543_FileSpec
     type: FileSpec
     configuration:
       sourceArtifactory: s_artifactory
-      pattern: "test-automation-generic-local/EXT_S_LX_AU_0007_fileSpec.txt"
+      pattern: "test-automation-generic-local/fileSpecBash/s_foo"
+      limit: 1
+      sortBy:
+        - created
 
 pipelines:
-  - name: UploadArtifact
+  - name: FileSpec
     steps:
-      - name: EXT_S_LX_AU_0007_1
+      - name: S_Bash_0543
         type: Bash
         configuration:
-          integrations:
-            - name: s_artifactory
-          outputResources:
-            - name: EXT_S_LX_AU_0007_fileSpec
-        execution:
-          onExecute:
-            - echo "${run_id}" > EXT_S_LX_AU_0007_fileSpec.txt
-            - jfrog rt upload EXT_S_LX_AU_0007_fileSpec.txt test-automation-generic-local
-
-      - name: EXT_S_LX_AU_0007_2
-        type: UploadArtifact
-        configuration:
-          targetPath: test-automation-generic-local/EXT_S_LX_AU_0007.txt
-          properties: propertyOne=1;propertyTwo=1,2,3
-          integrations:
-            - name: s_artifactory
           inputResources:
-            - name: EXT_S_LX_AU_0007_fileSpec
-
-      - name: EXT_S_LX_AU_0007_3
-        type: Bash
-        configuration:
-          integrations:
-            - name: s_artifactory
-          inputSteps:
-            - name: EXT_S_LX_AU_0007_2
+            - name: S_Bash_0543_FileSpec
         execution:
           onExecute:
-            - jfrog rt download --props "propertyOne=1;pipelines_run_number=${run_number}" test-automation-generic-local/EXT_S_LX_AU_0007.txt EXT_S_LX_AU_0007.txt
-            - contents=$(cat EXT_S_LX_AU_0007.txt)
-            - if [ "$contents" != "${run_id}" ]; then return 1; fi
+            - echo "executing step"
+            - pushd $res_S_Bash_0543_FileSpec_resourcePath
+            - if [ -f "./fileSpecBash/s_foo" ]; then echo "found the file"; fi
+            - if [ ! -f "./fileSpecBash/s_foo" ]; then echo "error finding the file"; exit 1; fi
+            - popd
