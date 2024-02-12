@@ -5,7 +5,7 @@ resources:
   - name: S_GoBuild_0019_GitRepo
     type: GitRepo
     configuration:
-      gitProvider: s_pipeAutoSCM
+      gitProvider: s_gitHub
       path: nitind123/newTemplates
       branches:
         include: {{gitBranch}}
