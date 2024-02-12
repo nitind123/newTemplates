@@ -1,5 +1,4 @@
 template: true
-valuesFilePath: ../values/gitRepoValues.yml
 
 resources:
   - name: S_GoBuild_0019_GitRepo
