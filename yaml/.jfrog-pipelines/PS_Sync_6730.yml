@@ -7,11 +7,14 @@ pipelines:
           integrations:
             - name: exportWithKey14856
             - name: exportWithFormat14856
+            - name: exportWithFormat1485611
         execution:
           onExecute:
             - withkey=${exportWithKey}
             - echo $withkey
             - echo ${exportWithFormat}
+            - echo ${int_exportWithFormat1485611_exportWexportWithFormatithKey2}
+            - echo ${exportWexportWithFormatithKey2}
             - if [ "$withkey" != "exportWithKey" ]; then return 1; fi 
             - if [ "${int_exportWithKey14856_exportWithKey}" != exportWithKey ]; then return 1; fi 
             - if [ "${int_exportWithFormat14856_exportWithFormat}" != exportWithFormat ]; then return 1; fi 
