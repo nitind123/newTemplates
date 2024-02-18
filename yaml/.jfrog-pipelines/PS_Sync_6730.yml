@@ -1,16 +1,16 @@
 pipelines:
   - name: pipelines_I_Jenkins_0019
     steps:
-      - name: I_Jenkins_0019                  
+      - name: I_Jenkins_0019
         type: Jenkins
         configuration:
-          jenkinsJobName: var-pipeline-proj    # Jenkins job/pipeline name. required   
-          priority: 2         
+          jenkinsJobName: var-pipeline-proj    # Jenkins job/pipeline name. required
+          priority: 2
           buildParameters:
             key1: 1
-            key2: 2                   
+            key2: 2
           integrations:
-            - name: i_testJenkins   # required Jenkins integration         
+            - name: i_testJenkins   # required Jenkins integration
         execution:
           onStart:
             - echo 'test'
@@ -20,4 +20,19 @@ pipelines:
             - echo 'test100s0a11'
           onComplete:
             - echo "complete"
-            
+      - name: branch_environment_operate
+        type: Jenkins
+        configuration:
+          inputSteps:
+            - name: I_Jenkins_0019
+              status:
+                - timeout
+                - skipped
+          integrations:
+            - name: i_testJenkins
+          jenkinsJobName: tools/platform/environment_operate
+          buildParameters:
+            SERVER_NAME: ${res_environmentOperateBag_serverName}
+            EXPIRY: "3d"
+            ACTION: "upgrade"
+
