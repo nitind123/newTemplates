@@ -26,7 +26,7 @@ pipelines:
           inputSteps:
             - name: I_Jenkins_0019
               status:
-                - timeout
+                - failure
                 - skipped
           integrations:
             - name: i_testJenkins
