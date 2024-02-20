@@ -1,5 +1,5 @@
 resources:
-  - name: e2e_0002_gitRepo
+  - name: e2e_0002_gitRepo_powerShell
     type: GitRepo
     configuration:
       path: nitind123/newTemplates
@@ -7,31 +7,31 @@ resources:
       branches:
         include: {{gitBranch}}
 
-  - name: e2e_0002_releaseBundle
+  - name: e2e_0002_releaseBundle_powerShell
     type: ReleaseBundle
     configuration:
       sourceDistribution: s_distribution
       name: e2e_0002_${run_number}
       version: ${run_number}
 
-  - name: e2e_0002_signedReleaseBundle
+  - name: e2e_0002_signedReleaseBundle_powerShell
     type: ReleaseBundle
     configuration:
       sourceDistribution: s_distribution
       name: e2e_0002_${run_number}
       version: ${run_number}
 
-  - name: e2e_0002_promotedInfo
+  - name: e2e_0002_promotedInfo_powerShell
     type: BuildInfo
     configuration:
       sourceArtifactory: s_artifactory
 
-  - name: e2e_0002_buildInfo
+  - name: e2e_0002_buildInfo_powerShell
     type: BuildInfo
     configuration:
       sourceArtifactory: s_artifactory
 
-  - name: e2e_0002_outPut_image
+  - name: e2e_0002_outPut_image_powerShell
     type: Image
     configuration:
       registry: s_artifactory
@@ -39,7 +39,7 @@ resources:
       imageName: ${artifactory_registry_url}/docker-local/node
       imageTag:  ${run_number}# required if registry is Artifactory
 
-  - name: e2e_0002_distributionRule
+  - name: e2e_0002_distributionRule_powerShell
     type: DistributionRule
     configuration:
       sourceDistribution: s_distribution
@@ -51,20 +51,20 @@ resources:
 
 
 pipelines:
-  - name: distribution
+  - name: distribution_powerShell
     configuration:
       nodePool: win_2019
       environmentVariables:
         readOnly:
           JFROG_CLI_BUILD_NUMBER: "${run_id}"
     steps:
-      - name: S_CreateReleaseBundle_0006_1
+      - name: S_CreateReleaseBundle_0006_1_powerShell
         type: PowerShell
         configuration:
           integrations:
             - name: s_artifactory
           outputResources:
-            - name: e2e_0002_promotedInfo
+            - name: e2e_0002_promotedInfo_powerShell
         execution:
           onExecute:
             - echo "${run_id}" > S_CreateReleaseBundle_0006.txt
@@ -73,39 +73,39 @@ pipelines:
             - write_output e2e_0002_promotedInfo buildName=${JFROG_CLI_BUILD_NAME} buildNumber=${JFROG_CLI_BUILD_NUMBER}
      
 
-      - name: e2e_0002_createReleaseBundle
+      - name: e2e_0002_createReleaseBundle_powerShell
         type: CreateReleaseBundle
         configuration:
           #inherits from bash
           releaseBundleName: e2e_0002_${run_number}
           releaseBundleVersion: ${run_number}
           inputSteps:
-            - name: S_CreateReleaseBundle_0006_1
+            - name: S_CreateReleaseBundle_0006_1_powerShell
           inputResources:
-            - name: e2e_0002_promotedInfo
+            - name: e2e_0002_promotedInfo_powerShell
           outputResources:
-            - name: e2e_0002_releaseBundle
+            - name: e2e_0002_releaseBundle_powerShell
           dryRun: false
 
 
-      - name: e2e_0002_signReleaseBundle
+      - name: e2e_0002_signReleaseBundle_powerShell
         type: SignReleaseBundle
         configuration:
           inputSteps:
-            - name: e2e_0002_createReleaseBundle
+            - name: e2e_0002_createReleaseBundle_powerShell
           inputResources:
-            - name: e2e_0002_releaseBundle
+            - name: e2e_0002_releaseBundle_powerShell
           outputResources:
-            - name: e2e_0002_signedReleaseBundle
+            - name: e2e_0002_signedReleaseBundle_powerShell
 
-      - name: e2e_0002_distributeReleaseBundle
+      - name: e2e_0002_distributeReleaseBundle_powerShell
         type: DistributeReleaseBundle
         configuration:
           dryRun: false
           inputSteps:
-            - name: e2e_0002_signReleaseBundle
-            #- name: e2e_0002_createReleaseBundle
+            - name: e2e_0002_signReleaseBundle_powerShell
+            #- name: e2e_0002_createReleaseBundle_powerShell
           inputResources:
-            - name: e2e_0002_signedReleaseBundle
-            - name: e2e_0002_distributionRule
+            - name: e2e_0002_signedReleaseBundle_powerShell
+            - name: e2e_0002_distributionRule_powerShell
             #- name: e2e_0002_releaseBundle
