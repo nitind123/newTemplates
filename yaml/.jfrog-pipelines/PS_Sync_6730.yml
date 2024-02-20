@@ -13,6 +13,9 @@ pipelines:
       - name: syncEnv
         type: Bash
         configuration:
+          integrations:
+            - name: s_gitHub
+            - name: test1
           environmentVariables:
             env1: {{gitBranch}}
             env2: {{.jfrog-pipelines.sourceRepository}}
