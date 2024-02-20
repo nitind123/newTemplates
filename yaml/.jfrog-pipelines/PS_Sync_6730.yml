@@ -53,12 +53,13 @@ resources:
 pipelines:
   - name: distribution
     configuration:
+      nodePool: win_2019
       environmentVariables:
         readOnly:
           JFROG_CLI_BUILD_NUMBER: "${run_id}"
     steps:
       - name: S_CreateReleaseBundle_0006_1
-        type: Bash
+        type: PowerShell
         configuration:
           integrations:
             - name: s_artifactory
