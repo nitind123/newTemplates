@@ -1,5 +1,5 @@
 resources:
-  - name: myFirstRepo11
+  - name: syncEnv
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
@@ -8,16 +8,16 @@ resources:
         include: {{gitBranch}}
 
 pipelines:
-  - name: Ps_variable_resolved_673011
+  - name: syncEnv
     steps:
-      - name: Ps_variable_resolved_673011
+      - name: syncEnv
         type: Bash
         configuration:
           environmentVariables:
             env1: {{gitBranch}}
             env2: {{.jfrog-pipelines.sourceRepository}}
           inputResources:
-            - name: myFirstRepo11
+            - name: syncEnv
         execution:
           onExecute:
             - echo {{gitBranch}}
