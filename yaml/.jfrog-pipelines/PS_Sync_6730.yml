@@ -43,7 +43,7 @@ pipelines:
             - name: s_artifactory
         execution:
           onStart:
-            - replace_envs ${res_S_HelmPublish_5849_002_GitRepo_resourcePath}/tests/helmCharts/myChart/Chart.yaml
+            - replace_envs ${res_S_HelmPublish_5849_002_GitRepo_resourcePath}/yaml/.jfrog-pipelines/Chart.yaml
 
       - name: S_HelmPublish_5849_002_2
         type: Bash
