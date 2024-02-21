@@ -9,7 +9,7 @@ resources:
 
 pipelines:
   - name: syncEnv
-    configuration
+    configuration:
       integrations:
         - name: s_gitHub
     steps:
