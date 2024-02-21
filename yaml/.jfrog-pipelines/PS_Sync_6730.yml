@@ -9,6 +9,9 @@ resources:
 
 pipelines:
   - name: syncEnv
+    configuration
+      integrations
+        - name: s_gitHub
     steps:
       - name: syncEnv
         type: Bash
