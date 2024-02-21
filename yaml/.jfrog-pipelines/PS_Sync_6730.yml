@@ -2,7 +2,7 @@ resources:
   - name: syncEnv
     type: GitRepo
     configuration:
-      gitProvider: test1
+      gitProvider: s_gitHub
       path: {{.jfrog-pipelines.sourceRepository}}
       branches:
         include: {{gitBranch}}
@@ -15,7 +15,7 @@ pipelines:
         configuration:
           integrations:
             - name: s_gitHub
-            - name: test1
+            - name: s_artifactory
           environmentVariables:
             env1: {{gitBranch}}
             env2: {{.jfrog-pipelines.sourceRepository}}
