@@ -11,7 +11,7 @@ pipelines:
   - name: syncEnv
     configuration:
       integrations:
-        - name: s_gitHub
+        - name: gitHub
     steps:
       - name: syncEnv
         type: Bash
