@@ -45,7 +45,7 @@ pipelines:
         execution:
           onExecute:
             - add_run_variables JFROG_CLI_BUILD_NUMBER=${run_id}
-            - Push-Location ${res_S_PS_HelmDeploy_GitRepo_8309_006_resourcePath}/yaml/core/helmdeploy
+            - Push-Location ${res_S_PS_HelmDeploy_GitRepo_8309_006_resourcePath}/yaml/.jfrog-pipelines/core/helmdeploy
             - jfrog rt upload simplehelm-0.3.0.tgz "simplecharts/S_PS_HelmDeploy_8309_006/"
             - jfrog rt bce $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
             - jfrog rt bp $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
