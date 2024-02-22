@@ -1,71 +1,66 @@
+template: true
+valuesFilePath: ../values/gitRepoValues.yml
+
 resources:
-  - name: S_PS_PromoteBuild_8308_009_input
-    type: BuildInfo
+  - name: S_PS_DockerPush_8307_004_GitRepo
+    type: GitRepo
     configuration:
-      sourceArtifactory: s_artifactory
-      buildName: name
-      buildNumber: '1'
-  - name: S_PS_PromoteBuild_8308_009_output
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: s_artifactory
-      buildName: name
-      buildNumber: '1'
+      gitProvider: s_pipeAutoSCM
+      path: {{ .Values.GitHub.Org_test_Automation_PowerShell.path }}
+      branches:
+        include: {{gitBranch}}
 
 pipelines:
-  - name: pipeline_S_PS_PromoteBuild_8308_009_1
+  - name: pipeline_S_PS_DockerPush_8307_004
     configuration:
       jfrogCliVersion: 2
       nodePool: win_2019
     steps:
-      - name: S_PS_PromoteBuild_8308_009_1
-        type: PowerShell
+      - name: S_PS_DockerPush_8307_004_1
+        type: DockerBuild
         configuration:
+          affinityGroup: S_PS_DockerPush_8307_004
+          dockerImageName: ${artifactory_registry_url}/test-automation-docker-local/s_ps_dockerpush_8307
+          dockerImageTag: ${run_id}
+          inputResources:
+            - name: S_PS_DockerPush_8307_004_GitRepo
           integrations:
             - name: s_artifactory
         execution:
-          onExecute:
-            - Set-Content -Path S_PS_PromoteBuild_8308_009_1.txt -Value ${run_id}
-            - jfrog rt upload S_PS_PromoteBuild_8308_009_1.txt test-automation-generic-local
-
-  - name: pipeline_S_PS_PromoteBuild_8308_009_2
-    configuration:
-      jfrogCliVersion: 2
-      nodePool: win_2019
-    steps:
-      - name: S_PS_PromoteBuild_8308_009_2
+          onStart:
+            - add_run_variables JFROG_CLI_BUILD_NUMBER=${run_id}
+            - |
+              $artifactory_url = [System.Uri]$int_s_artifactory_url
+              $artifactory_registry_host = $artifactory_url.Host
+              $artifactory_registry_port = $artifactory_url.Port
+              if ($artifactory_registry_port -eq 80) {
+                add_run_variables artifactory_registry_url="${artifactory_registry_host}"
+              } else {
+                add_run_variables artifactory_registry_url="${artifactory_registry_host}:${artifactory_registry_port}"
+              }
+            - Push-Location $res_S_PS_DockerPush_8307_004_GitRepo_resourcePath
+            - Set-Content -Path './Dockerfile' -Value 'FROM mcr.microsoft.com/windows/nanoserver:1809'
+      - name: S_PS_DockerPush_8307_004_2
+        type: DockerPush
+        configuration:
+          affinityGroup: S_PS_DockerPush_8307_004
+          targetRepository: ${target}
+          inputSteps:
+            - name: S_PS_DockerPush_8307_004_1
+          integrations:
+            - name: s_artifactory
+      - name: S_PS_DockerPush_8307_004_3
         type: PowerShell
         configuration:
           environmentVariables:
-            JFROG_CLI_BUILD_NAME: S_PS_PromoteBuild_8308_009_2
+            target: test-automation-docker-local
+          affinityGroup: S_PS_DockerPush_8307_004
+          inputSteps:
+            - name: S_PS_DockerPush_8307_004_2
           integrations:
             - name: s_artifactory
-          outputResources:
-            - name: S_PS_PromoteBuild_8308_009_input
         execution:
           onExecute:
-            - Set-Content -Path S_PS_PromoteBuild_8308_009_2.txt -Value ${run_id}
-            - jfrog rt upload S_PS_PromoteBuild_8308_009_2.txt test-automation-generic-local
-            - jfrog rt download --limit=1 --flat "test-automation-generic-local/S_PS_PromoteBuild_8308_009_1.txt" "dependency.txt"
-            - jfrog rt build-publish $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
-            - write_output S_PS_PromoteBuild_8308_009_input buildName=$JFROG_CLI_BUILD_NAME buildNumber=$JFROG_CLI_BUILD_NUMBER
-      - name: S_PS_PromoteBuild_8308_009_3
-        type: PromoteBuild
-        configuration:
-          targetRepository: test-automation-generic-promoted-local
-          includeDependencies: true
-          inputResources:
-            - name: S_PS_PromoteBuild_8308_009_input
-          outputResources:
-            - name: S_PS_PromoteBuild_8308_009_output
-      - name: S_PS_PromoteBuild_8308_009_4
-        type: PowerShell
-        configuration:
-          integrations:
-            - name: s_artifactory
-          inputResources:
-            - name: S_PS_PromoteBuild_8308_009_output
-        execution:
-          onExecute:
-            - jfrog rt download --fail-no-op --insecure-tls=${no_verify_ssl} --limit=1 --flat "test-automation-generic-promoted-local/S_PS_PromoteBuild_8308_009_1.txt" "dependency.txt"
-            - jfrog rt curl -XDELETE "/api/build/S_PS_PromoteBuild_8308_009_2?buildNumbers=${JFROG_CLI_BUILD_NUMBER}&artifacts=1"
+            - "docker rmi ${artifactory_registry_url}/test-automation-docker-local/s_ps_dockerpush_8307:${run_id}"
+            - "jfrog rt docker-pull ${artifactory_registry_url}/test-automation-docker-local/s_ps_dockerpush_8307:${run_id} test-automation-docker-local"
+            - docker rmi "${artifactory_registry_url}/test-automation-docker-local/s_ps_dockerpush_8307:${run_id}"
