@@ -1,7 +1,7 @@
 
 
 resources:
-  - name: S_PS_DockerPush_8307_004_GitRepo
+  - name: S_PS_GPM_8305_004_GitRepo
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
@@ -10,56 +10,20 @@ resources:
         include: {{gitBranch}}
 
 pipelines:
-  - name: pipeline_S_PS_DockerPush_8307_004
+  - name: pipeline_S_PS_GoPublishModule_8305_004
     configuration:
-      jfrogCliVersion: 2
       nodePool: win_2019
+      jfrogCliVersion: 2
     steps:
-      - name: S_PS_DockerPush_8307_004_1
-        type: DockerBuild
-        configuration:
-          affinityGroup: S_PS_DockerPush_8307_004
-          dockerImageName: ${artifactory_registry_url}/test-automation-docker-local/s_ps_dockerpush_8307
-          dockerImageTag: ${run_id}
-          inputResources:
-            - name: S_PS_DockerPush_8307_004_GitRepo
-          integrations:
-            - name: s_artifactory
-        execution:
-          onStart:
-            - add_run_variables JFROG_CLI_BUILD_NUMBER=${run_id}
-            - |
-              $artifactory_url = [System.Uri]$int_s_artifactory_url
-              $artifactory_registry_host = $artifactory_url.Host
-              $artifactory_registry_port = $artifactory_url.Port
-              if ($artifactory_registry_port -eq 80) {
-                add_run_variables artifactory_registry_url="${artifactory_registry_host}"
-              } else {
-                add_run_variables artifactory_registry_url="${artifactory_registry_host}:${artifactory_registry_port}"
-              }
-            - Push-Location $res_S_PS_DockerPush_8307_004_GitRepo_resourcePath
-            - Set-Content -Path './Dockerfile' -Value 'FROM mcr.microsoft.com/windows/nanoserver:1809'
-      - name: S_PS_DockerPush_8307_004_2
-        type: DockerPush
-        configuration:
-          affinityGroup: S_PS_DockerPush_8307_004
-          targetRepository: ${target}
-          inputSteps:
-            - name: S_PS_DockerPush_8307_004_1
-          integrations:
-            - name: s_artifactory
-      - name: S_PS_DockerPush_8307_004_3
-        type: PowerShell
+      - name: S_PS_GoPublishModule_8305_004
+        type: GoPublishModule
         configuration:
           environmentVariables:
-            target: test-automation-docker-local
-          affinityGroup: S_PS_DockerPush_8307_004
-          inputSteps:
-            - name: S_PS_DockerPush_8307_004_2
+            target_repository: "test-automation-go-local"
+          inputResources:
+            - name: S_PS_GPM_8305_004_GitRepo
           integrations:
             - name: s_artifactory
-        execution:
-          onExecute:
-            - "docker rmi ${artifactory_registry_url}/test-automation-docker-local/s_ps_dockerpush_8307:${run_id}"
-            - "jfrog rt docker-pull ${artifactory_registry_url}/test-automation-docker-local/s_ps_dockerpush_8307:${run_id} test-automation-docker-local"
-            - docker rmi "${artifactory_registry_url}/test-automation-docker-local/s_ps_dockerpush_8307:${run_id}"
+          version: "v1.83054.${run_number}"
+          targetRepository: "${target_repository}"
+          sourceLocation: "tests/Go"
