@@ -1,30 +1,17 @@
-
-
 resources:
-  - name: S_DockerBuild
-    type: GitRepo
+  - name: S_XrayScan_0001_BuildInfo
+    type: BuildInfo
     configuration:
-      gitProvider: s_gitHub
-      path: nitind123/newTemplates
-      branches:
-        include: {{gitBranch}}
+      sourceArtifactory: s_artifactory
+      buildName: 'name'
+      buildNumber: '1'
 
 pipelines:
-  - name: DockerBuild
+  - name: XrayScan
     steps:
-      - name: S_DockerBuild_5933_020
-        type: DockerBuild
+      - name: S_XrayScan_0001
+        type: XrayScan
         configuration:
-          dockerImageName: test-automation-docker-local/s_dockerbuild_5933
-          dockerImageTag: "${run_id}"
-          dockerFileLocation: "dockerfiles"
           inputResources:
-            - name: S_DockerBuild
-          integrations:
-            - name: s_artifactory
-        execution:
-          onStart:
-            - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
-            - cd $res_S_DockerBuild_5933_020_GitRepo_resourcePath
-            - mkdir -p dockerfiles
-            - echo "FROM hello-world" > dockerfiles/Dockerfile
+            - name: S_XrayScan_0001_BuildInfo
+              newVersionOnly: true
