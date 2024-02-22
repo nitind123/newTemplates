@@ -1,17 +1,79 @@
+
 resources:
-  - name: S_XrayScan_0001_BuildInfo
+  - name: S_DockerBuild_5933_015_GitRepo
+    type: GitRepo
+    configuration:
+      gitProvider: s_gitHub
+      path: nitind123/newTemplates
+      branches:
+        include: {{gitBranch}}
+
+  - name: S_DockerBuild_5933_015_FileSpec
+    type: FileSpec
+    configuration:
+      sourceArtifactory: s_artifactory
+      pattern: test-automation-generic-local/DockerBuild_5933_015_Dockerfile
+
+  - name: S_DockerBuild_0009_output
     type: BuildInfo
     configuration:
       sourceArtifactory: s_artifactory
-      buildName: 'name'
+      buildName: name
       buildNumber: '1'
 
 pipelines:
-  - name: XrayScan
+  - name: S_DockerBuild
     steps:
-      - name: S_XrayScan_0001
+      - name: S_DockerBuild_5933_015_1
+        type: Bash
+        configuration:
+          integrations:
+            - name: s_artifactory
+          outputResources:
+            -  name: S_DockerBuild_5933_015_FileSpec
+        execution:
+          onExecute:
+            - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
+            - echo "FROM $artifactory_registry_url/test-automation-docker-remote/hello-world" > Dockerfile
+            - jfrog rt upload Dockerfile test-automation-generic-local/DockerBuild_5933_015_Dockerfile
+
+      - name: S_DockerBuild_5933_015_2
+        type: DockerBuild
+        configuration:
+          inputSteps:
+            - name: S_DockerBuild_5933_015_1
+          affinityGroup: S_DockerBuild_5933_015
+          dockerImageName: jpd587702896.jfrogdev.org/test-automation-docker-local/image
+          dockerImageTag: "${run_id}"
+          dockerFileName: yaml/.jfrog-pipelines/Dockerfile
+
+          inputResources:
+            - name: S_DockerBuild_5933_015_GitRepo
+            - name: S_DockerBuild_5933_015_FileSpec
+          integrations:
+            - name: s_artifactory
+            - name: s_rt_dockerRegistry
+        execution:
+          onStart:
+            - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
+          onComplete:
+            - docker rmi "${artifactory_registry_url}/test-automation-docker-local/s_dockerbuild_5933:${run_id}" || true
+
+      - name: S_DockerPush_5849_001_2
+        type: DockerPush
+        configuration:
+          affinityGroup: S_DockerBuild_5933_015
+          targetRepository: test-automation-docker-local
+          autoPublishBuildInfo: true
+          inputSteps:
+            - name: S_DockerBuild_5933_015_2
+          integrations:
+            - name: s_artifactory
+          outputResources:
+            - name: S_DockerBuild_0009_output
+
+      - name: docker_scan
         type: XrayScan
         configuration:
           inputResources:
-            - name: S_XrayScan_0001_BuildInfo
-              newVersionOnly: true
+            - name: S_DockerBuild_0009_output
