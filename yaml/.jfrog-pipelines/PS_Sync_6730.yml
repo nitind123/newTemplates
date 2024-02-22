@@ -15,7 +15,7 @@ pipelines:
       - name: S_DockerBuild_5933_020
         type: DockerBuild
         configuration:
-          dockerImageName: test-automation-docker-local/s_dockerbuild_5933
+          dockerImageName: jfrog-pipelines-docker/linux
           dockerImageTag: "${run_id}"
           dockerFileLocation: "dockerfiles"
           inputResources:
