@@ -1,12 +1,11 @@
-template: true
-valuesFilePath: ../values/gitRepoValues.yml
+
 
 resources:
   - name: S_PS_DockerPush_8307_004_GitRepo
     type: GitRepo
     configuration:
-      gitProvider: s_pipeAutoSCM
-      path: {{ .Values.GitHub.Org_test_Automation_PowerShell.path }}
+      gitProvider: s_gitHub
+      path: nitind123/newTemplates
       branches:
         include: {{gitBranch}}
 
