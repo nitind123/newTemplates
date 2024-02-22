@@ -18,12 +18,12 @@ pipelines:
           inputResources:
             - name: S_GoPublishBinary_0001_GitRepo
           integrations:
-            - name: s_artifactory
+            - name: s_artifactory1
       - name: S_GoPublishBinary_0001_2
         type: GoPublishBinary
         configuration:
           inputSteps:
             - name: GoPublishBinary
           integrations:
-            - name: s_artifactory
+            - name: s_artifactory1
           targetRepository: test-automation-go-local
