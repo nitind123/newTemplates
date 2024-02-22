@@ -11,7 +11,7 @@ resources:
   - name: S_DockerBuild_5933_015_FileSpec
     type: FileSpec
     configuration:
-      sourceArtifactory: s_artifactory1
+      sourceArtifactory: s_artifactory
       pattern: test-automation-generic-local/DockerBuild_5933_015_Dockerfile
 
   - name: S_DockerBuild_0009_output
