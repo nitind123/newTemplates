@@ -36,7 +36,7 @@ pipelines:
           inputSteps:
             - name: S_DockerBuild_5933_015_1
           affinityGroup: S_DockerBuild_5933_015
-          dockerImageName: b155902.jfrog-pipelines.com/test-automation-docker-local
+          dockerImageName: b155902.jfrog-pipelines.com/artifactory/test-automation-docker-local
           dockerImageTag: "${run_id}"
           dockerFileName: Dockerfile
           inputResources:
