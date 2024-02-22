@@ -43,7 +43,7 @@ pipelines:
           inputSteps:
             - name: S_DockerBuild_5933_015_1
           affinityGroup: S_DockerBuild_5933_015
-          dockerImageName: b155902.jfrog-pipelines.com/test-automation-docker-local/image
+          dockerImageName: jpd587702896.jfrogdev.org/test-automation-docker-local/image
           dockerImageTag: "${run_id}"
           dockerFileName: yaml/.jfrog-pipelines/Dockerfile
 
