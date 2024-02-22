@@ -17,7 +17,7 @@ pipelines:
         configuration:
           dockerImageName: jfrog-pipelines-docker/linux
           dockerImageTag: "${run_id}"
-          dockerFileLocation: "dockerfiles"
+          #dockerFileLocation: "dockerfiles"
           inputResources:
             - name: S_DockerBuild
           integrations:
