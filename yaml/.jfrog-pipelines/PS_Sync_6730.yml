@@ -58,6 +58,6 @@ pipelines:
           affinityGroup: S_DockerBuild_5933_015
           targetRepository: test-automation-docker-local
           inputSteps:
-            - name: S_DockerPush_5849_001_1
+            - name: S_DockerBuild_5933_015_2
           integrations:
             - name: s_artifactory
