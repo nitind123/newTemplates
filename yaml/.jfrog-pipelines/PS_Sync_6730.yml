@@ -1,52 +1,71 @@
-
 resources:
-  - name: S_DockerBuild_5933_015_GitRepo
-    type: GitRepo
+  - name: S_PS_PromoteBuild_8308_009_input
+    type: BuildInfo
     configuration:
-      gitProvider: s_gitHub
-      path: nitind123/newTemplates
-      branches:
-        include: {{gitBranch}}
-
-  - name: S_DockerBuild_5933_015_FileSpec
-    type: FileSpec
+      sourceArtifactory: s_artifactory
+      buildName: name
+      buildNumber: '1'
+  - name: S_PS_PromoteBuild_8308_009_output
+    type: BuildInfo
     configuration:
-      sourceArtifactory: s_artifactory1
-      pattern: test-automation-generic-local/DockerBuild_5933_015_Dockerfile
+      sourceArtifactory: s_artifactory
+      buildName: name
+      buildNumber: '1'
 
 pipelines:
-  - name: S_DockerBuild
+  - name: pipeline_S_PS_PromoteBuild_8308_009_1
+    configuration:
+      jfrogCliVersion: 2
+      nodePool: win_2019
     steps:
-      - name: S_DockerBuild_5933_015_1
-        type: Bash
+      - name: S_PS_PromoteBuild_8308_009_1
+        type: PowerShell
         configuration:
+          integrations:
+            - name: s_artifactory
+        execution:
+          onExecute:
+            - Set-Content -Path S_PS_PromoteBuild_8308_009_1.txt -Value ${run_id}
+            - jfrog rt upload S_PS_PromoteBuild_8308_009_1.txt test-automation-generic-local
+
+  - name: pipeline_S_PS_PromoteBuild_8308_009_2
+    configuration:
+      jfrogCliVersion: 2
+      nodePool: win_2019
+    steps:
+      - name: S_PS_PromoteBuild_8308_009_2
+        type: PowerShell
+        configuration:
+          environmentVariables:
+            JFROG_CLI_BUILD_NAME: S_PS_PromoteBuild_8308_009_2
           integrations:
             - name: s_artifactory
           outputResources:
-            -  name: S_DockerBuild_5933_015_FileSpec
+            - name: S_PS_PromoteBuild_8308_009_input
         execution:
           onExecute:
-            - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
-            - echo "FROM $artifactory_registry_url/test-automation-docker-remote/hello-world" > Dockerfile
-            - jfrog rt upload Dockerfile test-automation-generic-local/DockerBuild_5933_015_Dockerfile
-
-      - name: S_DockerBuild_5933_015_2
-        type: DockerBuild
+            - Set-Content -Path S_PS_PromoteBuild_8308_009_2.txt -Value ${run_id}
+            - jfrog rt upload S_PS_PromoteBuild_8308_009_2.txt test-automation-generic-local
+            - jfrog rt download --limit=1 --flat "test-automation-generic-local/S_PS_PromoteBuild_8308_009_1.txt" "dependency.txt"
+            - jfrog rt build-publish $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
+            - write_output S_PS_PromoteBuild_8308_009_input buildName=$JFROG_CLI_BUILD_NAME buildNumber=$JFROG_CLI_BUILD_NUMBER
+      - name: S_PS_PromoteBuild_8308_009_3
+        type: PromoteBuild
         configuration:
-          inputSteps:
-            - name: S_DockerBuild_5933_015_1
-          affinityGroup: S_DockerBuild_5933_015
-          dockerImageName: https://b155902.jfrog-pipelines.com/artifactory/test-automation-docker-local
-          dockerImageTag: "${run_id}"
-          dockerFileName: Dockerfile
+          targetRepository: test-automation-generic-promoted-local
+          includeDependencies: true
           inputResources:
-            - name: S_DockerBuild_5933_015_GitRepo
-            - name: S_DockerBuild_5933_015_FileSpec
+            - name: S_PS_PromoteBuild_8308_009_input
+          outputResources:
+            - name: S_PS_PromoteBuild_8308_009_output
+      - name: S_PS_PromoteBuild_8308_009_4
+        type: PowerShell
+        configuration:
           integrations:
             - name: s_artifactory
-            - name: s_rt_dockerRegistry
+          inputResources:
+            - name: S_PS_PromoteBuild_8308_009_output
         execution:
-          onStart:
-            - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
-          onComplete:
-            - docker rmi "${artifactory_registry_url}/test-automation-docker-local/s_dockerbuild_5933:${run_id}" || true
+          onExecute:
+            - jfrog rt download --fail-no-op --insecure-tls=${no_verify_ssl} --limit=1 --flat "test-automation-generic-promoted-local/S_PS_PromoteBuild_8308_009_1.txt" "dependency.txt"
+            - jfrog rt curl -XDELETE "/api/build/S_PS_PromoteBuild_8308_009_2?buildNumbers=${JFROG_CLI_BUILD_NUMBER}&artifacts=1"
