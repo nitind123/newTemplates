@@ -1,0 +1,16 @@
+pipelines:
+  - name: CleanHelmDeployment
+    configuration:
+      environmentVariables:
+        readOnly:
+          RELEASE_NAME: 'simplehelm-test-promotion'
+          K8S_NAMESPACE: "pipe-master-pool"
+    steps:
+      - name: CleanHelmResource
+        type: Bash
+        configuration:
+          integrations:
+            - name: s_kubernetes
+        execution:
+          onExecute:
+            - helm3 delete ${RELEASE_NAME} --namespace $K8S_NAMESPACE

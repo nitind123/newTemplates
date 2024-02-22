@@ -1,0 +1,32 @@
+GitHub:
+  Org_test_Automation:
+    path: PIPA/Org_test_Automation
+  Org_test_Automation_bash:
+    path: PIPA/Org_test_Automation_bash
+  Org_test_Automation_PowerShell:
+    path: PIPA/Org_test_Automation_PowerShell
+
+GitHubEnterprise:
+  Org_test_Automation:
+    path: PIPA/Org_test_Automation
+  test_automation:
+    path: jfbeta/test_automation
+
+GitLab:
+  test_automation:
+    path: jfbeta/test_automation
+
+BitbucketCloud:
+  jfrogtesting:
+    path: jfbeta/jfrogtesting
+  test_automation:
+    path: jfbeta/test_automation
+
+BitbucketServer:
+  automation:
+    path: PIPA/Org_test_Automation_PowerShell
+  test_automation:
+    path: PIPA/test_automation
+
+Kubernetes:
+  namespace: pipe-master-pool
