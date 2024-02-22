@@ -9,7 +9,7 @@ resources:
         include: {{gitBranch}}
 
 pipelines:
-  - name: pipeline_S_DockerBuild_5933_001
+  - name: DockerBuild
     steps:
       - name: S_DockerBuild_5933_001_1
         type: DockerBuild
