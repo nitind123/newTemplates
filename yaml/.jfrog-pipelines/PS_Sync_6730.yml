@@ -33,6 +33,8 @@ pipelines:
       - name: S_DockerBuild_5933_015_2
         type: DockerBuild
         configuration:
+          inputSteps:
+            - name: S_DockerBuild_5933_015_1
           affinityGroup: S_DockerBuild_5933_015
           dockerImageName: ${artifactory_registry_url}/test-automation-docker-local/s_dockerbuild_5933
           dockerImageTag: "${run_id}"
