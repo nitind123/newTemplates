@@ -26,4 +26,4 @@ pipelines:
             - name: s_artifactory
           version: "v1.83054.${run_number}"
           targetRepository: "${target_repository}"
-          sourceLocation: "tests/Go"
+          sourceLocation: "yaml/.jfrog-pipelines"
