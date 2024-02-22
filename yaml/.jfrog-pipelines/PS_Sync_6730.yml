@@ -17,7 +17,7 @@ pipelines:
         configuration:
           dockerImageName: test-automation-docker-local/s_dockerbuild_5933
           dockerImageTag: "${run_id}"
-          #dockerFileLocation: "dockerfiles"
+          dockerFileLocation: "dockerfiles"
           inputResources:
             - name: S_DockerBuild
           integrations:
