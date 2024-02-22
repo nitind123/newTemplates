@@ -1,51 +1,29 @@
-resources:
-  - name: PowerShellLinuxVMDeploy_fileSpec
-    type: FileSpec
-    configuration:
-      sourceArtifactory: s_artifactory
-      pattern: "test-automation-generic-local/PowerShellLinuxVMDeploy_fileSpec.txt"
 
-  - name: myVM
-    type: VmCluster
+
+resources:
+  - name: S_PS_MvnBuild_8306_005_GitRepo
+    type: GitRepo
     configuration:
-      sshKey: s_PS_VM_DEPLOY_SSHKEY
-      targets:
-        - ${int_s_VM_DEPLOY_VM_ADDRESS_0}
-        - ${int_s_VM_DEPLOY_VM_ADDRESS_1}
+      gitProvider: s_gitHub
+      path: nitind123/newTemplates
+      branches:
+        include: {{gitBranch}}
 
 pipelines:
-  - name: S_PS_LinuxVMDeploy_5950_0009
+  - name: pipeline_S_PS_MvnBuild_8306_005
+    configuration:
+      nodePool: win_2019
+      jfrogCliVersion: 2
     steps:
-      - name: S_PS_LinuxVMDeploy_5950_0009_1
-        type: Powershell
+      - name: S_PS_MvnBuild_8306_005
+        type: MvnBuild
         configuration:
-          nodePool: win_2019
+          environmentVariables:
+            source_location: "tests/mvn"
+          inputResources:
+            - name: S_PS_MvnBuild_8306_005_GitRepo
           integrations:
             - name: s_artifactory
-          outputResources:
-            - name: PowerShellLinuxVMDeploy_fileSpec
-        execution:
-          onExecute:
-            - echo "File spec ${run_id}" > PowerShellLinuxVMDeploy_fileSpec.txt
-            - jfrog rt upload PowerShellLinuxVMDeploy_fileSpec.txt test-automation-generic-local
-      - name: S_PS_LinuxVMDeploy_5950_0009_2
-        type: LinuxVMDeploy
-        configuration:
-          nodePool: win_2019
-          integrations:
-            - name: s_VM_DEPLOY
-          inputResources:
-            - name: myVM
-            - name: PowerShellLinuxVMDeploy_fileSpec
-          sshUser: ubuntu
-          scripts:
-            - name: command1
-              context: "targetCluster"
-              commands:
-                - 'echo "command1:line1"'
-                - 'echo "command1:line2"'
-            - name: command2
-              context: "targetCluster"
-              commands:
-                - 'echo "command2:line1"'
-                - 'echo "command2:line2"'
+          sourceLocation: "${source_location}"
+          configFileName: config
+          configFileLocation: .
