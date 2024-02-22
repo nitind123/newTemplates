@@ -39,6 +39,7 @@ pipelines:
           dockerImageName: b155902.jfrog-pipelines.com/test-automation-docker-local
           dockerImageTag: "${run_id}"
           dockerFileName: yaml/.jfrog-pipelines/Dockerfile
+
           inputResources:
             - name: S_DockerBuild_5933_015_GitRepo
             - name: S_DockerBuild_5933_015_FileSpec
@@ -50,3 +51,13 @@ pipelines:
             - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
           onComplete:
             - docker rmi "${artifactory_registry_url}/test-automation-docker-local/s_dockerbuild_5933:${run_id}" || true
+
+      - name: S_DockerPush_5849_001_2
+        type: DockerPush
+        configuration:
+          affinityGroup: S_DockerBuild_5933_015
+          targetRepository: test-automation-docker-local
+          inputSteps:
+            - name: S_DockerPush_5849_001_1
+          integrations:
+            - name: s_artifactory
