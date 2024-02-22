@@ -32,7 +32,7 @@ pipelines:
             - name: S_PS_NpmP_8304_006_GitRepo
         execution:
           onStart:
-          - replace_envs ${res_S_PS_NpmP_8304_006_GitRepo_resourcePath}\tests\npm\package.json
+          - replace_envs ${res_S_PS_NpmP_8304_006_GitRepo_resourcePath}/yaml/.jfrog-pipelines/package.json
       - name: S_PS_NpmPublish_8304_006_2
         type: NpmPublish
         configuration:
