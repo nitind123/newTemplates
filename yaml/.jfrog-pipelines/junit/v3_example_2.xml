@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+    <testsuite name="Apix Cache Unit Tests" tests="65" assertions="115" failures="0" errors="0" time="0.440908">
+        <testsuite name="NestedTestedSuiteJunitv3Error" tests="1" failures="0" errors="1">
+            <error message="test.NestedTestSuiteErrorV3" type="java.lang.NoClassDefFoundError"> java.lang.NoClassDefFoundError: test.ErrorTestSuiteV3Test
+                at java.lang.Class.forName0(Native Method)
+                at java.lang.Class.forName(Class.java:348)
+            </error>
+        </testsuite>
+        <testsuite name="Apix\Cache\ApcTest" file="ApcTest.php" tests="17" assertions="52" failures="0" errors="0" time="0.171252">
+            <testcase name="testComplyWithApc" class="Apix\Cache\ApcTest" file="ApcTest.php" line="48" assertions="2" time="0.04"/>
+            <testcase name="testDeleteInexistantReturnsFalse" class="Apix\Cache\ApcTest" file="ApcTest.php" line="130" assertions="1" time="0.05"/>
+        </testsuite>
+    </testsuite>
+    <testsuite name="ErrorTestSuiteV3" tests="1" errors="1" failures="0" skip="0">
+        <error message="test.ErrorTestSuiteV3" type="java.lang.NoClassDefFoundError">java.lang.NoClassDefFoundError: test.ErrorTestSuiteV3Test
+            at java.lang.Class.forName0(Native Method)
+            at java.lang.Class.forName(Class.java:348)
+        </error>
+        <system-out><![CDATA[]]></system-out>
+        <system-err><![CDATA[]]></system-err>
+    </testsuite>
+</testsuites>

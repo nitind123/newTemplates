@@ -7,6 +7,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "chalk": "5.0.0"
+    "underscore": "1.13.1"
   }
 }
