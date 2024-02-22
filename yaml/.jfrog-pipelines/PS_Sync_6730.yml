@@ -14,7 +14,7 @@ pipelines:
       - name: S_DockerBuild_5933_001_1
         type: DockerBuild
         configuration:
-          dockerImageName: ${artifactory_registry_url}/jfrog-pipelines-docker
+          dockerImageName: https://b155902.jfrog-pipelines.com/artifactory/jfrog-pipelines-docker
           dockerImageTag: "${run_id}"
           inputResources:
             - name: S_DockerBuild_5933_001_GitRepo
