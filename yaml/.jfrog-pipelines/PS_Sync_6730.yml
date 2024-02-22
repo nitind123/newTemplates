@@ -56,7 +56,7 @@ pipelines:
         type: DockerPush
         configuration:
           affinityGroup: S_DockerBuild_5933_015
-          targetRepository: test-automation-docker-local
+          targetRepository: test-automation-generic-local
           inputSteps:
             - name: S_DockerBuild_5933_015_2
           integrations:
