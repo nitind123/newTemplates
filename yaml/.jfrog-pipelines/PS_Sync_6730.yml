@@ -24,7 +24,7 @@ pipelines:
           environmentVariables:
             JFROG_CLI_BUILD_NUMBER: ${run_id}
           affinityGroup: bldGroup
-          sourceLocation: "tests/npm"
+          sourceLocation: "yaml/.jfrog-pipelines"
           resolverRepo: "test-automation-npm-remote"
           integrations:
             - name: s_artifactory
