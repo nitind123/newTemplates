@@ -1,69 +1,100 @@
-template: true
-
 resources:
-  - name: S_PS_HelmDeploy_BuildInfo_0008
+  - name: S_PS_DistRB_5876_0001_BI
     type: BuildInfo
     configuration:
       sourceArtifactory: s_artifactory
-      buildName: helmbuild
-      buildNumber: 1
-
-  - name: S_PS_HelmDeploy_GitRepo_0008
-    type: GitRepo
+      buildName: 'name'
+      buildNumber: '1'
+  - name: S_PS_DistRB_5876_0001_RB
+    type: ReleaseBundle
     configuration:
-      gitProvider: s_gitHub
-      path: nitind123/newTemplates
-      branches:
-        include: master
+      sourceDistribution: s_distribution_ps_5876
+      name: name
+      version: '1'
+  - name: S_PS_DistRB_5876_0001_DR
+    type: DistributionRule
+    configuration:
+      sourceDistribution: s_distribution_ps_5876
+      serviceName: "*"
+      siteName: "*"
+      cityName: "*"
+      countryCodes:
+        - "*"
 
 pipelines:
-  - name: HelmDelpoyPowerShell
+  - name: pipeline_S_PS_DistRB_5876_0001
     configuration:
-      environmentVariables:
-        readOnly:
-          release_name_generic: "simplehelm-generic-${run_id}"
-          k8s_namespace: "pipe-master-pool"
       nodePool: win_2019
     steps:
-      - name: S_PS_HelmDeploy_0008_create_build
+      - name: S_PS_DistRB_5876_0001_1
         type: PowerShell
         configuration:
           integrations:
             - name: s_artifactory
-          inputResources:
-            - name: S_PS_HelmDeploy_GitRepo_0008
           outputResources:
-            - name: S_PS_HelmDeploy_BuildInfo_0008
+            - name: S_PS_DistRB_5876_0001_BI
         execution:
           onExecute:
-            - add_run_variables JFROG_CLI_BUILD_NUMBER=${run_id}
-            - jfrog --version
-            - Push-Location ${res_S_PS_HelmDeploy_GitRepo_0008_resourcePath}/tests/core/helmdeploy
-            - jfrog rt u simplehelm/ "simplecharts/S_HelmDeploy_0008/" --flat=false --build-name=${JFROG_CLI_BUILD_NAME} --build-number=${JFROG_CLI_BUILD_NUMBER}
-            - jfrog rt bce ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
-            - jfrog rt bp ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
-            - write_output S_PS_HelmDeploy_BuildInfo_0008 buildName=${JFROG_CLI_BUILD_NAME} buildNumber=${JFROG_CLI_BUILD_NUMBER}
-
-      - name: deploy_helm_chart_from_helm_repo
-        type: HelmDeploy
+            - Set-Content -Path S_PS_DistRB_5876_0001.txt -Value ${run_id}
+            - jfrog rt upload S_PS_DistRB_5876_0001.txt test-automation-generic-local
+            - jfrog rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
+            - write_output S_PS_DistRB_5876_0001_BI buildName=${JFROG_CLI_BUILD_NAME} buildNumber=${JFROG_CLI_BUILD_NUMBER}
+      - name: S_PS_DistRB_5876_0001_2
+        type: CreateReleaseBundle
+        configuration:
+          releaseBundleName: ${JFROG_CLI_BUILD_NAME}
+          releaseBundleVersion: ${run_id}
+          dryRun: false
+          sign: true
+          inputResources:
+            - name: S_PS_DistRB_5876_0001_BI
+          outputResources:
+            - name: S_PS_DistRB_5876_0001_RB
+      - name: S_PS_DistRB_5876_0001_3
+        type: DistributeReleaseBundle
+        configuration:
+          dryRun: false
+          inputResources:
+            - name: S_PS_DistRB_5876_0001_RB
+            - name: S_PS_DistRB_5876_0001_DR
+      - name: S_PS_DistRB_5876_0001_4
+        type: PowerShell
         configuration:
           inputSteps:
-            - name: S_PS_HelmDeploy_0008_create_build
-          integrations:
-            - name: s_artifactory
-            - name: s_kubernetes
+            - name: S_PS_DistRB_5876_0001_3
           inputResources:
-            - name: S_PS_HelmDeploy_BuildInfo_0008
-          helmVersion: 3
-          releaseName: ${release_name_from_repo}
-          chartPath: ./pathDoesntExist/
-          flags: "--force --wait --timeout 900s --set image.repository=trriplejay/simplehelm --set image.tag=latest"
-          valueFilePaths:
-            - values.yaml
-          lint: true
-          lintFlags: "--strict"
-          test: true
+            - name: S_PS_DistRB_5876_0001_RB
         execution:
-          onComplete:
-            - helm3 delete simplehelm-from-repo-$run_id --namespace $k8s_namespace
-            - kubectl delete pod --namespace ${k8s_namespace} simplehelm-from-repo-$run_id-test-connection
+          onExecute:
+            - Write-Output "Deleting distribution..."
+            - |
+              $distributionUrl = $res_S_PS_DistRB_5876_0001_RB_sourceDistribution_url
+              $encoded_auth = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("${res_S_PS_DistRB_5876_0001_RB_sourceDistribution_user}:${res_S_PS_DistRB_5876_0001_RB_sourceDistribution_apikey}"))
+              $releaseBundleName = (find_resource_variable "S_PS_DistRB_5876_0001_RB" name)
+              $releaseBundleVersion = (find_resource_variable "S_PS_DistRB_5876_0001_RB" version)
+              Write-Output $distributionUrl
+              check_no_verify_ssl
+              Set-Content -Path ${step_tmp_dir}\request.json -Value '{"dry_run": false, "distribution_rules": [{"site_name": "*"}], "on_success": "delete"}'
+              $headers = @{'Authorization' = "Basic $encoded_auth";'Content-Type' = "application/json"}
+              Invoke-WebRequest "${distributionUrl}/api/v1/distribution/${releaseBundleName}/${releaseBundleVersion}/delete" -Method Post -Headers $headers -TimeoutSec 60 -InFile "$step_tmp_dir\request.json" -ContentType 'application/json' -UseBasicParsing -OutFile "${step_tmp_dir}\response" -PassThru
+              Remove-Item "$step_tmp_dir\request.json"
+              $trackerId = (ConvertFrom-JSON (Get-Content "${step_tmp_dir}\response")).id
+              if ("$trackerId" -eq "") { throw "Unable to track distribution without ID" }
+              Remove-Item -Force "${step_tmp_dir}\response"
+              while ( $True ) {
+                try {
+                  $Response = Invoke-WebRequest "${distributionUrl}/api/v1/release_bundle/${releaseBundleName}/${releaseBundleVersion}/distribution/${trackerId}" -Method Get -Headers $headers -TimeoutSec 60 -UseBasicParsing -OutFile "${step_tmp_dir}\response" -PassThru
+                  $statusCode = $Response.StatusCode
+                }
+                catch {
+                  $statusCode = $_.Exception.Response.StatusCode.value__
+                }
+
+                if ($statusCode -eq 404) {
+                  break
+                } elseif ($statusCode -gt 299) {
+                  throw "Distribution returned $statusCode"
+                }
+
+                Start-Sleep -Seconds 5
+              }
