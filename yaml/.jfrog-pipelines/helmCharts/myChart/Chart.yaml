@@ -1,3 +1,0 @@
-apiVersion: v1
-name: myChart
-version: ${CHART_VERSION}
