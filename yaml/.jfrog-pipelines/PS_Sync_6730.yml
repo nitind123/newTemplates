@@ -22,9 +22,9 @@ pipelines:
             - name: S_DockerBuild
           integrations:
             - name: s_artifactory
-        execution:
-          onStart:
-            - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
-            - cd $res_S_DockerBuild_5933_020_GitRepo_resourcePath
-            - mkdir -p dockerfiles
-            - echo "FROM hello-world" > dockerfiles/Dockerfile
+        #execution:
+          #onStart:
+            #- artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
+            #- cd $res_S_DockerBuild_5933_020_GitRepo_resourcePath
+            #- mkdir -p dockerfiles
+            #- echo "FROM hello-world" > dockerfiles/Dockerfile
