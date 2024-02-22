@@ -14,6 +14,13 @@ resources:
       sourceArtifactory: s_artifactory1
       pattern: test-automation-generic-local/DockerBuild_5933_015_Dockerfile
 
+  - name: S_DockerBuild_0009_output
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: s_artifactory
+      buildName: name
+      buildNumber: '1'
+
 pipelines:
   - name: S_DockerBuild
     steps:
@@ -57,7 +64,16 @@ pipelines:
         configuration:
           affinityGroup: S_DockerBuild_5933_015
           targetRepository: test-automation-docker-local
+          autoPublishBuildInfo: true
           inputSteps:
             - name: S_DockerBuild_5933_015_2
           integrations:
             - name: s_artifactory
+          outputResources:
+            - name: S_DockerBuild_0009_output
+
+      - name: docker_scan
+        type: XrayScan
+        configuration:
+          inputResources:
+            - name: S_DockerBuild_0009_output
