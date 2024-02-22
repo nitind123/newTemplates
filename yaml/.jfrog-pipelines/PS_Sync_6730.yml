@@ -1,7 +1,7 @@
 
 
 resources:
-  - name: S_GoPublishBinary_0001_GitRepo
+  - name: S_DockerBuild_5933_020_GitRepo
     type: GitRepo
     configuration:
       gitProvider: s_gitHub
@@ -10,20 +10,21 @@ resources:
         include: {{gitBranch}}
 
 pipelines:
-  - name: GoPublishBinary
+  - name: DockerBuild
     steps:
-      - name: S_GoPublishBinary_0001_1
-        type: GoBuild
+      - name: S_DockerBuild_5933_020
+        type: DockerBuild
         configuration:
+          dockerImageName: test-automation-docker-local/s_dockerbuild_5933
+          dockerImageTag: "${run_id}"
+          dockerFileLocation: "dockerfiles"
           inputResources:
-            - name: S_GoPublishBinary_0001_GitRepo
+            - name: S_DockerBuild_5933_020_GitRepo
           integrations:
             - name: s_artifactory
-      - name: S_GoPublishBinary_0001_2
-        type: GoPublishBinary
-        configuration:
-          inputSteps:
-            - name: S_GoPublishBinary_0001_1
-          integrations:
-            - name: s_artifactory
-          targetRepository: test-automation-go-local
+        execution:
+          onStart:
+            - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
+            - cd $res_S_DockerBuild_5933_020_GitRepo_resourcePath
+            - mkdir -p dockerfiles
+            - echo "FROM hello-world" > dockerfiles/Dockerfile
