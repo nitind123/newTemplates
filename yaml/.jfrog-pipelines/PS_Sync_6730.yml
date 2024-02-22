@@ -35,7 +35,6 @@ pipelines:
             -  name: S_DockerBuild_5933_015_FileSpec_Xray
         execution:
           onExecute:
-            - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
             - echo "FROM $artifactory_registry_url/test-automation-docker-remote/hello-world" > Dockerfile
             - jfrog rt upload Dockerfile test-automation-generic-local/DockerBuild_5933_015_Dockerfile
 
@@ -59,7 +58,7 @@ pipelines:
           onStart:
             - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
           onComplete:
-            - docker rmi "${artifactory_registry_url}/test-automation-docker-local/s_dockerbuild_5933:${run_id}" || true
+            - docker rmi "jpd587702896.jfrogdev.org/test-automation-docker-local/s_dockerbuild_5933:${run_id}" || true
 
       - name: S_DockerPush_5849_001_2_Xray
         type: DockerPush
