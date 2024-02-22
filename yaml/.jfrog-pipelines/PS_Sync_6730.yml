@@ -38,7 +38,7 @@ pipelines:
           affinityGroup: S_DockerBuild_5933_015
           dockerImageName: https://b155902.jfrog-pipelines.com/artifactory/jfrog-pipelines-docker
           dockerImageTag: "${run_id}"
-          dockerFileName: DockerBuild_5933_015_Dockerfile
+          dockerFileName: Dockerfile
           inputResources:
             - name: S_DockerBuild_5933_015_GitRepo
             - name: S_DockerBuild_5933_015_FileSpec
