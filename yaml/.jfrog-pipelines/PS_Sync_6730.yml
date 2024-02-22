@@ -12,7 +12,7 @@ resources:
 pipelines:
   - name: GoPublishBinary
     steps:
-      - name: S_GoPublishBinary_0001_1
+      - name: GoPublishBinary
         type: GoBuild
         configuration:
           inputResources:
@@ -23,7 +23,7 @@ pipelines:
         type: GoPublishBinary
         configuration:
           inputSteps:
-            - name: S_GoPublishBinary_0001_1
+            - name: GoPublishBinary
           integrations:
             - name: s_artifactory
           targetRepository: test-automation-go-local
