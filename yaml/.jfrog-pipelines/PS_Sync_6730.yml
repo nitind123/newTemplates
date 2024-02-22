@@ -12,7 +12,7 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: s_artifactory
-      pattern: test-automation-generic-local/DockerBuild_5933_015_Dockerfile
+      pattern: test-automation-generic-local/Dockerfile
 
   - name: S_DockerBuild_0009_output_Xray
     type: BuildInfo
@@ -35,7 +35,7 @@ pipelines:
             -  name: S_DockerBuild_5933_015_FileSpec_Xray
         execution:
           onExecute:
-            - jfrog rt upload Dockerfile test-automation-generic-local/DockerBuild_5933_015_Dockerfile
+            - jfrog rt upload Dockerfile test-automation-generic-local/Dockerfile
 
       - name: S_DockerBuild_5933_015_2_Xray
         type: DockerBuild
