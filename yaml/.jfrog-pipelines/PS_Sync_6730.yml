@@ -2,7 +2,7 @@ resources:
   - name: S_XrayScan_0001_BuildInfo
     type: BuildInfo
     configuration:
-      sourceArtifactory: s_artifactory1
+      sourceArtifactory: s_artifactory
       buildName: 'name'
       buildNumber: '1'
 
