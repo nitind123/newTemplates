@@ -5,6 +5,7 @@ pipelines:
         type: Bash
         execution:
           onExecute:
+            - exit 1
             - cd /tmp
             - mkdir -p "node_modules/@jfrog-pipelines"
             - echo "test" >> node_modules/@jfrog-pipelines/test.txt
@@ -26,6 +27,7 @@ pipelines:
           inputSteps:
             - name: PS_Sync_9494_003_001
               status:
+                - failure
                 - success
                 - skipped
           integrations:
