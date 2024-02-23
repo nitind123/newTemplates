@@ -11,15 +11,7 @@ pipelines:
             key2: 2
           integrations:
             - name: i_testJenkins   # required Jenkins integration
-        execution:
-          onStart:
-            - echo 'test'
-          onExecute:
-            - echo {{gitBranch}}
-            - echo {{.jfrog-pipelines.sourceRepository}}
-            - echo 'test100s0a11'
-          onComplete:
-            - echo "complete"
+        
       - name: branch_environment_operate
         type: Jenkins
         configuration:
