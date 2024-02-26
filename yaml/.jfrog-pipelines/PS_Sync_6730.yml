@@ -7,8 +7,8 @@ pipelines:
         configuration:
           integrations:
             - name: trigger_platformToken
-          pipelineName: S_WF_8033_06_target
-          stepName: S_WF_8033_06_target_fakestep
+          pipelineName: go_app
+          stepName: test_docker_build
 
   - name: S_WF_8033_06_target
     steps:
