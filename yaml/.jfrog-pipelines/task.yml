@@ -37,8 +37,8 @@ pipelines:
           JFROG_TASK_DEBUG: "true"
           JFROG_CLI_LOG_LEVEL: debug
     steps:
-      for i in $(seq 1 100) 
-      - name: test_docker_build`$i`
+
+      - name: test_docker_build
         type: Bash
         configuration:
           inputResources:
@@ -57,4 +57,100 @@ pipelines:
               id: install-go
               input:
                 version: 1.19.5
-                
+
+      - name: test_docker_build1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: go_app_gitrepo
+            - name: go_build_gitrepo
+          outputResources:
+            - name: docker_build_info
+          integrations:
+            - name: s_artifactory
+        execution:
+          onStart:
+            - jf c show
+          onExecute:
+            - task: jfrog/setup-go@v0.1.0
+              repository: pipelines-tasks-virtual
+              id: install-go
+              input:
+                version: 1.19.5
+      - name: test_docker_build2
+        type: Bash
+        configuration:
+          inputResources:
+            - name: go_app_gitrepo
+            - name: go_build_gitrepo
+          outputResources:
+            - name: docker_build_info
+          integrations:
+            - name: s_artifactory
+        execution:
+          onStart:
+            - jf c show
+          onExecute:
+            - task: jfrog/setup-go@v0.1.0
+              repository: pipelines-tasks-virtual
+              id: install-go
+              input:
+                version: 1.19.5
+
+      - name: test_docker_build3
+        type: Bash
+        configuration:
+          inputResources:
+            - name: go_app_gitrepo
+            - name: go_build_gitrepo
+          outputResources:
+            - name: docker_build_info
+          integrations:
+            - name: s_artifactory
+        execution:
+          onStart:
+            - jf c show
+          onExecute:
+            - task: jfrog/setup-go@v0.1.0
+              repository: pipelines-tasks-virtual
+              id: install-go
+              input:
+                version: 1.19.5
+      - name: test_docker_build4
+        type: Bash
+        configuration:
+          inputResources:
+            - name: go_app_gitrepo
+            - name: go_build_gitrepo
+          outputResources:
+            - name: docker_build_info
+          integrations:
+            - name: s_artifactory
+        execution:
+          onStart:
+            - jf c show
+          onExecute:
+            - task: jfrog/setup-go@v0.1.0
+              repository: pipelines-tasks-virtual
+              id: install-go
+              input:
+                version: 1.19.5
+      - name: test_docker_build45
+        type: Bash
+        configuration:
+          inputResources:
+            - name: go_app_gitrepo
+            - name: go_build_gitrepo
+          outputResources:
+            - name: docker_build_info
+          integrations:
+            - name: s_artifactory
+        execution:
+          onStart:
+            - jf c show
+          onExecute:
+            - task: jfrog/setup-go@v0.1.0
+              repository: pipelines-tasks-virtual
+              id: install-go
+              input:
+                version: 1.19.5
