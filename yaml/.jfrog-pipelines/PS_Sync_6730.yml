@@ -1,5 +1,4 @@
-template: true
-valuesFilePath: ../values/gitRepoValues.yml
+
 
 resources:
   - name: S_PS_HelmDeploy_BuildInfo_8309_003
