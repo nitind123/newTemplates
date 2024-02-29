@@ -3,7 +3,7 @@ resources:
     type: GitRepo
     configuration:
       path: nitind123/newTemplates
-      gitProvider: gitHubNitin
+      gitProvider: s_gitHub
       branches:
         include: master
       cloneProtocol: https
