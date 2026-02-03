@@ -42,6 +42,7 @@ jobs:
         id: artifactory_search
         env:
           ARTIFACT_NAME: "2025_48913_aug-25_09-32_applicable_092ca"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Searching for artifact: $ARTIFACT_NAME"
           
@@ -126,6 +127,7 @@ jobs:
           fi   
 
           DEPLOYMENT_ENDPOINT="https://api.github.com/orgs/${OWNER}/artifacts/metadata/deployment-record"
+          
           DEPLOYMENT_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$DEPLOYMENT_ENDPOINT" \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github+json" \
@@ -141,20 +143,7 @@ jobs:
               \"github_repository\": \"${GITHUB_REPO}\"
             }" 2>&1)
 
-            echo $(curl -s -w "\n%{http_code}" -X POST "$DEPLOYMENT_ENDPOINT" \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"name\": \"${ARTIFACT_NAME}\",
-              \"digest\": \"${DEPLOYMENT_DIGEST}\",
-              \"version\": \"${ARTIFACT_VERSION}\",
-              \"status\": \"deployed\",
-              \"logical_environment\": \"${LOGICAL_ENV}\",
-              \"deployment_name\": \"${DEPLOYMENT_NAME}\",
-              \"github_repository\": \"${GITHUB_REPO}\"
-            }" 2>&1)
+            
           
           DEPLOYMENT_HTTP_CODE=$(echo "$DEPLOYMENT_RESPONSE" | tail -n1)
           DEPLOYMENT_BODY=$(echo "$DEPLOYMENT_RESPONSE" | sed '$d')
