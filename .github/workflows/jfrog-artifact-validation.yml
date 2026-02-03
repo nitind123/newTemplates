@@ -99,6 +99,8 @@ jobs:
           DEPLOYMENT_DIGEST="${ARTIFACT_SHA256}"
           OWNER="${{ github.repository_owner }}"
 
+          echo "owner $OWNER"
+
           STORAGE_ENDPOINT="https://api.github.com/orgs/${OWNER}/artifacts/metadata/storage-record"
           STORAGE_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$STORAGE_ENDPOINT" \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
@@ -127,6 +129,7 @@ jobs:
           fi   
 
           DEPLOYMENT_ENDPOINT="https://api.github.com/orgs/${OWNER}/artifacts/metadata/deployment-record"
+          echo "deployment url $DEPLOYMENT_ENDPOINT"
           
           DEPLOYMENT_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$DEPLOYMENT_ENDPOINT" \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
