@@ -128,7 +128,7 @@ jobs:
             echo "✅ Storage record created successfully!"
           fi   
 
-          DEPLOYMENT_ENDPOINT="https://api.github.com/orgs/${OWNER}/artifacts/metadata/deployment-record"
+          DEPLOYMENT_ENDPOINT="https://github.com/orgs/${OWNER}/artifacts/metadata/deployment-record"
           echo "deployment url $DEPLOYMENT_ENDPOINT"
           
           DEPLOYMENT_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$DEPLOYMENT_ENDPOINT" \
