@@ -25,7 +25,7 @@ jobs:
       - name: Search for Artifact in JFrog
         id: artifactory_search
         run: |
-          ./jfrog rt s "docker-local/2025_48913_aug-25_09-32_applicable_092ca" --limit=1 --quiet > search_result.txt || echo "Artifact not found."
+          ./   jf rt s "docker-local/*2025_48913_aug-25_09-32_applicable_092ca*" --server-id productdemo --limit=1 --quiet > search_result.txt || echo "Artifact not found."
           echo "Found artifact: $(cat search_result.txt)"
 
       - name: Create Artifact Deployment Record
