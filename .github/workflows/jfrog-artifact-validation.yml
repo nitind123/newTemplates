@@ -76,22 +76,16 @@ jobs:
             SEARCH_RESULT=$(jf rt s "docker-local/*" --server-id productdemo --limit=5 || echo "Could not list artifacts") || true
           fi
 
-          # Check if results array is empty
-          RESULT_COUNT=$(echo "$SEARCH_RESULT" | jq 'length' 2>/dev/null || echo "0")
-          if [ "$RESULT_COUNT" = "0" ] || [ -z "$RESULT_COUNT" ]; then
-            echo "❌ Artifact not found. Search returned empty results."
-            echo "Search result: $SEARCH_RESULT"
-            exit 1
-          fi
           
           # Extract artifact details
-          ARTIFACT_PATH=$(echo "$SEARCH_RESULT" | jq -r '.[0].path // empty' 2>/dev/null)
-          ARTIFACT_SHA256=$(echo "$SEARCH_RESULT" | jq -r '.[0].sha256 // empty' 2>/dev/null)
-          ARTIFACT_MD5=$(echo "$SEARCH_RESULT" | jq -r '.[0].md5 // empty' 2>/dev/null)
+          ARTIFACT_PATH=$(echo "$result4" | jq -r '.[0].path // empty' 2>/dev/null)
+          ARTIFACT_SHA256=$(echo "$result4" | jq -r '.[0].sha256 // empty' 2>/dev/null)
+          ARTIFACT_MD5=$(echo "$result4" | jq -r '.[0].md5 // empty' 2>/dev/null)
           
           if [ -z "$ARTIFACT_PATH" ]; then
             echo "❌ Could not extract artifact path from search results"
-            echo "Search result: $SEARCH_RESULT"
+            echo "Search result: $ARTIFACT_PATH"
+            echo "Search result: $ARTIFACT_SHA256"
             exit 1
           fi
 
