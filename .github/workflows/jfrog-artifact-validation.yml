@@ -1,0 +1,38 @@
+name: Validate JFrog Artifacts
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      
+      - name: Install JFrog CLI
+        run: |
+          curl -fL https://getcli.jfrog.io | sh
+          chmod +x jfrog
+
+      - name: Configure JFrog CLI
+        run: |
+          ./jfrog rt c --url=$JFROG_URL --user=$JFROG_USERNAME --password=$JFROG_API_KEY
+
+      - name: Search for Artifact in JFrog
+        id: artifactory_search
+        run: |
+          ./jfrog rt s "docker-local/2025_48913_aug-25_09-32_applicable_092ca" --limit=1 --quiet > search_result.txt || echo "Artifact not found."
+          echo "Found artifact: $(cat search_result.txt)"
+
+      - name: Create Artifact Deployment Record
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -X POST https://api.github.com/orgs/nitind123/packages/2025_48913_aug-25_09-32_applicable_092ca/artifacts/latest/deployments \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          -d '{"environment": "production", "version": "1.0.0"}'
