@@ -73,7 +73,7 @@ jobs:
             
             # List some artifacts in docker-local to help debug
             echo "=== Listing sample artifacts in docker-local ==="
-            jf rt s "docker-local/*" --server-id productdemo --limit=5 || echo "Could not list artifacts"
+            SEARCH_RESULT=$(jf rt s "docker-local/*" --server-id productdemo --limit=5 || echo "Could not list artifacts") || true
           fi
 
           # Check if results array is empty
