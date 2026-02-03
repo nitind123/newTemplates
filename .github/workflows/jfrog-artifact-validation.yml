@@ -84,7 +84,7 @@ jobs:
           ARTIFACT_MD5=$(echo "$result4" | jq -r '.[0].md5 // empty' 2>/dev/null)
 
           echo "$ARTIFACT_PATH"
-          echo "$result1" | grep -q "path"
+          echo "$ARTIFACT_SHA256"
           
           if [ -z "$ARTIFACT_PATH" ]; then
             echo "❌ Could not extract artifact path from search results"
