@@ -14,18 +14,23 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Install JFrog CLI
-        run: |
-          curl -fL https://getcli.jfrog.io | sh
-          chmod +x jfrog
+        uses: jfrog/setup-jfrog-cli@v4
+        with:
+          version: 2.89.0
+        # run: |
+        #   curl -fL https://getcli.jfrog.io | sh
+        #   chmod +x jfrog
 
       - name: Configure JFrog CLI
         run: |
-          ./jfrog config add productdemo --artifactory-url=$JFROG_URL --user=$JFROG_USERNAME --password=$JFROG_API_KEY
+          echo $JFROG_URL
+          ./jf --version
+          ./jf config add productdemo --artifactory-url=$JFROG_URL --user=$JFROG_USERNAME --password=$JFROG_API_KEY
 
       - name: Search for Artifact in JFrog
         id: artifactory_search
         run: |
-          ./jfrog rt s "docker-local/*2025_48913_aug-25_09-32_applicable_092ca*" --server-id productdemo --limit=1 --quiet > search_result.txt || echo "Artifact not found."
+          ./jf rt s "docker-local/*2025_48913_aug-25_09-32_applicable_092ca*" --server-id productdemo --limit=1 --quiet > search_result.txt || echo "Artifact not found."
           echo "Found artifact: $(cat search_result.txt)"
 
       - name: Create Artifact Deployment Record
