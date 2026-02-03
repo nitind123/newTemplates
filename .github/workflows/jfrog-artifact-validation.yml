@@ -20,7 +20,7 @@ jobs:
 
       - name: Configure JFrog CLI
         run: |
-          ./jfrog rt c --url=$JFROG_URL --user=$JFROG_USERNAME --password=$JFROG_API_KEY
+          ./jfrog config add productdemo --artifactory-url=$JFROG_URL --user=$JFROG_USERNAME --password=$JFROG_API_KEY
 
       - name: Search for Artifact in JFrog
         id: artifactory_search
