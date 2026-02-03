@@ -93,6 +93,39 @@ jobs:
             exit 1
           fi
 
+          ARTIFACT_DIGEST="sha256:${ARTIFACT_SHA256}"
+          # For deployment record, digest should be hex-encoded only (no sha256: prefix)
+          DEPLOYMENT_DIGEST="${ARTIFACT_SHA256}"
+          OWNER="${{ github.repository_owner }}"
+
+          STORAGE_ENDPOINT="https://api.github.com/orgs/${OWNER}/artifacts/metadata/storage-record"
+          STORAGE_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$STORAGE_ENDPOINT" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"name\": \"${ARTIFACT_NAME}\",
+              \"digest\": \"${ARTIFACT_DIGEST}\",
+              \"version\": \"${ARTIFACT_VERSION}\",
+              \"artifact_url\": \"${ARTIFACT_URL}\",
+              \"path\": \"${ARTIFACT_PATH}\",
+              \"registry_url\": \"${JFROG_URL}/artifactory\",
+              \"repository\": \"${ARTIFACT_REPO}\",
+              \"status\": \"active\",
+              \"github_repository\": \"${GITHUB_REPO}\"
+            }" 2>&1)
+
+          echo "Storage Record HTTP Status: $STORAGE_HTTP_CODE"
+          echo "Storage Record Response: $STORAGE_BODY"
+          
+          if [ "$STORAGE_HTTP_CODE" != "200" ]; then
+            echo "⚠️  Storage record creation failed, but continuing with deployment record..."
+          else
+            echo "✅ Storage record created successfully!"
+          fi   
+          
+
       - name: Create Artifact Deployment Record
         if: steps.artifactory_search.outputs.artifact_found == 'true'
         env:
