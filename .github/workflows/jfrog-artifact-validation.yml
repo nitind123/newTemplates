@@ -1,4 +1,4 @@
-name: Validate JFrog Artifacts
+name: Validate JFrog Artifacts (Alternative)
 
 on:
   push:
@@ -13,11 +13,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
       
-      - name: Install JFrog CLI
-        run: |
-          curl -fL https://getcli.jfrog.io | sh
-          chmod +x jfrog
-          sudo mv jfrog /usr/local/bin/
+      # Alternative: Use official JFrog setup action (more reliable)
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v3
+        with:
+          version: latest
 
       - name: Configure JFrog CLI
         env:
@@ -83,7 +83,3 @@ jobs:
         run: |
           echo "Artifact found at: ${{ steps.artifactory_search.outputs.artifact_path }}"
           # Your deployment record creation logic here
-          # curl -X POST https://api.github.com/orgs/nitind123/packages/2025_48913_aug-25_09-32_applicable_092ca/artifacts/latest/deployments \
-          #   -H "Authorization: token $GITHUB_TOKEN" \
-          #   -H "Accept: application/vnd.github.v3+json" \
-          #   -d '{"environment": "production", "version": "1.0.0"}'
