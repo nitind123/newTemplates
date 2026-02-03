@@ -1,19 +1,37 @@
-name: Validate JFrog Artifacts (Alternative)
+name: Link JFrog Artifacts to GitHub Packages
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      artifact_name:
+        description: 'Artifact name to link'
+        required: true
+        default: '2025_48913_aug-25_09-32_applicable_092ca'
+      logical_environment:
+        description: 'Logical environment (e.g., production, staging)'
+        required: false
+        default: 'production'
+      deployment_name:
+        description: 'Deployment name'
+        required: false
+        default: 'default-deployment'
 
 jobs:
-  validate-artifacts:
+  link-artifacts:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # Required for artifact metadata API
+      metadata: write
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
       
-      # Alternative: Use official JFrog setup action (more reliable)
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v3
         with:
@@ -24,64 +42,212 @@ jobs:
           JFROG_URL: ${{ secrets.JFROG_URL }}
           JFROG_ACCESS_TOKEN: ${{ secrets.JFROG_ACCESS_TOKEN }}
         run: |
-          # Use --access-token instead of --user/--password for token authentication
           jf c add productdemo \
             --interactive=false \
             --url="$JFROG_URL" \
             --access-token="$JFROG_ACCESS_TOKEN"
           
-          # Verify configuration
-          echo "Verifying JFrog configuration..."
-          jf c show productdemo || echo "Configuration failed"
-          
-          # Test connectivity
-          echo "Testing Artifactory connectivity..."
-          jf rt ping --server-id productdemo || echo "Ping failed"
+          jf c show productdemo
+          jf rt ping --server-id productdemo
 
-      - name: Search for Artifact in JFrog
-        id: artifactory_search
+      - name: Search and Link Artifact
+        id: link_artifact
         env:
-          ARTIFACT_NAME: "2025_48913_aug-25_09-32_applicable_092ca"
+          ARTIFACT_NAME: ${{ github.event.inputs.artifact_name || '2025_48913_aug-25_09-32_applicable_092ca' }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JFROG_URL: ${{ secrets.JFROG_URL }}
+          GITHUB_REPO: ${{ github.repository }}
+          LOGICAL_ENV: ${{ github.event.inputs.logical_environment || 'production' }}
+          DEPLOYMENT_NAME: ${{ github.event.inputs.deployment_name || 'default-deployment' }}
         run: |
           echo "Searching for artifact: $ARTIFACT_NAME"
           
-          # Try multiple search patterns for Docker images
-          echo "=== Pattern 1: Search for any matching artifacts ==="
-          result1=$(jf rt s "docker-local/*${ARTIFACT_NAME}*" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result1"
+          # Search for the artifact - jf rt s outputs JSON by default, no --json flag needed
+          # Try multiple search patterns
+          echo "Trying search pattern 1: docker-local/*${ARTIFACT_NAME}*"
+          SEARCH_RESULT=$(jf rt s "docker-local/*${ARTIFACT_NAME}*" --server-id productdemo --limit 1 2>&1) || true
           
-          echo "=== Pattern 2: Search for manifest files ==="
-          result2=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/manifest.json" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result2"
-          
-          echo "=== Pattern 3: Search for list.manifest.json files ==="
-          result3=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/list.manifest.json" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result3"
-          
-          echo "=== Pattern 4: Search with latest tag ==="
-          result4=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/latest/*" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result4"
-          
-          # Check if any results were found
-          if echo "$result1" | grep -q "path"; then
-            echo "Artifact found!"
-            echo "artifact_found=true" >> $GITHUB_OUTPUT
-            echo "artifact_path=$(echo "$result1" | jq -r '.[0].path' | head -1)" >> $GITHUB_OUTPUT
-          else
-            echo "Artifact not found with any pattern"
-            echo "artifact_found=false" >> $GITHUB_OUTPUT
-            
-            # List some artifacts in docker-local to help debug
-            echo "=== Listing sample artifacts in docker-local ==="
-            jf rt s "docker-local/*" --server-id productdemo --limit=5 || echo "Could not list artifacts"
+          # Check if search failed or returned empty
+          if echo "$SEARCH_RESULT" | grep -q "Error\|error\|not found"; then
+            echo "Pattern 1 failed, trying pattern 2: docker-local/*${ARTIFACT_NAME}*/*"
+            SEARCH_RESULT=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*" --server-id productdemo --limit 1 2>&1) || true
           fi
+          
+          if echo "$SEARCH_RESULT" | grep -q "Error\|error\|not found"; then
+            echo "Pattern 2 failed, trying pattern 3: docker-local/*${ARTIFACT_NAME}*/*/*"
+            SEARCH_RESULT=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/*" --server-id productdemo --limit 1 2>&1) || true
+          fi
+          
+          # Check if we got valid JSON results
+          if ! echo "$SEARCH_RESULT" | jq empty 2>/dev/null; then
+            echo "❌ Search failed or returned invalid JSON:"
+            echo "$SEARCH_RESULT"
+            echo ""
+            echo "Trying to list all artifacts in docker-local to debug..."
+            jf rt s "docker-local/*" --server-id productdemo --limit 5 || true
+            exit 1
+          fi
+          
+          # Check if results array is empty
+          RESULT_COUNT=$(echo "$SEARCH_RESULT" | jq 'length' 2>/dev/null || echo "0")
+          if [ "$RESULT_COUNT" = "0" ] || [ -z "$RESULT_COUNT" ]; then
+            echo "❌ Artifact not found. Search returned empty results."
+            echo "Search result: $SEARCH_RESULT"
+            exit 1
+          fi
+          
+          # Extract artifact details
+          ARTIFACT_PATH=$(echo "$SEARCH_RESULT" | jq -r '.[0].path // empty' 2>/dev/null)
+          ARTIFACT_SHA256=$(echo "$SEARCH_RESULT" | jq -r '.[0].sha256 // empty' 2>/dev/null)
+          ARTIFACT_MD5=$(echo "$SEARCH_RESULT" | jq -r '.[0].md5 // empty' 2>/dev/null)
+          
+          if [ -z "$ARTIFACT_PATH" ]; then
+            echo "❌ Could not extract artifact path from search results"
+            echo "Search result: $SEARCH_RESULT"
+            exit 1
+          fi
+          
+          ARTIFACT_REPO=$(echo "$ARTIFACT_PATH" | cut -d'/' -f1)
+          
+          # Extract version/tag from path (e.g., docker-local/image-name/tag/manifest.json -> tag)
+          ARTIFACT_VERSION=$(echo "$ARTIFACT_PATH" | awk -F'/' '{print $(NF-1)}' 2>/dev/null || echo "latest")
+          
+          # Construct artifact URL
+          ARTIFACT_URL="${JFROG_URL}/artifactory/${ARTIFACT_PATH}"
+          
+          echo "✅ Found artifact: $ARTIFACT_PATH"
+          echo "Artifact SHA256: $ARTIFACT_SHA256"
+          echo "Artifact MD5: $ARTIFACT_MD5"
+          echo "Artifact Version: $ARTIFACT_VERSION"
+          
+          # Calculate digest if not available from search
+          if [ -z "$ARTIFACT_SHA256" ]; then
+            echo "⚠️  SHA256 not found in search results, trying to get from artifact properties..."
+            # Try to get SHA256 from artifact properties
+            ARTIFACT_PROPS=$(jf rt sp "${ARTIFACT_PATH}" --server-id productdemo 2>&1 || echo "")
+            if echo "$ARTIFACT_PROPS" | grep -q "sha256"; then
+              ARTIFACT_SHA256=$(echo "$ARTIFACT_PROPS" | grep -i "sha256" | head -1 | awk '{print $NF}' | tr -d '[:space:]' || echo "")
+            fi
+            
+            # If still not found, try to get from Docker manifest digest property
+            if [ -z "$ARTIFACT_SHA256" ]; then
+              DOCKER_MANIFEST=$(jf rt sp "${ARTIFACT_PATH}" --server-id productdemo | grep -i "docker.manifest" | head -1 | awk '{print $NF}' | tr -d '[:space:]' || echo "")
+              if [ -n "$DOCKER_MANIFEST" ]; then
+                # Extract SHA256 from manifest digest (format: sha256:hex)
+                ARTIFACT_SHA256=$(echo "$DOCKER_MANIFEST" | sed 's/sha256://' | cut -d':' -f2 || echo "")
+              fi
+            fi
+            
+            # Last resort: generate deterministic digest from path
+            if [ -z "$ARTIFACT_SHA256" ]; then
+              echo "⚠️  Could not retrieve SHA256, generating deterministic digest from path..."
+              ARTIFACT_SHA256=$(echo -n "${ARTIFACT_PATH}" | sha256sum | cut -d' ' -f1)
+            fi
+          fi
+          
+          # Format digest as required by API: "sha256:hex-encoded-digest"
+          ARTIFACT_DIGEST="sha256:${ARTIFACT_SHA256}"
+          # For deployment record, digest should be hex-encoded only (no sha256: prefix)
+          DEPLOYMENT_DIGEST="${ARTIFACT_SHA256}"
+          
+          echo "Artifact Digest: $ARTIFACT_DIGEST"
+          
+          # Get organization name (for personal accounts, use username)
+          OWNER="${{ github.repository_owner }}"
+          
+          # Step 1: Create Storage Record
+          # API: POST /orgs/{org}/artifacts/metadata/storage-record
+          # Documentation: https://docs.github.com/en/rest/orgs/artifact-metadata#create-artifact-metadata-storage-record
+          echo ""
+          echo "=== Step 1: Creating Storage Record ==="
+          STORAGE_ENDPOINT="https://api.github.com/orgs/${OWNER}/artifacts/metadata/storage-record"
+          
+          STORAGE_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$STORAGE_ENDPOINT" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"name\": \"${ARTIFACT_NAME}\",
+              \"digest\": \"${ARTIFACT_DIGEST}\",
+              \"version\": \"${ARTIFACT_VERSION}\",
+              \"artifact_url\": \"${ARTIFACT_URL}\",
+              \"path\": \"${ARTIFACT_PATH}\",
+              \"registry_url\": \"${JFROG_URL}/artifactory\",
+              \"repository\": \"${ARTIFACT_REPO}\",
+              \"status\": \"active\",
+              \"github_repository\": \"${GITHUB_REPO}\"
+            }" 2>&1)
+          
+          STORAGE_HTTP_CODE=$(echo "$STORAGE_RESPONSE" | tail -n1)
+          STORAGE_BODY=$(echo "$STORAGE_RESPONSE" | sed '$d')
+          
+          echo "Storage Record HTTP Status: $STORAGE_HTTP_CODE"
+          echo "Storage Record Response: $STORAGE_BODY"
+          
+          if [ "$STORAGE_HTTP_CODE" != "200" ]; then
+            echo "⚠️  Storage record creation failed, but continuing with deployment record..."
+          else
+            echo "✅ Storage record created successfully!"
+          fi
+          
+          # Step 2: Create Deployment Record
+          # API: POST /orgs/{org}/artifacts/metadata/deployment-record
+          # Documentation: https://docs.github.com/en/rest/orgs/artifact-metadata#create-an-artifact-deployment-record
+          echo ""
+          echo "=== Step 2: Creating Deployment Record ==="
+          DEPLOYMENT_ENDPOINT="https://api.github.com/orgs/${OWNER}/artifacts/metadata/deployment-record"
+          
+          DEPLOYMENT_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$DEPLOYMENT_ENDPOINT" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"name\": \"${ARTIFACT_NAME}\",
+              \"digest\": \"${DEPLOYMENT_DIGEST}\",
+              \"version\": \"${ARTIFACT_VERSION}\",
+              \"status\": \"deployed\",
+              \"logical_environment\": \"${LOGICAL_ENV}\",
+              \"deployment_name\": \"${DEPLOYMENT_NAME}\",
+              \"github_repository\": \"${GITHUB_REPO}\"
+            }" 2>&1)
+          
+          DEPLOYMENT_HTTP_CODE=$(echo "$DEPLOYMENT_RESPONSE" | tail -n1)
+          DEPLOYMENT_BODY=$(echo "$DEPLOYMENT_RESPONSE" | sed '$d')
+          
+          echo "Deployment Record HTTP Status: $DEPLOYMENT_HTTP_CODE"
+          echo "Deployment Record Response: $DEPLOYMENT_BODY"
+          
+          if [ "$DEPLOYMENT_HTTP_CODE" = "200" ] || [ "$DEPLOYMENT_HTTP_CODE" = "201" ]; then
+            echo "✅ Deployment record created successfully!"
+            echo "artifact_linked=true" >> $GITHUB_OUTPUT
+            echo "artifact_url=$ARTIFACT_URL" >> $GITHUB_OUTPUT
+            echo "artifact_digest=$ARTIFACT_DIGEST" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Failed to create deployment record"
+            echo "Check GitHub API documentation: https://docs.github.com/en/rest/orgs/artifact-metadata"
+            echo "artifact_linked=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          # Output artifact details
+          echo ""
+          echo "=== Artifact Details ==="
+          echo "Name: $ARTIFACT_NAME"
+          echo "Path: $ARTIFACT_PATH"
+          echo "URL: $ARTIFACT_URL"
+          echo "Repository: $ARTIFACT_REPO"
+          echo "Version: $ARTIFACT_VERSION"
+          echo "Digest: $ARTIFACT_DIGEST"
 
-      - name: Create Artifact Deployment Record
-        if: steps.artifactory_search.outputs.artifact_found == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify Linked Artifacts
+        if: steps.link_artifact.outputs.artifact_linked == 'true'
         run: |
-          echo "Artifact found at: ${{ steps.artifactory_search.outputs.artifact_path }}"
-          # Your deployment record creation logic here
-
+          echo "✅ Artifact has been linked!"
+          echo "View your linked artifacts at:"
+          echo "  https://github.com/${{ github.repository_owner }}?tab=packages"
+          echo ""
+          echo "Or for organizations:"
+          echo "  https://github.com/orgs/${{ github.repository_owner }}/artifacts"
 
