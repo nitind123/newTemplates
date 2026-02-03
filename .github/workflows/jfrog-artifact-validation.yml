@@ -1,19 +1,27 @@
-name: Validate JFrog Artifacts (Alternative)
+name: Link JFrog Artifacts to GitHub Packages
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      artifact_name:
+        description: 'Artifact name to link'
+        required: true
+        default: '2025_48913_aug-25_09-32_applicable_092ca'
 
 jobs:
-  validate-artifacts:
+  link-artifacts:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
       
-      # Alternative: Use official JFrog setup action (more reliable)
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v3
         with:
@@ -24,62 +32,105 @@ jobs:
           JFROG_URL: ${{ secrets.JFROG_URL }}
           JFROG_ACCESS_TOKEN: ${{ secrets.JFROG_ACCESS_TOKEN }}
         run: |
-          # Use --access-token instead of --user/--password for token authentication
           jf c add productdemo \
             --interactive=false \
             --url="$JFROG_URL" \
             --access-token="$JFROG_ACCESS_TOKEN"
           
-          # Verify configuration
-          echo "Verifying JFrog configuration..."
-          jf c show productdemo || echo "Configuration failed"
-          
-          # Test connectivity
-          echo "Testing Artifactory connectivity..."
-          jf rt ping --server-id productdemo || echo "Ping failed"
+          jf c show productdemo
+          jf rt ping --server-id productdemo
 
-      - name: Search for Artifact in JFrog
-        id: artifactory_search
+      - name: Search and Link Artifact
+        id: link_artifact
         env:
-          ARTIFACT_NAME: "2025_48913_aug-25_09-32_applicable_092ca"
+          ARTIFACT_NAME: ${{ github.event.inputs.artifact_name || '2025_48913_aug-25_09-32_applicable_092ca' }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JFROG_URL: ${{ secrets.JFROG_URL }}
         run: |
           echo "Searching for artifact: $ARTIFACT_NAME"
           
-          # Try multiple search patterns for Docker images
-          echo "=== Pattern 1: Search for any matching artifacts ==="
-          result1=$(jf rt s "docker-local/*${ARTIFACT_NAME}*" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result1"
+          # Search for the artifact
+          SEARCH_RESULT=$(jf rt s "docker-local/*${ARTIFACT_NAME}*" --server-id productdemo --limit=1 --json || echo "[]")
           
-          echo "=== Pattern 2: Search for manifest files ==="
-          result2=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/manifest.json" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result2"
-          
-          echo "=== Pattern 3: Search for list.manifest.json files ==="
-          result3=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/list.manifest.json" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result3"
-          
-          echo "=== Pattern 4: Search with latest tag ==="
-          result4=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/latest/*" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result4"
-          
-          # Check if any results were found
-          if echo "$result1" | grep -q "path"; then
-            echo "Artifact found!"
-            echo "artifact_found=true" >> $GITHUB_OUTPUT
-            echo "artifact_path=$(echo "$result1" | jq -r '.[0].path' | head -1)" >> $GITHUB_OUTPUT
-          else
-            echo "Artifact not found with any pattern"
-            echo "artifact_found=false" >> $GITHUB_OUTPUT
-            
-            # List some artifacts in docker-local to help debug
-            echo "=== Listing sample artifacts in docker-local ==="
-            jf rt s "docker-local/*" --server-id productdemo --limit=5 || echo "Could not list artifacts"
+          if [ "$SEARCH_RESULT" = "[]" ] || [ -z "$SEARCH_RESULT" ]; then
+            echo "❌ Artifact not found"
+            exit 1
           fi
+          
+          # Extract artifact details
+          ARTIFACT_PATH=$(echo "$SEARCH_RESULT" | jq -r '.[0].path // empty')
+          ARTIFACT_NAME_FULL=$(echo "$SEARCH_RESULT" | jq -r '.[0].name // empty')
+          ARTIFACT_REPO=$(echo "$ARTIFACT_PATH" | cut -d'/' -f1)
+          
+          echo "Found artifact: $ARTIFACT_PATH"
+          
+          # Construct artifact URL
+          ARTIFACT_URL="${JFROG_URL}/artifactory/${ARTIFACT_PATH}"
+          
+          # Link artifact using GitHub Artifact Metadata API
+          # API Documentation: https://docs.github.com/en/rest/packages/artifact-metadata
+          echo "Linking artifact to GitHub Packages..."
+          
+          # For personal accounts, use /users/{username}/artifacts
+          # For organizations, use /orgs/{org}/artifacts
+          OWNER="${{ github.repository_owner }}"
+          
+          # Determine if it's an org or user
+          if [ "$OWNER" = "nitind123" ]; then
+            API_ENDPOINT="https://api.github.com/users/${OWNER}/artifacts"
+          else
+            API_ENDPOINT="https://api.github.com/orgs/${OWNER}/artifacts"
+          fi
+          
+          # Create the artifact link
+          LINK_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$API_ENDPOINT" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"name\": \"${ARTIFACT_NAME}\",
+              \"type\": \"docker\",
+              \"registry_url\": \"${JFROG_URL}/artifactory\",
+              \"repository\": \"${ARTIFACT_REPO}\",
+              \"artifact_path\": \"${ARTIFACT_PATH}\",
+              \"external_url\": \"${ARTIFACT_URL}\"
+            }" 2>&1)
+          
+          HTTP_CODE=$(echo "$LINK_RESPONSE" | tail -n1)
+          RESPONSE_BODY=$(echo "$LINK_RESPONSE" | sed '$d')
+          
+          echo "HTTP Status Code: $HTTP_CODE"
+          echo "Response: $RESPONSE_BODY"
+          
+          if [ "$HTTP_CODE" = "201" ] || [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ Artifact linked successfully!"
+            echo "artifact_linked=true" >> $GITHUB_OUTPUT
+            echo "artifact_url=$ARTIFACT_URL" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️  Failed to link artifact. This might be expected if:"
+            echo "   1. The Artifact Metadata API requires different authentication"
+            echo "   2. The API endpoint format has changed"
+            echo "   3. Your account needs specific permissions"
+            echo ""
+            echo "Check GitHub API documentation: https://docs.github.com/en/rest/packages/artifact-metadata"
+            echo "artifact_linked=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Output artifact details for manual linking if needed
+          echo ""
+          echo "=== Artifact Details ==="
+          echo "Name: $ARTIFACT_NAME"
+          echo "Path: $ARTIFACT_PATH"
+          echo "URL: $ARTIFACT_URL"
+          echo "Repository: $ARTIFACT_REPO"
 
-      - name: Create Artifact Deployment Record
-        if: steps.artifactory_search.outputs.artifact_found == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify Linked Artifacts
+        if: steps.link_artifact.outputs.artifact_linked == 'true'
         run: |
-          echo "Artifact found at: ${{ steps.artifactory_search.outputs.artifact_path }}"
-          # Your deployment record creation logic here
+          echo "✅ Artifact has been linked!"
+          echo "View your linked artifacts at:"
+          echo "  https://github.com/${{ github.repository_owner }}?tab=packages"
+          echo ""
+          echo "Or for organizations:"
+          echo "  https://github.com/orgs/${{ github.repository_owner }}/artifacts"
