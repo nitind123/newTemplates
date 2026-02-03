@@ -1,4 +1,4 @@
-name: Validate JFrog Artifacts
+name: Validate JFrog Artifacts (Alternative)
 
 on:
   push:
@@ -13,14 +13,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
       
-      - name: Install JFrog CLI
-        run: |
-          curl -fL https://getcli.jfrog.io | sh
-          # The installer creates 'jf' binary in current directory
-          chmod +x jf
-          sudo mv jf /usr/local/bin/
-          # Verify installation
-          jf --version
+      # Alternative: Use official JFrog setup action (more reliable)
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v3
+        with:
+          version: latest
 
       - name: Configure JFrog CLI
         env:
@@ -49,127 +46,41 @@ jobs:
           echo "Searching for artifact: $ARTIFACT_NAME"
           
           # Try multiple search patterns for Docker images
-          # Note: --limit uses space, not equals sign
           echo "=== Pattern 1: Search for any matching artifacts ==="
-          result1=$(jf rt s "docker-local/*${ARTIFACT_NAME}*" --server-id productdemo --limit 10 2>&1 || echo "[]")
-          
-          # Check if result is valid JSON
-          if echo "$result1" | jq empty 2>/dev/null; then
-            echo "$result1" | jq '.'
-          else
-            echo "Pattern 1 failed or returned non-JSON: $result1"
-            result1="[]"
-          fi
+          result1=$(jf rt s "docker-local/*${ARTIFACT_NAME}*" --server-id productdemo --limit=10 || echo "No results")
+          echo "$result1"
           
           echo "=== Pattern 2: Search for manifest files ==="
-          result2=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/manifest.json" --server-id productdemo --limit 10 2>&1 || echo "[]")
-          
-          if echo "$result2" | jq empty 2>/dev/null; then
-            echo "$result2" | jq '.'
-          else
-            echo "Pattern 2 failed or returned non-JSON: $result2"
-            result2="[]"
-          fi
+          result2=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/manifest.json" --server-id productdemo --limit=10 || echo "No results")
+          echo "$result2"
           
           echo "=== Pattern 3: Search for list.manifest.json files ==="
-          result3=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/list.manifest.json" --server-id productdemo --limit 10 2>&1 || echo "[]")
-          
-          if echo "$result3" | jq empty 2>/dev/null; then
-            echo "$result3" | jq '.'
-          else
-            echo "Pattern 3 failed or returned non-JSON: $result3"
-            result3="[]"
-          fi
+          result3=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/list.manifest.json" --server-id productdemo --limit=10 || echo "No results")
+          echo "$result3"
           
           echo "=== Pattern 4: Search with latest tag ==="
-          result4=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/latest/*" --server-id productdemo --limit 10 2>&1 || echo "[]")
+          result4=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/latest/*" --server-id productdemo --limit=10 || echo "No results")
+          echo "$result4"
           
-          if echo "$result4" | jq empty 2>/dev/null; then
-            echo "$result4" | jq '.'
+          # Check if any results were found
+          if echo "$result1" | grep -q "path"; then
+            echo "Artifact found!"
+            echo "artifact_found=true" >> $GITHUB_OUTPUT
+            echo "artifact_path=$(echo "$result1" | jq -r '.[0].path' | head -1)" >> $GITHUB_OUTPUT
           else
-            echo "Pattern 4 failed or returned non-JSON: $result4"
-            result4="[]"
-          fi
-          
-          # Check if any results were found (check if JSON array has items)
-          if echo "$result1" | jq 'length > 0' 2>/dev/null | grep -q true; then
-            echo "✅ Artifact found with pattern 1!"
-            echo "artifact_found=true" >> $GITHUB_OUTPUT
-            echo "artifact_path=$(echo "$result1" | jq -r '.[0].path' 2>/dev/null)" >> $GITHUB_OUTPUT
-          elif echo "$result2" | jq 'length > 0' 2>/dev/null | grep -q true; then
-            echo "✅ Artifact found with pattern 2!"
-            echo "artifact_found=true" >> $GITHUB_OUTPUT
-            echo "artifact_path=$(echo "$result2" | jq -r '.[0].path' 2>/dev/null)" >> $GITHUB_OUTPUT
-          elif echo "$result3" | jq 'length > 0' 2>/dev/null | grep -q true; then
-            echo "✅ Artifact found with pattern 3!"
-            echo "artifact_found=true" >> $GITHUB_OUTPUT
-            echo "artifact_path=$(echo "$result3" | jq -r '.[0].path' 2>/dev/null)" >> $GITHUB_OUTPUT
-          elif echo "$result4" | jq 'length > 0' 2>/dev/null | grep -q true; then
-            echo "✅ Artifact found with pattern 4!"
-            echo "artifact_found=true" >> $GITHUB_OUTPUT
-            echo "artifact_path=$(echo "$result4" | jq -r '.[0].path' 2>/dev/null)" >> $GITHUB_OUTPUT
-          else
-            echo "❌ Artifact not found with any pattern"
+            echo "Artifact not found with any pattern"
             echo "artifact_found=false" >> $GITHUB_OUTPUT
             
             # List some artifacts in docker-local to help debug
             echo "=== Listing sample artifacts in docker-local ==="
-            jf rt s "docker-local/*" --server-id productdemo --limit 5 2>&1 | head -20 || echo "Could not list artifacts"
+            jf rt s "docker-local/*" --server-id productdemo --limit=5 || echo "Could not list artifacts"
           fi
 
-      - name: Link Artifact to GitHub Packages
+      - name: Create Artifact Deployment Record
         if: steps.artifactory_search.outputs.artifact_found == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ARTIFACT_PATH: ${{ steps.artifactory_search.outputs.artifact_path }}
-          ARTIFACT_NAME: "2025_48913_aug-25_09-32_applicable_092ca"
-          JFROG_URL: ${{ secrets.JFROG_URL }}
         run: |
-          echo "Linking artifact to GitHub Packages..."
-          echo "Artifact path: $ARTIFACT_PATH"
-          
-          # Extract artifact details from path
-          # Format: docker-local/image-name/tag/manifest.json
-          ARTIFACT_REPO="docker-local"
-          ARTIFACT_IMAGE=$(echo "$ARTIFACT_PATH" | cut -d'/' -f2)
-          ARTIFACT_TAG=$(echo "$ARTIFACT_PATH" | cut -d'/' -f3)
-          
-          # Construct the artifact URL in JFrog Artifactory
-          ARTIFACT_URL="${JFROG_URL}/artifactory/${ARTIFACT_PATH}"
-          
-          echo "Artifact URL: $ARTIFACT_URL"
-          echo "Image: $ARTIFACT_IMAGE"
-          echo "Tag: $ARTIFACT_TAG"
-          
-          # Link artifact using GitHub Artifact Metadata API
-          # For user account (not org), use: /users/{username}/artifacts
-          # For organization, use: /orgs/{org}/artifacts
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-            "https://api.github.com/users/${{ github.repository_owner }}/artifacts" \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            -d "{
-              \"name\": \"$ARTIFACT_IMAGE\",
-              \"version\": \"$ARTIFACT_TAG\",
-              \"type\": \"docker\",
-              \"registry_url\": \"${JFROG_URL}/artifactory\",
-              \"repository\": \"$ARTIFACT_REPO\",
-              \"artifact_path\": \"$ARTIFACT_PATH\",
-              \"external_url\": \"$ARTIFACT_URL\"
-            }" || echo "Failed to link artifact")
-          
-          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
-          
-          if [ "$HTTP_CODE" = "201" ] || [ "$HTTP_CODE" = "200" ]; then
-            echo "✅ Artifact linked successfully!"
-            echo "$BODY" | jq '.' || echo "$BODY"
-          else
-            echo "❌ Failed to link artifact. HTTP Code: $HTTP_CODE"
-            echo "Response: $BODY"
-            echo ""
-            echo "Note: The Artifact Metadata API might require different parameters."
-            echo "Check GitHub API documentation for the correct format."
-          fi
+          echo "Artifact found at: ${{ steps.artifactory_search.outputs.artifact_path }}"
+          # Your deployment record creation logic here
 
