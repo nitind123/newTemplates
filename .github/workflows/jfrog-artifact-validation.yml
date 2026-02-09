@@ -1,19 +1,30 @@
-name: Validate JFrog Artifacts (Alternative)
+name: Attest JFrog Artifact
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      artifact_name:
+        description: 'Artifact name or path (e.g., green-taco or production/green-taco)'
+        required: true
+        type: string
+      sha256_digest:
+        description: 'SHA-256 Digest (Hex string, optional - will search JFrog if not provided)'
+        required: false
+        type: string
+
+permissions:
+  id-token: write      # Required to request OIDC token for signing
+  attestations: write  # Required to create attestations
+  contents: read       # Required to read repository info
 
 jobs:
-  validate-artifacts:
+  attest-artifact:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
       
-      # Alternative: Use official JFrog setup action (more reliable)
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v3
         with:
@@ -40,127 +51,201 @@ jobs:
 
       - name: Search for Artifact in JFrog
         id: artifactory_search
+        if: inputs.sha256_digest == ''
         env:
-          ARTIFACT_NAME: "2025_48913_aug-25_09-32_applicable_092ca"
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Searching for artifact: $ARTIFACT_NAME"
           
+          # Extract image name if full path provided (e.g., "production/green-taco" -> "green-taco")
+          IMAGE_NAME=$(echo "$ARTIFACT_NAME" | awk -F'/' '{print $NF}')
+          
           # Try multiple search patterns for Docker images
           echo "=== Pattern 1: Search for any matching artifacts ==="
-          result1=$(jf rt s "docker-local/*${ARTIFACT_NAME}*" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result1"
+          result1=$(jf rt s "docker-local/*${IMAGE_NAME}*" --server-id productdemo --limit=10 2>&1 || echo "[]")
+          
+          # Check if result is valid JSON
+          if echo "$result1" | jq empty 2>/dev/null; then
+            echo "$result1" | jq '.'
+          else
+            echo "Pattern 1 failed or returned non-JSON: $result1"
+            result1="[]"
+          fi
           
           echo "=== Pattern 2: Search for manifest files ==="
-          result2=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/manifest.json" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result2"
+          result2=$(jf rt s "docker-local/*${IMAGE_NAME}*/*/manifest.json" --server-id productdemo --limit=10 2>&1 || echo "[]")
+          
+          if echo "$result2" | jq empty 2>/dev/null; then
+            echo "$result2" | jq '.'
+          else
+            echo "Pattern 2 failed or returned non-JSON: $result2"
+            result2="[]"
+          fi
           
           echo "=== Pattern 3: Search for list.manifest.json files ==="
-          result3=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/*/list.manifest.json" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result3"
+          result3=$(jf rt s "docker-local/*${IMAGE_NAME}*/*/list.manifest.json" --server-id productdemo --limit=10 2>&1 || echo "[]")
+          
+          if echo "$result3" | jq empty 2>/dev/null; then
+            echo "$result3" | jq '.'
+          else
+            echo "Pattern 3 failed or returned non-JSON: $result3"
+            result3="[]"
+          fi
           
           echo "=== Pattern 4: Search with latest tag ==="
-          result4=$(jf rt s "docker-local/*${ARTIFACT_NAME}*/latest/*" --server-id productdemo --limit=10 || echo "No results")
-          echo "$result4"
+          result4=$(jf rt s "docker-local/*${IMAGE_NAME}*/latest/*" --server-id productdemo --limit=10 2>&1 || echo "[]")
           
-          # Check if any results were found
-          if echo "$result1" | grep -q "path"; then
-            echo "Artifact found!"
-            echo "artifact_found=true" >> $GITHUB_OUTPUT
-            echo "artifact_path=$(echo "$result1" | jq -r '.[0].path' | head -1)" >> $GITHUB_OUTPUT
+          if echo "$result4" | jq empty 2>/dev/null; then
+            echo "$result4" | jq '.'
           else
-            echo "Artifact not found with any pattern"
+            echo "Pattern 4 failed or returned non-JSON: $result4"
+            result4="[]"
+          fi
+          
+          # NEW: Pattern 5 - Direct path for nested structures like production/green-taco
+          echo "=== Pattern 5: Direct path search ==="
+          result5=$(jf rt s "docker-local/${ARTIFACT_NAME}*" --server-id productdemo --limit=10 2>&1 || echo "[]")
+          
+          if echo "$result5" | jq empty 2>/dev/null; then
+            echo "$result5" | jq '.'
+          else
+            echo "Pattern 5 failed or returned non-JSON: $result5"
+            result5="[]"
+          fi
+          
+          # NEW: Pattern 6 - Nested path with manifest
+          echo "=== Pattern 6: Nested path with manifest ==="
+          result6=$(jf rt s "docker-local/${ARTIFACT_NAME}*/*/manifest.json" --server-id productdemo --limit=10 2>&1 || echo "[]")
+          
+          if echo "$result6" | jq empty 2>/dev/null; then
+            echo "$result6" | jq '.'
+          else
+            echo "Pattern 6 failed or returned non-JSON: $result6"
+            result6="[]"
+          fi
+          
+          # Check if any results were found (check if JSON array has items)
+          if echo "$result1" | jq 'length > 0' 2>/dev/null | grep -q true; then
+            echo "✅ Artifact found with pattern 1!"
+            echo "artifact_found=true" >> $GITHUB_OUTPUT
+            echo "artifact_path=$(echo "$result1" | jq -r '.[0].path' 2>/dev/null)" >> $GITHUB_OUTPUT
+            echo "artifact_sha256=$(echo "$result1" | jq -r '.[0].sha256' 2>/dev/null)" >> $GITHUB_OUTPUT
+          elif echo "$result2" | jq 'length > 0' 2>/dev/null | grep -q true; then
+            echo "✅ Artifact found with pattern 2!"
+            echo "artifact_found=true" >> $GITHUB_OUTPUT
+            echo "artifact_path=$(echo "$result2" | jq -r '.[0].path' 2>/dev/null)" >> $GITHUB_OUTPUT
+            echo "artifact_sha256=$(echo "$result2" | jq -r '.[0].sha256' 2>/dev/null)" >> $GITHUB_OUTPUT
+          elif echo "$result3" | jq 'length > 0' 2>/dev/null | grep -q true; then
+            echo "✅ Artifact found with pattern 3!"
+            echo "artifact_found=true" >> $GITHUB_OUTPUT
+            echo "artifact_path=$(echo "$result3" | jq -r '.[0].path' 2>/dev/null)" >> $GITHUB_OUTPUT
+            echo "artifact_sha256=$(echo "$result3" | jq -r '.[0].sha256' 2>/dev/null)" >> $GITHUB_OUTPUT
+          elif echo "$result4" | jq 'length > 0' 2>/dev/null | grep -q true; then
+            echo "✅ Artifact found with pattern 4!"
+            echo "artifact_found=true" >> $GITHUB_OUTPUT
+            echo "artifact_path=$(echo "$result4" | jq -r '.[0].path' 2>/dev/null)" >> $GITHUB_OUTPUT
+            echo "artifact_sha256=$(echo "$result4" | jq -r '.[0].sha256' 2>/dev/null)" >> $GITHUB_OUTPUT
+          elif echo "$result5" | jq 'length > 0' 2>/dev/null | grep -q true; then
+            echo "✅ Artifact found with pattern 5!"
+            echo "artifact_found=true" >> $GITHUB_OUTPUT
+            echo "artifact_path=$(echo "$result5" | jq -r '.[0].path' 2>/dev/null)" >> $GITHUB_OUTPUT
+            echo "artifact_sha256=$(echo "$result5" | jq -r '.[0].sha256' 2>/dev/null)" >> $GITHUB_OUTPUT
+          elif echo "$result6" | jq 'length > 0' 2>/dev/null | grep -q true; then
+            echo "✅ Artifact found with pattern 6!"
+            echo "artifact_found=true" >> $GITHUB_OUTPUT
+            echo "artifact_path=$(echo "$result6" | jq -r '.[0].path' 2>/dev/null)" >> $GITHUB_OUTPUT
+            echo "artifact_sha256=$(echo "$result6" | jq -r '.[0].sha256' 2>/dev/null)" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Artifact not found with any pattern"
             echo "artifact_found=false" >> $GITHUB_OUTPUT
             
             # List some artifacts in docker-local to help debug
             echo "=== Listing sample artifacts in docker-local ==="
-            SEARCH_RESULT=$(jf rt s "docker-local/*" --server-id productdemo --limit=5 || echo "Could not list artifacts") || true
-          fi
-
-          
-          # Extract artifact details
-          echo "=== xtract artifact details ==="
-          ARTIFACT_PATH=$(echo "$result4" | jq -r '.[0].path // empty' 2>/dev/null)
-          ARTIFACT_SHA256=$(echo "$result4" | jq -r '.[0].sha256 // empty' 2>/dev/null)
-          ARTIFACT_MD5=$(echo "$result4" | jq -r '.[0].md5 // empty' 2>/dev/null)
-
-          echo "$ARTIFACT_PATH"
-          echo "$ARTIFACT_SHA256"
-          
-          if [ -z "$ARTIFACT_PATH" ]; then
-            echo "❌ Could not extract artifact path from search results"
-            echo "Search result: $ARTIFACT_PATH"
-            echo "Search result: $ARTIFACT_SHA256"
+            jf rt s "docker-local/*" --server-id productdemo --limit=5 2>&1 | head -20 || echo "Could not list artifacts"
             exit 1
           fi
-
-          ARTIFACT_DIGEST="sha256:${ARTIFACT_SHA256}"
-          # For deployment record, digest should be hex-encoded only (no sha256: prefix)
-          DEPLOYMENT_DIGEST="${ARTIFACT_SHA256}"
-          OWNER="${{ github.repository_owner }}"
-
-          echo "owner $OWNER"
-
-          STORAGE_ENDPOINT="https://api.github.com/orgs/${OWNER}/artifacts/metadata/storage-record"
-          STORAGE_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$STORAGE_ENDPOINT" \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"name\": \"${ARTIFACT_NAME}\",
-              \"digest\": \"${ARTIFACT_DIGEST}\",
-              \"version\": \"${ARTIFACT_VERSION}\",
-              \"artifact_url\": \"${ARTIFACT_URL}\",
-              \"path\": \"${ARTIFACT_PATH}\",
-              \"registry_url\": \"${JFROG_URL}/artifactory\",
-              \"repository\": \"${ARTIFACT_REPO}\",
-              \"status\": \"active\",
-              \"github_repository\": \"${GITHUB_REPO}\"
-            }" 2>&1)
-
-          echo "Storage Record HTTP Status: $STORAGE_HTTP_CODE"
-          echo "Storage Record Response: $STORAGE_BODY"
           
-          if [ "$STORAGE_HTTP_CODE" != "200" ]; then
-            echo "⚠️  Storage record creation failed, but continuing with deployment record..."
-          else
-            echo "✅ Storage record created successfully!"
-          fi   
-
-          DEPLOYMENT_ENDPOINT="https://github.com/orgs/${OWNER}/artifacts/metadata/deployment-record"
-          echo "deployment url $DEPLOYMENT_ENDPOINT"
+          # Extract artifact details
+          echo "=== Extract artifact details ==="
+          ARTIFACT_PATH=$(echo "${{ steps.artifactory_search.outputs.artifact_path }}" | head -1)
+          ARTIFACT_SHA256=$(echo "${{ steps.artifactory_search.outputs.artifact_sha256 }}" | head -1)
           
-          DEPLOYMENT_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$DEPLOYMENT_ENDPOINT" \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"name\": \"${ARTIFACT_NAME}\",
-              \"digest\": \"${DEPLOYMENT_DIGEST}\",
-              \"version\": \"${ARTIFACT_VERSION}\",
-              \"status\": \"deployed\",
-              \"logical_environment\": \"${LOGICAL_ENV}\",
-              \"deployment_name\": \"${DEPLOYMENT_NAME}\",
-              \"github_repository\": \"${GITHUB_REPO}\"
-            }" 2>&1)
-
+          echo "Artifact Path: $ARTIFACT_PATH"
+          echo "Artifact SHA256: $ARTIFACT_SHA256"
+          
+          if [ -z "$ARTIFACT_SHA256" ]; then
+            echo "⚠️  SHA256 not found in search results, trying to get from artifact properties..."
+            # Try to get SHA256 from artifact properties
+            ARTIFACT_PROPS=$(jf rt sp "${ARTIFACT_PATH}" --server-id productdemo 2>&1 || echo "")
+            if echo "$ARTIFACT_PROPS" | grep -q "sha256"; then
+              ARTIFACT_SHA256=$(echo "$ARTIFACT_PROPS" | grep -i "sha256" | head -1 | awk '{print $NF}' | tr -d '[:space:]' || echo "")
+            fi
             
-          
-          DEPLOYMENT_HTTP_CODE=$(echo "$DEPLOYMENT_RESPONSE" | tail -n1)
-          DEPLOYMENT_BODY=$(echo "$DEPLOYMENT_RESPONSE" | sed '$d')
-          
-          echo "Deployment Record HTTP Status: $DEPLOYMENT_HTTP_CODE"
-          echo "Deployment Record Response: $DEPLOYMENT_BODY"
-          
+            # If still not found, try to get from Docker manifest digest property
+            if [ -z "$ARTIFACT_SHA256" ]; then
+              DOCKER_MANIFEST=$(jf rt sp "${ARTIFACT_PATH}" --server-id productdemo | grep -i "docker.manifest" | head -1 | awk '{print $NF}' | tr -d '[:space:]' || echo "")
+              if [ -n "$DOCKER_MANIFEST" ]; then
+                # Extract SHA256 from manifest digest (format: sha256:hex)
+                ARTIFACT_SHA256=$(echo "$DOCKER_MANIFEST" | sed 's/sha256://' | cut -d':' -f2 || echo "")
+              fi
+            fi
+            
+            if [ -z "$ARTIFACT_SHA256" ]; then
+              echo "❌ Could not retrieve SHA256 digest for artifact"
+              exit 1
+            fi
+            
+            echo "Updated SHA256 from properties: $ARTIFACT_SHA256"
+            echo "artifact_sha256=$ARTIFACT_SHA256" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Create Artifact Deployment Record
-        if: steps.artifactory_search.outputs.artifact_found == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Determine SHA256 Digest
+        id: digest
         run: |
-          echo "Artifact found at: ${{ steps.artifactory_search.outputs.artifact_path }}"
-          # Your deployment record creation logic here
+          if [ -n "${{ inputs.sha256_digest }}" ]; then
+            # Use provided SHA256
+            SHA256="${{ inputs.sha256_digest }}"
+            echo "Using provided SHA256: $SHA256"
+          elif [ -n "${{ steps.artifactory_search.outputs.artifact_sha256 }}" ]; then
+            # Use SHA256 from JFrog search
+            SHA256="${{ steps.artifactory_search.outputs.artifact_sha256 }}"
+            echo "Using SHA256 from JFrog: $SHA256"
+          else
+            echo "❌ No SHA256 digest available"
+            exit 1
+          fi
+          
+          # Ensure SHA256 has sha256: prefix (remove if present, then add)
+          SHA256_CLEAN=$(echo "$SHA256" | sed 's/^sha256://')
+          SHA256_FORMATTED="sha256:${SHA256_CLEAN}"
+          
+          echo "Final SHA256: $SHA256_FORMATTED"
+          echo "sha256=$SHA256_FORMATTED" >> $GITHUB_OUTPUT
 
+      - name: Determine Artifact Name
+        id: artifact_name
+        run: |
+          ARTIFACT_NAME="${{ inputs.artifact_name }}"
+          echo "Artifact name: $ARTIFACT_NAME"
+          echo "name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
 
+      - name: Create Attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ steps.artifact_name.outputs.name }}
+          subject-digest: ${{ steps.digest.outputs.sha256 }}
+
+      - name: Verify Attestation
+        run: |
+          echo "✅ Attestation created successfully!"
+          echo ""
+          echo "Artifact Details:"
+          echo "  Name: ${{ steps.artifact_name.outputs.name }}"
+          echo "  Digest: ${{ steps.digest.outputs.sha256 }}"
+          if [ -n "${{ steps.artifactory_search.outputs.artifact_path }}" ]; then
+            echo "  Path: ${{ steps.artifactory_search.outputs.artifact_path }}"
+          fi
+          echo ""
+          echo "View your attestations at:"
+          echo "  https://github.com/orgs/${{ github.repository_owner }}/artifacts"
