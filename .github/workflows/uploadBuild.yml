@@ -48,29 +48,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      # - name: Pull image
-      #   run: |
-      #     IMAGE="ghcr.io/jfrog-playground/test_artifact_view@sha256:8a6c434f085334af5707f0c4f42c9a541f5bc006a227732aff9d2a0e0dad6170"
-      #     docker pull $IMAGE
-      
-      #     echo "--- Docker images ---"
-      #     docker image ls
-
-      #     mkdir -p image-contents/root
-      #     docker create --name extract $IMAGE
-      #     docker cp extract:/. image-contents/root/
-      #     docker rm extract
-
-      #     echo "--- Extracted contents ---"
-      #     ls -la image-contents/root
-          
-      # - name: Upload build artifact
-      #   id: upload
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     path: ghcr.io/jfrog-playground/test_artifact_view:latest
-      #     # ${{ steps.push.outputs.tags }}
-      #     name: manifest.json
+    
 
       - name: Set up JFrog CLI
         uses: jfrog/setup-jfrog-cli@v4
