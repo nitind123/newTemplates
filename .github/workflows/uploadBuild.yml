@@ -1,0 +1,93 @@
+name: build-upload-github-jfrog
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      packages: write
+      contents: read
+      attestations: write
+      artifact-metadata: write
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push image
+        id: push
+        uses: docker/build-push-action@v5.0.0
+        with:
+          context: docker
+          file: docker/retention.Dockerfile
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Attest
+        uses: actions/attest-build-provenance@v3.2.0
+        id: attest
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true    
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      # - name: Pull image
+      #   run: |
+      #     IMAGE="ghcr.io/jfrog-playground/test_artifact_view@sha256:8a6c434f085334af5707f0c4f42c9a541f5bc006a227732aff9d2a0e0dad6170"
+      #     docker pull $IMAGE
+      
+      #     echo "--- Docker images ---"
+      #     docker image ls
+
+      #     mkdir -p image-contents/root
+      #     docker create --name extract $IMAGE
+      #     docker cp extract:/. image-contents/root/
+      #     docker rm extract
+
+      #     echo "--- Extracted contents ---"
+      #     ls -la image-contents/root
+          
+      # - name: Upload build artifact
+      #   id: upload
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     path: ghcr.io/jfrog-playground/test_artifact_view:latest
+      #     # ${{ steps.push.outputs.tags }}
+      #     name: manifest.json
+
+      - name: Set up JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        with:
+          custom-server-id: productdemo
+        env:
+          JF_URL: ${{ secrets.JFROG_TEST_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_TEST_TOKEN }}
+
+      - name: Push to JFrog
+        run: |
+          BUILD_IMAGE="${{ steps.push.outputs.imageID }}"
+          JFROG_IMAGE="productdemo.jfrog.io/sha-docker-repo/test:${{ github.sha }}"
+          JFROG_LATEST="productdemo.jfrog.io/sha-docker-repo/org:latest"
+          [ "$BUILD_IMAGE" != "$JFROG_IMAGE" ] && docker tag "$BUILD_IMAGE" "$JFROG_IMAGE"
+          docker tag "$JFROG_IMAGE" "$JFROG_LATEST"
+          jfrog docker push "$JFROG_IMAGE" --server-id=productdemo
+          # jfrog docker push "$JFROG_LATEST" --server-id=productdemo    
+          
+      
