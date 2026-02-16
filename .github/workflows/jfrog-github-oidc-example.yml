@@ -15,7 +15,7 @@ jobs:
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v4
         env:
-          JF_URL: ${{ vars.JF_URL }}
+          JF_URL: "https://z0artifactviewdev1.jfrogdev.org"
         with:
           oidc-provider-name: nitind123/newTemplates@github
 
